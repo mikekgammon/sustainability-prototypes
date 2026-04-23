@@ -1,0 +1,565 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrueDI — Alternative Fuel Modelling Flowchart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #111111;
+      --white: #FFFFFF;
+      --hover: #F5F5F5;
+      --success: #63C73B;
+      --warning: #FF9800;
+      --alert: #DC2626;
+      --accent: #3185DA;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+      background: var(--white);
+      color: var(--black);
+      padding: 48px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .page-header { margin-bottom: 40px; }
+    .page-header .overline {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 8px;
+    }
+    .page-header h1 { font-size: 32px; font-weight: 700; line-height: 1.3; margin-bottom: 8px; }
+    .page-header p { font-size: 14px; font-weight: 400; line-height: 1.6; max-width: 720px; }
+
+    .annotation {
+      border-left: 3px solid var(--warning);
+      padding: 12px 16px; margin-bottom: 40px;
+      font-size: 12px; font-weight: 400; line-height: 1.6;
+      background: rgba(255,152,0,0.05); border-radius: 0 6px 6px 0;
+    }
+    .annotation strong { font-weight: 600; }
+
+    .key-strip {
+      display: flex; gap: 24px; margin-bottom: 40px; flex-wrap: wrap;
+    }
+    .key-item { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; }
+    .key-swatch {
+      width: 32px; height: 18px; border-radius: 4px; border: 1.5px solid var(--black);
+    }
+    .key-swatch-start { background: var(--black); }
+    .key-swatch-process { background: var(--white); }
+    .key-swatch-decision { background: var(--white); border-style: dashed; border-width: 2px; }
+    .key-swatch-schema { background: var(--white); border-color: var(--accent); }
+    .key-swatch-dep { background: var(--white); border-color: var(--success); }
+
+    /* ── Flow ── */
+    .flow-section { margin-bottom: 56px; }
+    .flow-section-title {
+      font-size: 14px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 24px; padding-bottom: 8px;
+      border-bottom: 2px solid var(--black);
+    }
+    .flow-container {
+      display: flex; flex-direction: column; align-items: center; gap: 0;
+    }
+
+    .flow-node {
+      width: 520px; border: 1.5px solid var(--black); border-radius: 8px;
+      padding: 16px 20px; background: var(--white);
+    }
+    .flow-node .fn-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .flow-node .fn-desc { font-size: 12px; font-weight: 400; line-height: 1.6; }
+    .flow-node .fn-tag {
+      display: inline-block; font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      padding: 2px 8px; border-radius: 4px; margin-bottom: 6px;
+    }
+
+    .node-start {
+      background: var(--black); color: var(--white); text-align: center; width: 360px;
+    }
+    .node-start .fn-title, .node-start .fn-desc { color: var(--white); }
+    .node-end {
+      background: var(--black); color: var(--white); text-align: center; width: 360px;
+    }
+    .node-end .fn-title, .node-end .fn-desc { color: var(--white); }
+
+    .node-process .fn-tag { background: rgba(17,17,17,0.08); }
+    .node-decision { border-style: dashed; border-width: 2px; }
+    .node-decision .fn-tag { background: rgba(255,152,0,0.1); }
+    .node-schema { border-color: var(--accent); }
+    .node-schema .fn-tag { background: rgba(49,133,218,0.1); }
+    .node-dep { border-color: var(--success); }
+    .node-dep .fn-tag { background: rgba(99,199,59,0.1); }
+
+    .flow-arrow {
+      display: flex; flex-direction: column; align-items: center; height: 36px;
+    }
+    .flow-arrow-line { width: 1.5px; flex: 1; background: var(--black); }
+    .flow-arrow-head {
+      width: 0; height: 0;
+      border-left: 5px solid transparent; border-right: 5px solid transparent;
+      border-top: 6px solid var(--black);
+    }
+
+    .decision-branches {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 32px; width: 100%; max-width: 720px;
+    }
+    .decision-branches-3 {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px; width: 100%; max-width: 820px;
+    }
+    .branch {
+      display: flex; flex-direction: column; align-items: center; gap: 0;
+    }
+    .branch-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 8px; padding: 2px 10px; border-radius: 4px;
+    }
+    .branch-label-yes { background: rgba(99,199,59,0.15); }
+    .branch-label-no { background: rgba(220,38,38,0.1); }
+    .branch-label-neutral { background: rgba(17,17,17,0.08); }
+    .branch .flow-node { width: 100%; }
+
+    .merge-label {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.04em; padding: 4px 12px; border-radius: 4px;
+      background: rgba(17,17,17,0.06); margin: 16px 0 8px;
+    }
+
+    /* Schema */
+    .schema-block {
+      width: 520px; border: 1.5px solid var(--accent); border-radius: 8px;
+      padding: 20px; background: var(--white);
+    }
+    .schema-block .sb-title {
+      font-size: 12px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.04em; margin-bottom: 12px; color: var(--accent);
+    }
+    .schema-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 6px 0; border-bottom: 1px solid var(--black); font-size: 12px;
+    }
+    .schema-row:last-child { border-bottom: none; }
+    .schema-field { font-weight: 600; }
+    .schema-type { font-weight: 400; }
+    .schema-note { font-weight: 400; font-size: 11px; text-align: right; max-width: 240px; }
+
+    /* Fuel list */
+    .fuel-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+      margin-top: 10px;
+    }
+    .fuel-chip {
+      font-size: 11px; font-weight: 600; text-align: center;
+      padding: 6px 8px; border-radius: 6px;
+      background: var(--black); color: var(--white);
+    }
+
+    .footer-note {
+      margin-top: 32px; font-size: 12px; font-weight: 400; line-height: 1.6;
+    }
+
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <div class="overline">Foundation Phase &middot; Requirement 03</div>
+    <h1>Alternative Fuel Modelling Integration</h1>
+    <p>Flowchart mapping the fuel type data model, input logic, carbon factor application, fuel switching engine, and integration with compliance reporting and strategies. Builds on top of the Scope 3 Foundation schema.</p>
+  </div>
+
+  <div class="annotation">
+    <strong>Dependency:</strong> This feature requires the Scope 3 Foundation (Requirement 02) to be in place — specifically the expanded project data schema, multi-metric inputs, and carbon-led value modelling. The fuel type framework plugs into that generic structure.
+  </div>
+
+  <div class="annotation">
+    <strong>Context:</strong> Many customers — manufacturing, data centres, fleet-heavy orgs — rely on fuels beyond electricity and gas. To fully support SECR and enable broader decarbonisation modelling, the platform needs to handle diesel, LPG, biomethane, HVO, kerosene, biomass, propane and more. This is distinct from the broader Scope 3 emissions accounting expansion — this ticket is specifically about fuel-based energy inputs and switching projects.
+  </div>
+
+  <div class="key-strip">
+    <div class="key-item"><div class="key-swatch key-swatch-start"></div>Start / End</div>
+    <div class="key-item"><div class="key-swatch key-swatch-process"></div>Process Step</div>
+    <div class="key-item"><div class="key-swatch key-swatch-decision"></div>Decision Gate</div>
+    <div class="key-item"><div class="key-swatch key-swatch-schema"></div>Data Schema</div>
+    <div class="key-item"><div class="key-swatch key-swatch-dep"></div>Dependency / Integration</div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- FLOW 1: Fuel Type Data Model          -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="flow-section">
+    <div class="flow-section-title">1. Fuel Type Framework &amp; Data Model</div>
+
+    <div class="flow-container">
+
+      <div class="flow-node node-start">
+        <div class="fn-title">User creates a fuel-based project</div>
+        <div class="fn-desc" style="font-size:11px;">Via the expanded project type selector (Scope 3 Foundation)</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Selection</div>
+        <div class="fn-title">User selects fuel type</div>
+        <div class="fn-desc">Dropdown populated from the platform fuel library. Extensible — new fuels can be added by admins without code changes. Selection drives the default unit, emission factor, and compliance scheme tagging.</div>
+        <div class="fuel-grid">
+          <div class="fuel-chip">Diesel</div>
+          <div class="fuel-chip">Petrol</div>
+          <div class="fuel-chip">LPG</div>
+          <div class="fuel-chip">Kerosene</div>
+          <div class="fuel-chip">HVO</div>
+          <div class="fuel-chip">Biomethane</div>
+          <div class="fuel-chip">Propane</div>
+          <div class="fuel-chip">Biomass</div>
+          <div class="fuel-chip">Natural Gas</div>
+          <div class="fuel-chip">Other</div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Auto-populate</div>
+        <div class="fn-title">Platform sets defaults from fuel type</div>
+        <div class="fn-desc">On selection, the platform auto-fills: default unit (e.g. litres for diesel, kWh for biomethane), emission factor from DEFRA library, scope classification (Scope 1 for direct combustion), and applicable compliance schemes (SECR, ESOS). User can override any of these.</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <!-- Schema -->
+      <div class="schema-block">
+        <div class="sb-title">Fuel Type Data Model</div>
+        <div class="schema-row"><span class="schema-field">fuel_type_id</span><span class="schema-type">ref</span><span class="schema-note">Links to fuel library</span></div>
+        <div class="schema-row"><span class="schema-field">fuel_category</span><span class="schema-type">enum</span><span class="schema-note">fossil_liquid | fossil_gas | biofuel | solid | other</span></div>
+        <div class="schema-row"><span class="schema-field">default_unit</span><span class="schema-type">enum</span><span class="schema-note">litres | tonnes | m&sup3; | kg | kWh</span></div>
+        <div class="schema-row"><span class="schema-field">emission_factor</span><span class="schema-type">number</span><span class="schema-note">kgCO&#8322;e per unit (DEFRA source)</span></div>
+        <div class="schema-row"><span class="schema-field">energy_content</span><span class="schema-type">number</span><span class="schema-note">kWh per unit (for cross-fuel comparison)</span></div>
+        <div class="schema-row"><span class="schema-field">factor_source</span><span class="schema-type">string</span><span class="schema-note">DEFRA 2025 | Custom</span></div>
+        <div class="schema-row"><span class="schema-field">factor_year</span><span class="schema-type">int</span><span class="schema-note">Year of factor publication</span></div>
+        <div class="schema-row"><span class="schema-field">scope_default</span><span class="schema-type">enum</span><span class="schema-note">1 | 2 | 3</span></div>
+        <div class="schema-row"><span class="schema-field">compliance_schemes[]</span><span class="schema-type">array</span><span class="schema-note">SECR | ESOS | RE100 | etc.</span></div>
+        <div class="schema-row"><span class="schema-field">extensible</span><span class="schema-type">bool</span><span class="schema-note">true — admins can add new fuel types</span></div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- FLOW 2: Consumption & Cost Input      -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="flow-section">
+    <div class="flow-section-title">2. Consumption &amp; Cost Input Logic</div>
+
+    <div class="flow-container">
+
+      <div class="flow-node node-start">
+        <div class="fn-title">Fuel type selected, defaults loaded</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Input</div>
+        <div class="fn-title">User enters consumption volume</div>
+        <div class="fn-desc">Numeric input with the pre-selected unit. User can switch unit if needed (e.g. litres to tonnes for bulk fuel). Platform handles unit conversion behind the scenes using energy content values.</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-decision">
+        <div class="fn-tag">Decision</div>
+        <div class="fn-title">Unit matches default?</div>
+        <div class="fn-desc">If the user changed the unit from the default, the platform needs to convert before applying the emission factor.</div>
+      </div>
+
+      <div style="height:16px;"></div>
+
+      <div class="decision-branches">
+        <div class="branch">
+          <div class="branch-label branch-label-yes">Yes — Direct apply</div>
+          <div style="height:8px;"></div>
+          <div class="flow-node node-process">
+            <div class="fn-tag">Straight-through</div>
+            <div class="fn-title">Volume &times; factor = tCO&#8322;e</div>
+            <div class="fn-desc">No conversion needed. Emission factor applied directly to the entered volume.</div>
+          </div>
+        </div>
+        <div class="branch">
+          <div class="branch-label branch-label-no">No — Convert first</div>
+          <div style="height:8px;"></div>
+          <div class="flow-node node-process">
+            <div class="fn-tag">Conversion</div>
+            <div class="fn-title">Convert via energy content</div>
+            <div class="fn-desc">e.g. user enters tonnes of diesel, platform converts to litres using density, then applies per-litre emission factor. Conversion chain is logged and auditable.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:24px;"></div>
+      <div class="merge-label">Both paths continue</div>
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Cost input</div>
+        <div class="fn-title">User enters current and projected fuel costs</div>
+        <div class="fn-desc">Two cost fields: current unit price (&pound; per litre/kg/kWh) and optional projected unit price for future cost modelling. Platform calculates annual cost from volume &times; unit price. Future: potential integration with fuel market pricing APIs, but manual entry always available.</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Output</div>
+        <div class="fn-title">Fuel source record created</div>
+        <div class="fn-desc">
+          Record stored with: fuel type + volume + unit + emission factor + source + annual cost + tCO&#8322;e + scope + compliance tags. This record feeds into the project summary, comparisons, and strategies via the Scope 3 Foundation schema.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- FLOW 3: Fuel Switching Engine         -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="flow-section">
+    <div class="flow-section-title">3. Fuel Switching Engine</div>
+
+    <div class="flow-container">
+
+      <div class="flow-node node-start">
+        <div class="fn-title">User initiates a fuel switch project</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Baseline</div>
+        <div class="fn-title">Select current fuel (source)</div>
+        <div class="fn-desc">User picks the fuel being replaced. Can select from existing fuel sources already on the project, or define a new one. The platform loads the current volume, unit cost, and emission factor as the baseline.</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Replacement</div>
+        <div class="fn-title">Select replacement fuel (target)</div>
+        <div class="fn-desc">User picks the new fuel. Platform loads its emission factor and default unit. User enters the replacement volume — may be 1:1 (e.g. diesel to HVO drop-in) or different (e.g. gas boiler to heat pump requires unit change).</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-decision">
+        <div class="fn-tag">Decision</div>
+        <div class="fn-title">Same unit type?</div>
+        <div class="fn-desc">Is the replacement fuel measured in the same unit as the source fuel?</div>
+      </div>
+
+      <div style="height:16px;"></div>
+
+      <div class="decision-branches">
+        <div class="branch">
+          <div class="branch-label branch-label-yes">Yes — Direct comparison</div>
+          <div style="height:8px;"></div>
+          <div class="flow-node node-process">
+            <div class="fn-tag">e.g. diesel &rarr; HVO</div>
+            <div class="fn-title">Like-for-like volume</div>
+            <div class="fn-desc">Both measured in litres. Direct comparison on carbon and cost per litre. Simple delta calculation.</div>
+          </div>
+        </div>
+        <div class="branch">
+          <div class="branch-label branch-label-no">No — Normalise first</div>
+          <div style="height:8px;"></div>
+          <div class="flow-node node-process">
+            <div class="fn-tag">e.g. gas &rarr; electric</div>
+            <div class="fn-title">Normalise via energy content</div>
+            <div class="fn-desc">Convert both fuels to kWh equivalent using energy content values. Compare on a per-kWh basis for carbon and cost. Log the conversion path.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:24px;"></div>
+      <div class="merge-label">Both paths continue</div>
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Calculation</div>
+        <div class="fn-title">Fuel switch impact analysis</div>
+        <div class="fn-desc">
+          Platform calculates three deltas:<br><br>
+          <strong>Carbon change:</strong> source tCO&#8322;e &minus; replacement tCO&#8322;e = net saving<br>
+          <strong>Cost change:</strong> source annual cost &minus; replacement annual cost = net cost impact<br>
+          <strong>Consumption change:</strong> volume difference (if applicable)<br><br>
+          Outputs include: % carbon reduction, absolute tCO&#8322;e saving, abatement cost (&pound;/tCO&#8322;e), and payback period (if cost-positive).
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-decision">
+        <div class="fn-tag">Decision</div>
+        <div class="fn-title">Cost impact direction?</div>
+        <div class="fn-desc">Does the fuel switch save money or cost more? This determines the value framing (links to Scope 3 Foundation carbon-led value model).</div>
+      </div>
+
+      <div style="height:16px;"></div>
+
+      <div class="decision-branches-3">
+        <div class="branch">
+          <div class="branch-label branch-label-neutral">Saves money</div>
+          <div style="height:8px;"></div>
+          <div class="flow-node node-process">
+            <div class="fn-tag">Win-win</div>
+            <div class="fn-title">Positive ROI + carbon saving</div>
+            <div class="fn-desc">Display both financial and carbon benefits. Standard project framing. e.g. switching from expensive fuel to cheaper bio alternative.</div>
+          </div>
+        </div>
+        <div class="branch">
+          <div class="branch-label branch-label-neutral">Costs more</div>
+          <div style="height:8px;"></div>
+          <div class="flow-node node-process">
+            <div class="fn-tag">Carbon-led</div>
+            <div class="fn-title">Carbon saving at a cost premium</div>
+            <div class="fn-desc">e.g. diesel &rarr; HVO. Show carbon saving as primary value. Display abatement cost (&pound;/tCO&#8322;e). Frame within portfolio strategy where other projects offset the cost.</div>
+          </div>
+        </div>
+        <div class="branch">
+          <div class="branch-label branch-label-neutral">Cost neutral</div>
+          <div style="height:8px;"></div>
+          <div class="flow-node node-process">
+            <div class="fn-tag">Pure carbon</div>
+            <div class="fn-title">No financial impact, carbon only</div>
+            <div class="fn-desc">Rare but possible. Display carbon saving. No financial metrics needed beyond confirming zero cost impact.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- FLOW 4: Compliance & Reporting        -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="flow-section">
+    <div class="flow-section-title">4. Compliance &amp; Reporting Alignment</div>
+
+    <div class="flow-container">
+
+      <div class="flow-node node-start">
+        <div class="fn-title">Fuel sources and switches saved to project</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Auto-tagging</div>
+        <div class="fn-title">Compliance schemes tagged from fuel type</div>
+        <div class="fn-desc">Each fuel type in the library carries compliance scheme mappings. When a fuel source is added, the platform automatically tags which schemes it's reportable under. SECR requires all Scope 1 fuel emissions. ESOS requires energy use breakdowns. These tags are inherited by the project and propagated to strategies.</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-dep">
+        <div class="fn-tag">Integration</div>
+        <div class="fn-title">SECR reporting module</div>
+        <div class="fn-desc">Alternative fuel data flows directly into SECR. No re-entry. Fuel type, volume, emission factor, and tCO&#8322;e are all captured at modelling time. The SECR module (separate ticket, in progress) pulls from the same data. This ticket provides the data; SECR provides the output format.</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-dep">
+        <div class="fn-tag">Integration</div>
+        <div class="fn-title">Comparisons module</div>
+        <div class="fn-desc">Fuel switching projects appear in project comparisons alongside energy efficiency projects. Compared on carbon saving, cost impact, abatement cost. The generic output format (financial + carbon tracks from Scope 3 Foundation) ensures comparability across project types.</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-dep">
+        <div class="fn-tag">Integration</div>
+        <div class="fn-title">Strategy module</div>
+        <div class="fn-desc">Fuel switches can be included in multi-scope strategies. A strategy might combine LED upgrades (Scope 2, cost-saving) with a diesel-to-HVO fleet switch (Scope 1, cost-increasing) — the strategy view shows the net portfolio position. "Commercially competitive net zero" in practice.</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-end">
+        <div class="fn-title">Alternative fuels fully integrated</div>
+        <div class="fn-desc" style="font-size:11px;">Modelled &middot; Compared &middot; Strategised &middot; Reported</div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- FLOW 5: Extensibility & Future Scope  -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="flow-section">
+    <div class="flow-section-title">5. Extensibility &amp; Future Scope</div>
+
+    <div class="flow-container">
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Extensible framework</div>
+        <div class="fn-title">Beyond fuels — same data model applies</div>
+        <div class="fn-desc">The fuel type framework is deliberately generic. The same structure (activity type + unit + volume + factor + cost) supports future emission sources without further architectural changes:</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="decision-branches">
+        <div class="branch">
+          <div class="flow-node node-process" style="width:100%;">
+            <div class="fn-tag">Future</div>
+            <div class="fn-title">Fleet fuel consumption</div>
+            <div class="fn-desc">Same fuel library, but applied to vehicle fleet contexts. Distance-based and fuel-based metrics. Telematics API integration potential (e.g. Virta for EV).</div>
+          </div>
+          <div style="height:16px;"></div>
+          <div class="flow-node node-process" style="width:100%;">
+            <div class="fn-tag">Future</div>
+            <div class="fn-title">Refrigerant gases</div>
+            <div class="fn-desc">kg-based inputs, high-GWP emission factors. Same structure — different factor library entry.</div>
+          </div>
+        </div>
+        <div class="branch">
+          <div class="flow-node node-process" style="width:100%;">
+            <div class="fn-tag">Future</div>
+            <div class="fn-title">Waste-related emissions</div>
+            <div class="fn-desc">Tonnes to landfill, recycling rates. Activity-driven with waste-specific emission factors.</div>
+          </div>
+          <div style="height:16px;"></div>
+          <div class="flow-node node-process" style="width:100%;">
+            <div class="fn-tag">Future</div>
+            <div class="fn-title">Fuel market pricing API</div>
+            <div class="fn-desc">Auto-populate current fuel costs from market data. Similar to electricity/gas market integrations. Manual entry always available as fallback.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="annotation">
+    <strong>Subtasks from Asana:</strong> (1) Model Cost and Carbon Impacts for Alternative Fuels — covered in Flows 2 and 3. (2) Fuel Switching Project Modelling &amp; Cost-Benefit Analysis — covered in Flow 3. (3) Integrate Alternative Fuel Projects into Comparisons and Strategies — covered in Flow 4.
+  </div>
+
+  <div class="footer-note">
+    Source: Asana task #1213539056591383 &middot; Priority: High &middot; Type: New Feature &middot; Status: Scheduled &middot; Depends on: Scope 3 Foundation &middot; Required for: SECR compliance &middot; V0.1 April 2026
+  </div>
+
+</body>
+</html>

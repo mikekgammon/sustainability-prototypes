@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Targets V2 — Target Cockpit</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+<style>
+:root {
+  --primary: #3F2A95;
+  --secondary: #111111;
+  --accent: #3185DA;
+  --highlight: #C04A74;
+  --total: #7F3A84;
+  --success: #63C73B;
+  --warning: #FF9800;
+  --alert: #DC2626;
+  --white: #ffffff;
+  --grey: #F5F5F5;
+  --font: 'Poppins', system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  background: var(--white);
+  color: var(--secondary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.app {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 32px 48px 80px;
+}
+
+/* ---------- VERSION BANNER ---------- */
+.version-banner {
+  background: var(--grey);
+  border-left: 4px solid var(--secondary);
+  padding: 14px 20px;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.version-banner-main { font-size: 13px; font-weight: 500; }
+.version-banner-main strong { font-weight: 700; }
+.version-banner-meta {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ---------- TAB NAV ---------- */
+.tabs {
+  display: flex;
+  gap: 40px;
+  border-bottom: 1.5px solid var(--secondary);
+  margin-bottom: 32px;
+}
+.tab {
+  padding: 16px 2px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1.5px;
+  transition: opacity 150ms ease-out;
+}
+.tab.active { border-bottom-color: var(--secondary); }
+.tab:not(.active):hover { opacity: 0.6; }
+
+/* ---------- COCKPIT HEADER ---------- */
+.cockpit-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1.5px solid var(--secondary);
+}
+.cockpit-title-block { }
+.cockpit-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+.cockpit-title {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 10px;
+}
+.cockpit-sub {
+  font-size: 14px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.cockpit-sub-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.cockpit-sub-item .material-symbols-outlined { font-size: 16px; }
+
+/* Target switcher */
+.switcher {
+  position: relative;
+  display: inline-block;
+}
+.switcher-btn {
+  background: var(--white);
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 280px;
+  color: var(--secondary);
+  transition: background 150ms ease-out;
+}
+.switcher-btn:hover { background: var(--grey); }
+.switcher-btn .material-symbols-outlined { font-size: 18px; }
+.switcher-btn-label {
+  flex: 1;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 10px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.switcher-btn-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+}
+.switcher-btn-main { font-size: 13px; font-weight: 600; }
+
+.switcher-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--white);
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 8px;
+  min-width: 340px;
+  z-index: 10;
+  display: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+.switcher.open .switcher-dropdown { display: block; }
+.switcher-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  transition: background 150ms ease-out;
+}
+.switcher-item:hover { background: var(--grey); }
+.switcher-item.active { background: var(--grey); }
+.switcher-item-title { font-size: 13px; font-weight: 600; }
+.switcher-item-sub { font-size: 11px; margin-top: 2px; }
+.switcher-divider {
+  border: none;
+  border-top: 1px solid var(--grey);
+  margin: 6px 0;
+}
+.switcher-new {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 150ms ease-out;
+}
+.switcher-new:hover { background: var(--grey); }
+
+/* ---------- HERO LAYOUT ---------- */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 32px;
+  margin-bottom: 48px;
+}
+
+/* Chart card */
+.hero-chart-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 12px;
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+}
+.hero-chart-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.chart-drag-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 6px 10px;
+  background: var(--grey);
+  border-radius: 4px;
+}
+.chart-drag-hint .material-symbols-outlined { font-size: 14px; }
+
+.toggle-group {
+  display: inline-flex;
+  border: 1.5px solid var(--secondary);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.toggle-group button {
+  background: var(--white);
+  border: none;
+  padding: 8px 14px;
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  color: var(--secondary);
+  transition: background 150ms ease-out;
+}
+.toggle-group button:not(:last-child) { border-right: 1.5px solid var(--secondary); }
+.toggle-group button.active { background: var(--secondary); color: var(--white); }
+.toggle-group button:not(.active):hover { background: var(--grey); }
+
+.hero-chart {
+  width: 100%;
+  height: 420px;
+  cursor: default;
+}
+
+.hero-chart-legend {
+  display: flex;
+  gap: 24px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--grey);
+  flex-wrap: wrap;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.legend-swatch { width: 20px; height: 3px; }
+.legend-swatch.dashed {
+  background: transparent;
+  border-top: 2.5px dashed var(--secondary);
+  height: 0;
+}
+.legend-swatch.solid { background: var(--secondary); }
+.legend-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+
+/* ---------- STATUS RAIL ---------- */
+.status-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Hero status (huge) */
+.status-hero {
+  border: 1.5px solid var(--secondary);
+  border-radius: 12px;
+  padding: 28px;
+  background: var(--secondary);
+  color: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+.status-hero.at-risk {
+  background: var(--secondary);
+}
+.status-hero-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+  margin-bottom: 10px;
+}
+.status-hero-state {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.status-hero-state .status-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+.status-hero.on-track .status-hero-state .status-dot { background: var(--success); }
+.status-hero.at-risk .status-hero-state .status-dot { background: var(--warning); }
+.status-hero.off-track .status-hero-state .status-dot { background: var(--alert); }
+
+.status-hero-delta {
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 12px;
+  opacity: 0.9;
+}
+.status-hero-delta strong { font-weight: 700; }
+
+/* Stat grid */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.stat-tile {
+  border: 1.5px solid var(--secondary);
+  border-radius: 10px;
+  padding: 16px;
+}
+.stat-tile-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.stat-tile-value {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.stat-tile-value .unit {
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 2px;
+}
+.stat-tile-sub { font-size: 11px; margin-top: 4px; }
+
+/* Progress ring tile (full width) */
+.stat-tile.full { grid-column: 1 / -1; display: flex; align-items: center; gap: 20px; }
+.progress-ring { flex-shrink: 0; }
+.progress-ring-text { flex: 1; }
+.progress-ring-text .stat-tile-label { margin-bottom: 4px; }
+.progress-ring-text .stat-tile-value { font-size: 20px; }
+
+/* Next milestone tile */
+.milestone-tile {
+  border: 1.5px solid var(--secondary);
+  border-radius: 10px;
+  padding: 16px;
+  background: var(--grey);
+}
+.milestone-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.milestone-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.milestone-date {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  background: var(--white);
+  border-radius: 3px;
+}
+.milestone-value {
+  font-size: 18px;
+  font-weight: 700;
+}
+.milestone-sub { font-size: 11px; margin-top: 4px; }
+
+/* ---------- LINKED STRATEGIES ---------- */
+.linked-row {
+  margin-bottom: 48px;
+}
+.linked-row-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 16px;
+  border-bottom: 1.5px solid var(--secondary);
+  margin-bottom: 20px;
+}
+.linked-row-head h2 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.linked-row-head h2 .count {
+  font-size: 14px;
+  font-weight: 500;
+  margin-left: 10px;
+  opacity: 0.6;
+}
+.linked-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+.linked-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 10px;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: background 150ms ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.linked-card:hover { background: var(--grey); }
+.linked-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.linked-card-title { font-size: 14px; font-weight: 600; line-height: 1.3; }
+.linked-mini-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.mini-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.on-track-dot { background: var(--success); }
+.at-risk-dot { background: var(--warning); }
+.off-track-dot { background: var(--alert); }
+.draft-dot { background: var(--secondary); }
+
+.linked-card-meta {
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid var(--grey);
+}
+
+.linked-card.add-card {
+  border-style: dashed;
+  background: transparent;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  gap: 8px;
+  flex-direction: row;
+}
+.linked-card.add-card .material-symbols-outlined { font-size: 18px; }
+
+/* ---------- OTHER TARGETS ---------- */
+.other-row { }
+.other-row-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 16px;
+  border-bottom: 1.5px solid var(--secondary);
+  margin-bottom: 20px;
+}
+.other-row-head h2 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.other-row-head h2 .count { font-size: 14px; font-weight: 500; margin-left: 10px; opacity: 0.6; }
+
+.other-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+.other-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 12px;
+  padding: 22px 24px;
+  cursor: pointer;
+  transition: background 150ms ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 180px;
+}
+.other-card:hover { background: var(--grey); }
+.other-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.other-card-title-block { flex: 1; }
+.other-card-metric {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+.other-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.other-mini-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.other-mini-status.on-track { background: rgba(99,199,59,0.15); }
+.other-mini-status.at-risk { background: rgba(255,152,0,0.15); }
+.other-mini-status.off-track { background: rgba(220,38,38,0.15); }
+.other-mini-status.draft { background: var(--grey); }
+.other-mini-status.achieved { background: var(--secondary); color: var(--white); }
+
+/* mini progress bar */
+.other-progress {
+  margin-top: auto;
+}
+.other-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.other-progress-label .pct { font-size: 14px; font-weight: 700; }
+.other-progress-track {
+  height: 6px;
+  background: var(--grey);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+.other-progress-fill {
+  height: 100%;
+  background: var(--secondary);
+  border-radius: 3px;
+}
+.other-card-footer {
+  font-size: 11px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.other-card.add-new {
+  border-style: dashed;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-direction: column;
+  text-align: center;
+}
+.other-card.add-new .material-symbols-outlined { font-size: 32px; }
+.other-card.add-new .add-title { font-size: 15px; font-weight: 600; }
+.other-card.add-new .add-sub { font-size: 12px; }
+
+/* ---------- METRIC BADGE ---------- */
+.metric-ribbon {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: var(--secondary);
+  color: var(--white);
+}
+.metric-ribbon.energy { background: var(--primary); }
+.metric-ribbon.cost { background: var(--secondary); }
+.metric-ribbon.carbon { background: var(--secondary); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Version banner -->
+  <div class="version-banner">
+    <div class="version-banner-main"><strong>Targets V2 · Version 2</strong> — "Target Cockpit" — one target as hero, live progress front and centre, all Otto's enhancements built into the core layout.</div>
+    <div class="version-banner-meta">Prototype · Mike Gammon</div>
+  </div>
+
+  <!-- Tab nav -->
+  <nav class="tabs">
+    <div class="tab">Overview</div>
+    <div class="tab active">Targets</div>
+    <div class="tab">Emissions</div>
+  </nav>
+
+  <!-- COCKPIT HEADER -->
+  <div class="cockpit-head">
+    <div class="cockpit-title-block">
+      <div class="cockpit-eyebrow">Target · Live tracking</div>
+      <div class="cockpit-title">Net Zero by 2038</div>
+      <div class="cockpit-sub">
+        <span class="cockpit-sub-item"><span class="material-symbols-outlined">eco</span>Carbon reduction · tCO₂e</span>
+        <span class="cockpit-sub-item"><span class="material-symbols-outlined">layers</span>All Scopes</span>
+        <span class="cockpit-sub-item"><span class="material-symbols-outlined">calendar_today</span>Deadline 31 March 2038</span>
+        <span class="cockpit-sub-item"><span class="material-symbols-outlined">percent</span>75% reduction vs 2021/22</span>
+      </div>
+    </div>
+
+    <!-- Switcher -->
+    <div class="switcher" id="switcher">
+      <button class="switcher-btn" id="switcherBtn">
+        <span class="material-symbols-outlined">flag</span>
+        <span class="switcher-btn-col">
+          <span class="switcher-btn-label">Active target</span>
+          <span class="switcher-btn-main">Net Zero by 2038</span>
+        </span>
+        <span class="material-symbols-outlined">unfold_more</span>
+      </button>
+      <div class="switcher-dropdown">
+        <div class="switcher-item active">
+          <div>
+            <div class="switcher-item-title">Net Zero by 2038</div>
+            <div class="switcher-item-sub">Carbon · All Scopes · At Risk</div>
+          </div>
+          <span class="mini-dot at-risk-dot"></span>
+        </div>
+        <div class="switcher-item">
+          <div>
+            <div class="switcher-item-title">Achieve Net Zero Scope 1&amp;2 by 2030</div>
+            <div class="switcher-item-sub">Carbon · Scopes 1&amp;2 · On Track</div>
+          </div>
+          <span class="mini-dot on-track-dot"></span>
+        </div>
+        <div class="switcher-item">
+          <div>
+            <div class="switcher-item-title">Reduce energy use 30% by 2029</div>
+            <div class="switcher-item-sub">Energy · All sites · On Track</div>
+          </div>
+          <span class="mini-dot on-track-dot"></span>
+        </div>
+        <div class="switcher-item">
+          <div>
+            <div class="switcher-item-title">£2M annual savings by 2030</div>
+            <div class="switcher-item-sub">Cost · Operational · Off Track</div>
+          </div>
+          <span class="mini-dot off-track-dot"></span>
+        </div>
+        <div class="switcher-item">
+          <div>
+            <div class="switcher-item-title">S 1 &amp; 2 Net Zero by 2030</div>
+            <div class="switcher-item-sub">Carbon · Draft</div>
+          </div>
+          <span class="mini-dot draft-dot"></span>
+        </div>
+        <hr class="switcher-divider" />
+        <div class="switcher-new">
+          <span class="material-symbols-outlined">add</span>Create new target
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO: Chart + Status rail -->
+  <div class="hero">
+
+    <!-- Chart card -->
+    <div class="hero-chart-card">
+      <div class="hero-chart-controls">
+        <div class="chart-drag-hint">
+          <span class="material-symbols-outlined">touch_app</span>
+          Drag checkpoints to reshape the trajectory
+        </div>
+        <div class="toggle-group">
+          <button>Month</button>
+          <button>Quarter</button>
+          <button class="active">Year</button>
+        </div>
+      </div>
+
+      <svg class="hero-chart" id="heroChart" viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg"></svg>
+
+      <div class="hero-chart-legend">
+        <div class="legend-item"><span class="legend-swatch dashed"></span>Target path (editable)</div>
+        <div class="legend-item"><span class="legend-swatch solid"></span>Actual emissions (live M&amp;T)</div>
+        <div class="legend-item"><span class="legend-dot" style="background: var(--warning);"></span>Current position</div>
+        <div class="legend-item"><span class="legend-dot" style="border: 2px solid var(--secondary); background: var(--white); width: 8px; height: 8px;"></span>Checkpoint (drag to edit)</div>
+      </div>
+    </div>
+
+    <!-- Status rail -->
+    <div class="status-rail">
+
+      <!-- Hero status -->
+      <div class="status-hero at-risk">
+        <div class="status-hero-label">Current status</div>
+        <div class="status-hero-state">
+          <span class="status-dot"></span>
+          At Risk
+        </div>
+        <div class="status-hero-delta">
+          Tracking <strong>+9.2%</strong> above target path · exceeds the ±5% threshold
+        </div>
+      </div>
+
+      <!-- Stat grid -->
+      <div class="stat-grid">
+        <div class="stat-tile">
+          <div class="stat-tile-label">Current</div>
+          <div class="stat-tile-value">586<span class="unit">tCO₂e</span></div>
+          <div class="stat-tile-sub">This month</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-tile-label">Target today</div>
+          <div class="stat-tile-value">537<span class="unit">tCO₂e</span></div>
+          <div class="stat-tile-sub">On-path value</div>
+        </div>
+
+        <!-- Progress ring, full width -->
+        <div class="stat-tile full">
+          <svg class="progress-ring" width="64" height="64" viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="26" fill="none" stroke="#F5F5F5" stroke-width="6" />
+            <circle cx="32" cy="32" r="26" fill="none" stroke="#111" stroke-width="6"
+              stroke-dasharray="163.4" stroke-dashoffset="117.6" stroke-linecap="round"
+              transform="rotate(-90 32 32)" />
+            <text x="32" y="37" font-family="Poppins" font-size="14" font-weight="700" fill="#111" text-anchor="middle">28%</text>
+          </svg>
+          <div class="progress-ring-text">
+            <div class="stat-tile-label">Journey progress</div>
+            <div class="stat-tile-value">28% of path</div>
+            <div class="stat-tile-sub">224 tCO₂e reduced from 810 benchmark</div>
+          </div>
+        </div>
+
+        <!-- Time remaining -->
+        <div class="stat-tile">
+          <div class="stat-tile-label">Time remaining</div>
+          <div class="stat-tile-value">11.9<span class="unit">yr</span></div>
+          <div class="stat-tile-sub">to deadline</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-tile-label">Trend (12 mo)</div>
+          <div class="stat-tile-value">−8.4<span class="unit">%</span></div>
+          <div class="stat-tile-sub">reduction rate</div>
+        </div>
+      </div>
+
+      <!-- Next milestone -->
+      <div class="milestone-tile">
+        <div class="milestone-head">
+          <div class="milestone-label">Next checkpoint</div>
+          <div class="milestone-date">2029</div>
+        </div>
+        <div class="milestone-value">60% of benchmark · 486 tCO₂e</div>
+        <div class="milestone-sub">2.8 years away · a step down of 100 tCO₂e from today</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LINKED STRATEGIES -->
+  <div class="linked-row">
+    <div class="linked-row-head">
+      <h2>Linked strategies <span class="count">3 contributing</span></h2>
+      <div style="font-size: 12px;">Actuals are aggregated from these strategies.</div>
+    </div>
+    <div class="linked-grid">
+      <div class="linked-card">
+        <div class="linked-card-head">
+          <div class="linked-card-title">Baseline strategy</div>
+          <div class="linked-mini-state"><span class="mini-dot on-track-dot"></span>On Track</div>
+        </div>
+        <div>
+          <div style="font-size: 12px;">12 interventions · Scope 1, 2</div>
+        </div>
+        <div class="linked-card-meta">
+          <span>Contributes <strong>64%</strong></span>
+          <span>Open →</span>
+        </div>
+      </div>
+      <div class="linked-card">
+        <div class="linked-card-head">
+          <div class="linked-card-title">Heat Pump Acceleration</div>
+          <div class="linked-mini-state"><span class="mini-dot at-risk-dot"></span>At Risk</div>
+        </div>
+        <div>
+          <div style="font-size: 12px;">4 interventions · Scope 1</div>
+        </div>
+        <div class="linked-card-meta">
+          <span>Contributes <strong>22%</strong></span>
+          <span>Open →</span>
+        </div>
+      </div>
+      <div class="linked-card">
+        <div class="linked-card-head">
+          <div class="linked-card-title">Solar PV Roll-out</div>
+          <div class="linked-mini-state"><span class="mini-dot draft-dot"></span>Draft</div>
+        </div>
+        <div>
+          <div style="font-size: 12px;">6 interventions · Scope 2</div>
+        </div>
+        <div class="linked-card-meta">
+          <span>Contributes <strong>14%</strong></span>
+          <span>Open →</span>
+        </div>
+      </div>
+      <div class="linked-card add-card">
+        <span class="material-symbols-outlined">add_link</span>
+        Link another strategy
+      </div>
+    </div>
+  </div>
+
+  <!-- OTHER TARGETS -->
+  <div class="other-row">
+    <div class="other-row-head">
+      <h2>Other targets <span class="count">4 active · 1 draft</span></h2>
+      <div style="font-size: 12px;">Select one to switch cockpit view.</div>
+    </div>
+    <div class="other-grid">
+
+      <div class="other-card">
+        <div class="other-card-head">
+          <div class="other-card-title-block">
+            <div class="other-card-metric">Carbon · Scopes 1&amp;2</div>
+            <div class="other-card-title">Net Zero Scope 1 &amp; 2 by 2030</div>
+          </div>
+          <div class="other-mini-status on-track"><span class="mini-dot on-track-dot"></span>On Track</div>
+        </div>
+        <div class="other-progress">
+          <div class="other-progress-label"><span>Progress</span><span class="pct">47%</span></div>
+          <div class="other-progress-track"><div class="other-progress-fill" style="width: 47%;"></div></div>
+        </div>
+        <div class="other-card-footer">
+          <span>Due 01/03/2030</span>
+          <span>Tracking −3.1%</span>
+        </div>
+      </div>
+
+      <div class="other-card">
+        <div class="other-card-head">
+          <div class="other-card-title-block">
+            <div class="other-card-metric">Energy · All sites</div>
+            <div class="other-card-title">Reduce energy use 30% by 2029</div>
+          </div>
+          <div class="other-mini-status on-track"><span class="mini-dot on-track-dot"></span>On Track</div>
+        </div>
+        <div class="other-progress">
+          <div class="other-progress-label"><span>Progress</span><span class="pct">63%</span></div>
+          <div class="other-progress-track"><div class="other-progress-fill" style="width: 63%;"></div></div>
+        </div>
+        <div class="other-card-footer">
+          <span>Due 31/12/2029</span>
+          <span>Tracking −1.4%</span>
+        </div>
+      </div>
+
+      <div class="other-card">
+        <div class="other-card-head">
+          <div class="other-card-title-block">
+            <div class="other-card-metric">Cost · Operational</div>
+            <div class="other-card-title">£2M annual savings by 2030</div>
+          </div>
+          <div class="other-mini-status off-track"><span class="mini-dot off-track-dot"></span>Off Track</div>
+        </div>
+        <div class="other-progress">
+          <div class="other-progress-label"><span>Progress</span><span class="pct">18%</span></div>
+          <div class="other-progress-track"><div class="other-progress-fill" style="width: 18%;"></div></div>
+        </div>
+        <div class="other-card-footer">
+          <span>Due 31/12/2030</span>
+          <span>Tracking +19.4%</span>
+        </div>
+      </div>
+
+      <div class="other-card">
+        <div class="other-card-head">
+          <div class="other-card-title-block">
+            <div class="other-card-metric">Carbon · Scopes 1&amp;2 · Draft</div>
+            <div class="other-card-title">S 1 &amp; 2 Net Zero by 2030</div>
+          </div>
+          <div class="other-mini-status draft"><span class="mini-dot draft-dot"></span>Draft</div>
+        </div>
+        <div class="other-progress">
+          <div class="other-progress-label"><span>Progress</span><span class="pct">—</span></div>
+          <div class="other-progress-track"></div>
+        </div>
+        <div class="other-card-footer">
+          <span>Due 31/12/2029</span>
+          <span>Not published</span>
+        </div>
+      </div>
+
+      <div class="other-card add-new">
+        <span class="material-symbols-outlined">add</span>
+        <div class="add-title">Create new target</div>
+        <div class="add-sub">Carbon, energy, or cost</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ==========================================================
+   HERO CHART — path with draggable checkpoints + actuals
+   ========================================================== */
+(function renderHeroChart() {
+  const svgEl = document.getElementById('heroChart');
+  const W = 900, H = 420;
+  const padL = 70, padR = 40, padT = 40, padB = 60;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+
+  const startYear = 2021, endYear = 2038;
+  const years = endYear - startYear + 1;
+  const yMax = 900;
+  const benchmark = 810;
+
+  function xForYear(y) { return padL + ((y - startYear) / (years - 1)) * plotW; }
+  function yForVal(v) { return padT + (1 - v / yMax) * plotH; }
+
+  // Editable non-linear target checkpoints
+  let checkpoints = [
+    { year: 2021, val: 810, locked: true },
+    { year: 2025, val: 688, locked: false },
+    { year: 2029, val: 486, locked: false },
+    { year: 2033, val: 340, locked: false },
+    { year: 2038, val: 202, locked: true }
+  ];
+
+  // Actuals (past only, monthly-ish sampled to yearly)
+  const actuals = [
+    { year: 2021, val: 810 },
+    { year: 2022, val: 790 },
+    { year: 2023, val: 745 },
+    { year: 2024, val: 690 },
+    { year: 2025, val: 640 },
+    { year: 2026, val: 586 }
+  ];
+
+  function render() {
+    let svg = '';
+
+    // Y gridlines + labels
+    for (let i = 0; i <= 5; i++) {
+      const v = (yMax / 5) * i;
+      const y = yForVal(v);
+      svg += `<line x1="${padL}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="#111" stroke-opacity="0.06" stroke-width="0.5" />`;
+      svg += `<text x="${padL - 10}" y="${y + 4}" font-size="11" font-weight="500" fill="#111" text-anchor="end">${v}</text>`;
+    }
+
+    // X axis labels
+    for (let year = startYear; year <= endYear; year++) {
+      if (year % 3 === 0 || year === startYear || year === endYear) {
+        const x = xForYear(year);
+        svg += `<text x="${x}" y="${H - padB + 22}" font-size="11" font-weight="500" fill="#111" text-anchor="middle">${year}</text>`;
+      }
+    }
+
+    // Axis baselines
+    svg += `<line x1="${padL}" x2="${W - padR}" y1="${H - padB}" y2="${H - padB}" stroke="#111" stroke-width="1" />`;
+    svg += `<line x1="${padL}" x2="${padL}" y1="${padT}" y2="${H - padB}" stroke="#111" stroke-width="1" />`;
+
+    // Y axis label
+    svg += `<text transform="translate(24, ${padT + plotH / 2}) rotate(-90)" font-size="10" font-weight="600" fill="#111" text-anchor="middle" letter-spacing="0.12em">EMISSIONS · tCO₂e</text>`;
+
+    // "TODAY" marker
+    const todayYear = 2026;
+    const todayX = xForYear(todayYear);
+    svg += `<line x1="${todayX}" x2="${todayX}" y1="${padT}" y2="${H - padB}" stroke="#111" stroke-width="1" stroke-dasharray="2,4" stroke-opacity="0.5" />`;
+    svg += `<rect x="${todayX - 30}" y="${padT - 16}" width="60" height="20" fill="#111" rx="3" />`;
+    svg += `<text x="${todayX}" y="${padT - 2}" font-size="10" font-weight="700" fill="#fff" text-anchor="middle" letter-spacing="0.12em">TODAY</text>`;
+
+    // Variance band (±5%) around target path — subtle
+    let bandUpper = checkpoints.map(cp => ({ year: cp.year, val: cp.val * 1.05 }));
+    let bandLower = checkpoints.map(cp => ({ year: cp.year, val: cp.val * 0.95 }));
+    let bandD = 'M ' + bandUpper.map(p => `${xForYear(p.year)} ${yForVal(p.val)}`).join(' L ');
+    bandLower.slice().reverse().forEach(p => bandD += ` L ${xForYear(p.year)} ${yForVal(p.val)}`);
+    bandD += ' Z';
+    svg += `<path d="${bandD}" fill="#111" fill-opacity="0.04" stroke="none" />`;
+
+    // Fill under target path
+    const targetD = 'M ' + checkpoints.map(cp => `${xForYear(cp.year)} ${yForVal(cp.val)}`).join(' L ');
+    const areaD = targetD + ` L ${xForYear(endYear)} ${H - padB} L ${xForYear(startYear)} ${H - padB} Z`;
+    svg += `<path d="${areaD}" fill="#111" fill-opacity="0.025" stroke="none" />`;
+
+    // Target path line (dashed)
+    svg += `<path d="${targetD}" fill="none" stroke="#111" stroke-width="2.5" stroke-dasharray="6,5" stroke-linecap="round" stroke-linejoin="round" />`;
+
+    // Actuals path (solid, thick)
+    const actD = 'M ' + actuals.map(p => `${xForYear(p.year)} ${yForVal(p.val)}`).join(' L ');
+    svg += `<path d="${actD}" fill="none" stroke="#111" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />`;
+    actuals.forEach(p => {
+      svg += `<circle cx="${xForYear(p.year)}" cy="${yForVal(p.val)}" r="4" fill="#111" />`;
+    });
+
+    // Current position highlight
+    const last = actuals[actuals.length - 1];
+    const curX = xForYear(last.year);
+    const curY = yForVal(last.val);
+    svg += `<circle cx="${curX}" cy="${curY}" r="10" fill="none" stroke="#FF9800" stroke-width="2.5" />`;
+    // Target value at "today" for reference
+    const targetAtToday = interpolateTarget(todayYear);
+    const targetY = yForVal(targetAtToday);
+    svg += `<line x1="${curX}" x2="${curX}" y1="${targetY}" y2="${curY}" stroke="#FF9800" stroke-width="1.5" stroke-dasharray="2,3" />`;
+    svg += `<circle cx="${curX}" cy="${targetY}" r="3" fill="#FF9800" />`;
+
+    // Deviation label
+    const deltaPct = ((last.val - targetAtToday) / targetAtToday * 100).toFixed(1);
+    svg += `<rect x="${curX + 12}" y="${curY - 12}" width="62" height="24" fill="#FF9800" rx="4" />`;
+    svg += `<text x="${curX + 43}" y="${curY + 4}" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">+${deltaPct}%</text>`;
+
+    // Draggable checkpoints
+    checkpoints.forEach((cp, i) => {
+      const cx = xForYear(cp.year);
+      const cy = yForVal(cp.val);
+      // Hit target (invisible, large)
+      svg += `<circle cx="${cx}" cy="${cy}" r="14" fill="#fff" fill-opacity="0" class="checkpoint-hit" data-i="${i}" style="cursor: ${cp.locked ? 'not-allowed' : 'grab'}" />`;
+      if (cp.locked) {
+        svg += `<circle cx="${cx}" cy="${cy}" r="5" fill="#111" />`;
+      } else {
+        svg += `<circle cx="${cx}" cy="${cy}" r="7" fill="#fff" stroke="#111" stroke-width="2.5" class="checkpoint-visual" data-i="${i}" />`;
+        svg += `<circle cx="${cx}" cy="${cy}" r="2.5" fill="#111" />`;
+      }
+      // Label above checkpoint
+      if (!cp.locked) {
+        svg += `<rect x="${cx - 22}" y="${cy - 28}" width="44" height="18" fill="#111" rx="3" />`;
+        svg += `<text x="${cx}" y="${cy - 15}" font-size="10" font-weight="600" fill="#fff" text-anchor="middle">${Math.round(cp.val)}</text>`;
+      }
+    });
+
+    // Start & end labels
+    svg += `<text x="${xForYear(startYear)}" y="${yForVal(checkpoints[0].val) - 16}" font-size="10" font-weight="700" fill="#111" text-anchor="start" letter-spacing="0.06em">BENCHMARK 810</text>`;
+    svg += `<text x="${xForYear(endYear)}" y="${yForVal(checkpoints[checkpoints.length-1].val) - 16}" font-size="10" font-weight="700" fill="#111" text-anchor="end" letter-spacing="0.06em">TARGET 202</text>`;
+
+    svgEl.innerHTML = svg;
+  }
+
+  function interpolateTarget(year) {
+    for (let i = 0; i < checkpoints.length - 1; i++) {
+      const a = checkpoints[i];
+      const b = checkpoints[i + 1];
+      if (year >= a.year && year <= b.year) {
+        const t = (year - a.year) / (b.year - a.year);
+        return a.val + (b.val - a.val) * t;
+      }
+    }
+    return checkpoints[0].val;
+  }
+
+  render();
+
+  // Drag handlers
+  let dragging = null;
+  svgEl.addEventListener('mousedown', e => {
+    const hit = e.target.closest('.checkpoint-hit');
+    if (!hit) return;
+    const i = parseInt(hit.dataset.i, 10);
+    if (checkpoints[i].locked) return;
+    dragging = i;
+    document.body.style.cursor = 'grabbing';
+  });
+  svgEl.addEventListener('mousemove', e => {
+    if (dragging === null) return;
+    const rect = svgEl.getBoundingClientRect();
+    const scaleY = H / rect.height;
+    const svgY = (e.clientY - rect.top) * scaleY;
+    let val = yMax * (1 - (svgY - padT) / plotH);
+    val = Math.max(0, Math.min(yMax, val));
+    // constrain monotonic decreasing
+    if (dragging > 0) val = Math.min(val, checkpoints[dragging - 1].val);
+    if (dragging < checkpoints.length - 1) val = Math.max(val, checkpoints[dragging + 1].val);
+    checkpoints[dragging].val = val;
+    render();
+  });
+  document.addEventListener('mouseup', () => {
+    dragging = null;
+    document.body.style.cursor = '';
+  });
+})();
+
+/* ==========================================================
+   SWITCHER
+   ========================================================== */
+document.getElementById('switcherBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('switcher').classList.toggle('open');
+});
+document.addEventListener('click', () => {
+  document.getElementById('switcher').classList.remove('open');
+});
+document.querySelectorAll('.switcher-dropdown').forEach(d => {
+  d.addEventListener('click', e => e.stopPropagation());
+});
+
+/* ==========================================================
+   TOGGLE (M/Q/Y)
+   ========================================================== */
+document.querySelectorAll('.toggle-group').forEach(group => {
+  group.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      group.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+});
+
+/* ==========================================================
+   TABS
+   ========================================================== */
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

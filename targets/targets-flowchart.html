@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Targets V2 — Logic Flowchart</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+<style>
+:root {
+  --primary: #3F2A95;
+  --secondary: #111111;
+  --accent: #3185DA;
+  --highlight: #C04A74;
+  --total: #7F3A84;
+  --success: #63C73B;
+  --warning: #FF9800;
+  --alert: #DC2626;
+  --white: #ffffff;
+  --grey: #F5F5F5;
+  --font: 'Poppins', system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  background: var(--white);
+  color: var(--secondary);
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 48px;
+}
+.container { max-width: 1600px; margin: 0 auto; }
+
+/* ---------- HEADER ---------- */
+.page-header {
+  border-bottom: 1.5px solid var(--secondary);
+  padding-bottom: 32px;
+  margin-bottom: 48px;
+}
+.page-header .label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.page-header .meta {
+  font-size: 13px;
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+}
+.page-header .meta span { display: inline-flex; align-items: center; gap: 6px; }
+.page-header .meta .material-symbols-outlined { font-size: 16px; }
+
+/* ---------- INTRO ---------- */
+.intro {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 48px;
+  margin-bottom: 64px;
+}
+.intro p { font-size: 15px; line-height: 1.6; margin-bottom: 12px; }
+.principle-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 20px 24px;
+}
+.principle-card h3 {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+.principle-card ul { list-style: none; }
+.principle-card li {
+  padding: 8px 0;
+  font-size: 13px;
+  border-bottom: 1px solid var(--grey);
+}
+.principle-card li:last-child { border-bottom: none; }
+
+/* ---------- SECTION ---------- */
+.section { margin-bottom: 72px; }
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 32px;
+  border-bottom: 1.5px solid var(--secondary);
+}
+.section-header .num {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 10px;
+  background: var(--secondary);
+  color: var(--white);
+  border-radius: 4px;
+}
+.section-header h2 { font-size: 24px; font-weight: 700; }
+.section-header .tag {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 4px;
+}
+.section-description {
+  font-size: 14px;
+  color: var(--secondary);
+  margin-bottom: 32px;
+  max-width: 900px;
+}
+
+/* ---------- FLOW NODES ---------- */
+.node {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 14px 18px;
+  background: var(--white);
+  min-width: 180px;
+  position: relative;
+}
+.node .node-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.node .node-label .material-symbols-outlined { font-size: 14px; }
+.node .node-title { font-size: 14px; font-weight: 600; line-height: 1.3; }
+.node .node-detail { font-size: 12px; line-height: 1.4; margin-top: 6px; color: var(--secondary); }
+
+.node.user { }
+.node.user .node-label { color: var(--secondary); }
+.node.system { background: var(--grey); }
+.node.external { border-style: dashed; }
+.node.data { border-left: 6px solid var(--accent); padding-left: 16px; }
+.node.decision {
+  border: 1.5px solid var(--secondary);
+  background: var(--white);
+  text-align: center;
+}
+.node.decision .node-title { font-style: italic; }
+.node.start-end {
+  background: var(--secondary);
+  color: var(--white);
+  border-radius: 24px;
+  padding: 12px 20px;
+  min-width: 140px;
+  text-align: center;
+}
+.node.start-end .node-title { color: var(--white); font-size: 13px; }
+.node.state-good { border-left: 6px solid var(--success); padding-left: 16px; }
+.node.state-warn { border-left: 6px solid var(--warning); padding-left: 16px; }
+.node.state-alert { border-left: 6px solid var(--alert); padding-left: 16px; }
+.node.state-done { border-left: 6px solid var(--secondary); padding-left: 16px; background: var(--grey); }
+
+/* ---------- ARROWS ---------- */
+.arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--secondary);
+}
+.arrow-down, .arrow-right {
+  position: relative;
+}
+.arrow-down { width: 2px; height: 32px; background: var(--secondary); margin: 0 auto; }
+.arrow-down::after {
+  content: ''; position: absolute; bottom: -1px; left: 50%;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid var(--secondary);
+}
+.arrow-right { width: 40px; height: 2px; background: var(--secondary); align-self: center; flex-shrink: 0; }
+.arrow-right::after {
+  content: ''; position: absolute; right: -1px; top: 50%;
+  transform: translateY(-50%);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 8px solid var(--secondary);
+}
+
+/* ---------- FLOW LAYOUT: MASTER ---------- */
+.master-flow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 48px;
+}
+.master-flow .flow-step { display: flex; flex-direction: column; align-items: stretch; }
+.master-flow .flow-connector { display: flex; align-items: center; justify-content: center; }
+
+/* Branch layout */
+.branch-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 16px;
+}
+.branch-container > div { display: flex; flex-direction: column; gap: 16px; }
+
+/* Lifecycle states row */
+.lifecycle-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* ---------- DATA ARCHITECTURE ---------- */
+.data-arch {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+.arch-column {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.arch-column .col-header {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding-bottom: 12px;
+  border-bottom: 1.5px solid var(--secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.arch-column .col-header .material-symbols-outlined { font-size: 18px; }
+.arch-column .col-subhead { font-size: 11px; font-weight: 500; color: var(--secondary); margin-top: 4px; line-height: 1.4; }
+
+/* ---------- M&T INTEGRATION ---------- */
+.mt-flow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+.mt-col { display: flex; flex-direction: column; gap: 16px; }
+.mt-col .node { width: 100%; }
+
+.branch-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-top: 8px;
+}
+.branch-row .node { width: 100%; }
+
+/* ---------- RELATIONSHIP MODEL ---------- */
+.rel-proposal {
+  border: 2px solid var(--secondary);
+  border-radius: 8px;
+  padding: 24px;
+  background: var(--grey);
+  margin-bottom: 32px;
+}
+.rel-proposal .prop-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.rel-proposal h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.rel-proposal p { font-size: 14px; line-height: 1.6; max-width: 900px; }
+
+.rel-model {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  gap: 16px;
+  align-items: stretch;
+  margin-top: 24px;
+}
+.rel-entity {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 20px;
+  background: var(--white);
+}
+.rel-entity .entity-head {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding-bottom: 12px;
+  border-bottom: 1.5px solid var(--secondary);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.rel-entity .entity-head .material-symbols-outlined { font-size: 18px; }
+.rel-entity .entity-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.rel-entity .entity-sub {
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+.rel-entity .entity-props { display: flex; flex-direction: column; gap: 8px; }
+.rel-entity .entity-prop {
+  font-size: 13px;
+  padding: 8px 12px;
+  background: var(--grey);
+  border-radius: 4px;
+}
+.rel-entity .entity-prop strong { font-weight: 600; }
+
+.rel-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.rel-connector .rel-line {
+  width: 100%;
+  height: 2px;
+  background: var(--secondary);
+  position: relative;
+}
+.rel-connector .rel-line::before,
+.rel-connector .rel-line::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+}
+.rel-connector .rel-line::before {
+  left: -1px;
+  border-right: 8px solid var(--secondary);
+}
+.rel-connector .rel-line::after {
+  right: -1px;
+  border-left: 8px solid var(--secondary);
+}
+.rel-connector .rel-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--grey);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.rel-views {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 32px;
+}
+.rel-view-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 20px;
+}
+.rel-view-card .view-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.rel-view-card .view-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.rel-view-card .view-question {
+  font-size: 13px;
+  font-style: italic;
+  margin-bottom: 12px;
+}
+.rel-view-card .view-desc { font-size: 13px; line-height: 1.5; }
+
+.rel-alt-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 24px;
+}
+.rel-alt-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 16px 18px;
+  background: var(--white);
+  opacity: 0.65;
+}
+.rel-alt-card .alt-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+.rel-alt-card .alt-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.rel-alt-card .alt-reason { font-size: 12px; line-height: 1.4; }
+.rel-alt-card .alt-verdict {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--secondary);
+}
+
+/* ---------- DEPENDENCIES ---------- */
+.deps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.dep-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 20px;
+}
+.dep-card .dep-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.dep-card .dep-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.dep-card .dep-body { font-size: 13px; line-height: 1.5; }
+.dep-card .dep-status {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-top: 12px;
+}
+.dep-status.ready { background: rgba(99,199,59,0.15); color: var(--secondary); }
+.dep-status.partial { background: rgba(255,152,0,0.15); color: var(--secondary); }
+.dep-status.blocked { background: rgba(220,38,38,0.15); color: var(--secondary); }
+
+/* ---------- OPEN QUESTIONS ---------- */
+.questions-list { display: flex; flex-direction: column; gap: 12px; }
+.question {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 20px;
+  padding: 18px 20px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  align-items: center;
+}
+.question .q-num {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--secondary);
+}
+.question .q-body { font-size: 14px; line-height: 1.5; }
+.question .q-body strong { font-weight: 600; }
+.question .q-owner {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* ---------- CURRENT STATE CALLOUT ---------- */
+.current-state {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px;
+  align-items: start;
+}
+.current-state .cs-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 6px 12px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.current-state .cs-body { font-size: 13px; line-height: 1.55; }
+.current-state .cs-body strong { font-weight: 600; }
+
+/* ---------- LEGEND ---------- */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 20px 24px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  margin-bottom: 48px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+.legend-swatch {
+  width: 40px;
+  height: 28px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 4px;
+  background: var(--white);
+}
+.legend-swatch.system { background: var(--grey); }
+.legend-swatch.external { border-style: dashed; }
+.legend-swatch.data { border-left: 6px solid var(--accent); }
+.legend-swatch.start-end { background: var(--secondary); border-radius: 16px; }
+
+/* ---------- FOOTER ---------- */
+.page-footer {
+  margin-top: 72px;
+  padding-top: 32px;
+  border-top: 1.5px solid var(--secondary);
+  font-size: 12px;
+  color: var(--secondary);
+  display: flex;
+  justify-content: space-between;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <div class="label">TrueDI · Logic Flowchart</div>
+    <h1>Targets V2</h1>
+    <div style="font-size: 15px; font-weight: 400; max-width: 800px; margin-top: 8px;">
+      How targets work in V2 — lifecycle, live tracking, and the relationship to Strategy V2.
+    </div>
+    <div class="meta">
+      <span><span class="material-symbols-outlined">person</span>Mike Gammon · Lead Product Designer</span>
+      <span><span class="material-symbols-outlined">calendar_today</span>April 2026</span>
+      <span><span class="material-symbols-outlined">description</span>Companion to Strategy V2</span>
+    </div>
+  </header>
+
+  <!-- INTRO -->
+  <div class="intro">
+    <div>
+      <p style="font-size: 16px; font-weight: 500;">Targets V2 is the rework of the Targets page, designed alongside Strategy V2 as the other half of the same user loop — <em>set target → design strategy → track progress</em>. The current Targets page is lightweight: a form to create a target, a static reduction path chart, no actuals overlay, no connection to the strategies meant to deliver it, and only Carbon reduction targets.</p>
+      <p style="margin-top: 16px;">V2 closes those gaps and delivers against Otto's three Asana sub-tickets — <strong>multi-metric targets</strong> (Carbon, Energy, Cost), <strong>non-linear reduction pathways</strong> (checkpoints and curves, not just straight lines), and <strong>live progress tracking</strong> (M&amp;T actuals overlaid on the target path with variance states). The Target ↔ Strategy relationship is also made explicit — which is the core logic decision this flowchart exists to settle.</p>
+    </div>
+    <div class="principle-card">
+      <h3>Design principles</h3>
+      <ul>
+        <li>Multi-metric: Carbon · Energy · Cost</li>
+        <li>Trajectories can be non-linear</li>
+        <li>Same variance engine as Strategy V2</li>
+        <li>Live actuals, not static forecasts</li>
+        <li>Progress is the hero, not the form</li>
+        <li>Many-to-many with strategies</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CURRENT STATE -->
+  <div class="current-state">
+    <div class="cs-label">Current state · V1</div>
+    <div class="cs-body">
+      The V1 Targets page presents as a <strong>basic list + form</strong>: users define an aim, pick benchmark year, set scope and reduction %, and see a static projected reduction path. It works, but only supports <strong>Carbon targets</strong> (no Energy or Cost), only linear reduction paths, no live tracking, no variance states, no strategy linkage, and the chart uses teal/purple (not brand meter colours). It also only supports Draft/Live — no terminal states for achieved or missed targets. Targets V2 addresses all of these while reusing the same input fields.
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch start-end"></div>Start / end</div>
+    <div class="legend-item"><div class="legend-swatch"></div>User action</div>
+    <div class="legend-item"><div class="legend-swatch system"></div>System process</div>
+    <div class="legend-item"><div class="legend-swatch external"></div>External / API</div>
+    <div class="legend-item"><div class="legend-swatch data"></div>Data store / output</div>
+    <div class="legend-item"><span style="font-style: italic; font-size: 13px;">Decision point (italic label)</span></div>
+  </div>
+
+  <!-- SECTION 1: MASTER FLOW -->
+  <section class="section">
+    <div class="section-header">
+      <span class="num">1</span>
+      <h2>Master flow — user journey &amp; lifecycle</h2>
+      <span class="tag">Page-level logic</span>
+    </div>
+    <p class="section-description">
+      Entry point to outcome. A user lands on the Targets page, either creates or opens a target, sees target path overlaid with live actuals (inherited from linked strategies via M&amp;T), and the target lands in one of five lifecycle states. Terminal states (Achieved / Missed) only apply once the deadline passes.
+    </p>
+
+    <div class="master-flow">
+      <div class="flow-step">
+        <div class="node start-end"><div class="node-title">Enter Targets page</div></div>
+      </div>
+      <div class="flow-connector"><div class="arrow-right"></div></div>
+      <div class="flow-step">
+        <div class="node decision">
+          <div class="node-label"><span class="material-symbols-outlined">fork_right</span>Decision</div>
+          <div class="node-title">Create new or open existing?</div>
+        </div>
+      </div>
+      <div class="flow-connector"><div class="arrow-right"></div></div>
+      <div class="flow-step">
+        <div class="node user">
+          <div class="node-label"><span class="material-symbols-outlined">edit_note</span>User action</div>
+          <div class="node-title">Define or select</div>
+          <div class="node-detail">Metric · aim · benchmark · scope · deadline · %</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="branch-container">
+      <!-- Left branch: create -->
+      <div>
+        <div class="node" style="align-self:center;">
+          <div class="node-label"><span class="material-symbols-outlined">add_circle</span>Create path</div>
+          <div class="node-title">Build target</div>
+          <div class="node-detail">Metric (Carbon/Energy/Cost) · aim · benchmark · scope(s) · deadline · reduction % · trajectory mode</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node system">
+          <div class="node-label"><span class="material-symbols-outlined">settings</span>System</div>
+          <div class="node-title">Calculate target path</div>
+          <div class="node-detail">Monthly reduction curve from benchmark to deadline</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node data">
+          <div class="node-label"><span class="material-symbols-outlined">database</span>Data</div>
+          <div class="node-title">Persist target + path</div>
+        </div>
+      </div>
+
+      <!-- Right branch: open -->
+      <div>
+        <div class="node" style="align-self:center;">
+          <div class="node-label"><span class="material-symbols-outlined">visibility</span>View path</div>
+          <div class="node-title">Open target</div>
+          <div class="node-detail">Load saved target + live actuals</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node system">
+          <div class="node-label"><span class="material-symbols-outlined">sync</span>System</div>
+          <div class="node-title">Aggregate actuals from M&amp;T</div>
+          <div class="node-detail">Monthly emissions per scope · via linked strategies</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node data">
+          <div class="node-label"><span class="material-symbols-outlined">compare_arrows</span>Output</div>
+          <div class="node-title">Render path + actual overlay</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; justify-content:center; margin-top: 24px;">
+      <div class="arrow-down"></div>
+    </div>
+
+    <div class="node decision" style="max-width: 440px; margin: 0 auto;">
+      <div class="node-label" style="justify-content: center;"><span class="material-symbols-outlined">fork_right</span>Decision</div>
+      <div class="node-title">Determine lifecycle state</div>
+    </div>
+
+    <p class="section-description" style="margin-top: 32px; text-align: center;">
+      Five possible states. First three are active (deadline not passed); last two are terminal (deadline passed). State drives the visual treatment on the page and any notifications.
+    </p>
+
+    <div class="lifecycle-row">
+      <div class="node state-good">
+        <div class="node-label"><span class="material-symbols-outlined" style="color: var(--success);">check_circle</span>Active</div>
+        <div class="node-title">On Track</div>
+        <div class="node-detail">Actual ≤ target path · within ±5%</div>
+      </div>
+      <div class="node state-warn">
+        <div class="node-label"><span class="material-symbols-outlined" style="color: var(--warning);">warning</span>Active</div>
+        <div class="node-title">At Risk</div>
+        <div class="node-detail">Actual drifts above path · ±5–15%</div>
+      </div>
+      <div class="node state-alert">
+        <div class="node-label"><span class="material-symbols-outlined" style="color: var(--alert);">error</span>Active</div>
+        <div class="node-title">Off Track</div>
+        <div class="node-detail">Actual breaches threshold · &gt; ±15%</div>
+      </div>
+      <div class="node state-done">
+        <div class="node-label"><span class="material-symbols-outlined">task_alt</span>Terminal</div>
+        <div class="node-title">Achieved</div>
+        <div class="node-detail">Deadline passed · reduction met</div>
+      </div>
+      <div class="node state-done">
+        <div class="node-label"><span class="material-symbols-outlined">block</span>Terminal</div>
+        <div class="node-title">Missed</div>
+        <div class="node-detail">Deadline passed · reduction not met</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: DATA ARCHITECTURE -->
+  <section class="section">
+    <div class="section-header">
+      <span class="num">2</span>
+      <h2>Data architecture</h2>
+      <span class="tag">Inputs → Engine → Outputs</span>
+    </div>
+    <p class="section-description">
+      What feeds the page. Inputs come from the user and from the emissions / energy / cost data stores — depending on the target's metric. The path engine converts them into a reduction curve (linear, milestone, or curved). Actuals arrive from M&amp;T via linked strategies. Outputs drive the chart, KPIs, and lifecycle state.
+    </p>
+
+    <div class="data-arch">
+      <!-- Inputs -->
+      <div class="arch-column">
+        <div class="col-header"><span class="material-symbols-outlined">input</span>Inputs</div>
+        <div class="node" style="border-left: 6px solid var(--secondary); padding-left: 16px; background: var(--grey);">
+          <div class="node-title">Metric type</div>
+          <div class="node-detail">Carbon (tCO₂e) · Energy (kWh) · Cost (£) · chosen at creation</div>
+        </div>
+        <div class="node"><div class="node-title">Target aim</div><div class="node-detail">Freeform text · "Net Zero by 2038"</div></div>
+        <div class="node"><div class="node-title">Benchmark year</div><div class="node-detail">Baseline or nonbaseline period</div></div>
+        <div class="node"><div class="node-title">Scope(s)</div><div class="node-detail">1, 2, and/or 3 · carbon targets only</div></div>
+        <div class="node"><div class="node-title">Target deadline</div><div class="node-detail">Date user must hit reduction by</div></div>
+        <div class="node"><div class="node-title">Reduction %</div><div class="node-detail">vs benchmark value in the chosen metric</div></div>
+        <div class="node"><div class="node-title">Trajectory mode</div><div class="node-detail">Linear · milestones · curved</div></div>
+        <div class="node"><div class="node-title">Benchmark value</div><div class="node-detail">From emissions, energy, or cost store · per metric</div></div>
+      </div>
+
+      <!-- Engine -->
+      <div class="arch-column" style="background: var(--grey);">
+        <div class="col-header"><span class="material-symbols-outlined">memory</span>Path engine</div>
+        <div class="col-subhead">Metric-agnostic. Takes a benchmark + reduction % + trajectory mode, outputs a monthly curve. Shares variance engine with Strategy V2 — build once, reuse twice.</div>
+        <div class="node system" style="background:var(--white);">
+          <div class="node-label"><span class="material-symbols-outlined">calculate</span>Step 1</div>
+          <div class="node-title">Calc target end-state</div>
+          <div class="node-detail">Benchmark × (1 − reduction%) · in the target's metric unit</div>
+        </div>
+        <div class="node system" style="background:var(--white);">
+          <div class="node-label"><span class="material-symbols-outlined">calculate</span>Step 2</div>
+          <div class="node-title">Apply trajectory mode</div>
+          <div class="node-detail">Linear · milestones (user-placed checkpoints) · curved (front/back-loaded)</div>
+        </div>
+        <div class="node system" style="background:var(--white);">
+          <div class="node-label"><span class="material-symbols-outlined">calculate</span>Step 3</div>
+          <div class="node-title">Normalise to monthly</div>
+        </div>
+        <div class="node system" style="background:var(--white);">
+          <div class="node-label"><span class="material-symbols-outlined">calculate</span>Step 4</div>
+          <div class="node-title">Apply variance thresholds</div>
+          <div class="node-detail">±5% / ±15% · shared with Strategy V2</div>
+        </div>
+      </div>
+
+      <!-- Outputs -->
+      <div class="arch-column">
+        <div class="col-header"><span class="material-symbols-outlined">output</span>Outputs</div>
+        <div class="node data"><div class="node-title">Monthly target path</div><div class="node-detail">Units match metric: tCO₂e · kWh · £ per month</div></div>
+        <div class="node data"><div class="node-title">Annual milestones</div><div class="node-detail">Checkpoint values at each inflection point</div></div>
+        <div class="node data"><div class="node-title">Current-period target</div><div class="node-detail">Where user should be today, in chosen metric</div></div>
+        <div class="node data"><div class="node-title">Lifecycle state</div><div class="node-detail">On Track · At Risk · Off Track · Achieved · Missed</div></div>
+        <div class="node data" style="border-left-color: var(--highlight);">
+          <div class="node-title">Renders as reduction path chart</div>
+          <div class="node-detail">M/Q/Y toggle · draggable checkpoints · actual overlay</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: LIVE PROGRESS TRACKING -->
+  <section class="section">
+    <div class="section-header">
+      <span class="num">3</span>
+      <h2>Live progress tracking</h2>
+      <span class="tag">Retention loop</span>
+    </div>
+    <p class="section-description">
+      Same retention loop as Strategy V2, but with a branch at the source. The target's <strong>metric type</strong> determines where actuals come from — emissions data for Carbon targets, energy consumption for Energy targets, financial outputs for Cost targets. All three still flow through the same variance engine, producing one lifecycle state.
+    </p>
+
+    <div class="mt-flow">
+      <div class="mt-col">
+        <div class="node decision">
+          <div class="node-label" style="justify-content:center;"><span class="material-symbols-outlined">fork_right</span>Decision</div>
+          <div class="node-title">What's the target metric?</div>
+        </div>
+        <div class="branch-row">
+          <div class="node external">
+            <div class="node-label"><span class="material-symbols-outlined">eco</span>Carbon</div>
+            <div class="node-title">Emissions via strategies</div>
+            <div class="node-detail">Aggregated tCO₂e · M&amp;T-fed</div>
+          </div>
+          <div class="node external">
+            <div class="node-label"><span class="material-symbols-outlined">bolt</span>Energy</div>
+            <div class="node-title">Consumption via M&amp;T</div>
+            <div class="node-detail">kWh · direct meter data</div>
+          </div>
+          <div class="node external">
+            <div class="node-label"><span class="material-symbols-outlined">payments</span>Cost</div>
+            <div class="node-title">Financials via strategies</div>
+            <div class="node-detail">£ saved · from strategy outputs</div>
+          </div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node system">
+          <div class="node-label"><span class="material-symbols-outlined">sum</span>Aggregation</div>
+          <div class="node-title">Sum actuals for the metric</div>
+          <div class="node-detail">Monthly buckets · scope filter applies to Carbon only</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node data">
+          <div class="node-title">Actual series (per metric)</div>
+          <div class="node-detail">Monthly values in the target's unit</div>
+        </div>
+      </div>
+
+      <div class="mt-col">
+        <div class="node data">
+          <div class="node-title">Target path series</div>
+          <div class="node-detail">From path engine · dashed line · any metric</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node system">
+          <div class="node-label"><span class="material-symbols-outlined">compare_arrows</span>Compare</div>
+          <div class="node-title">Variance = actual − target</div>
+          <div class="node-detail">% delta per month · unit-agnostic comparison</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node decision">
+          <div class="node-label" style="justify-content:center;"><span class="material-symbols-outlined">fork_right</span>Decision</div>
+          <div class="node-title">Apply shared thresholds</div>
+        </div>
+        <div class="branch-row">
+          <div class="node state-good"><div class="node-title">≤ ±5%</div><div class="node-detail">On Track</div></div>
+          <div class="node state-warn"><div class="node-title">±5–15%</div><div class="node-detail">At Risk</div></div>
+          <div class="node state-alert"><div class="node-title">&gt; ±15%</div><div class="node-detail">Off Track</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: TARGET ↔ STRATEGY RELATIONSHIP -->
+  <section class="section">
+    <div class="section-header">
+      <span class="num">4</span>
+      <h2>Target ↔ Strategy relationship</h2>
+      <span class="tag">Key logic decision</span>
+    </div>
+    <p class="section-description">
+      The central question this flowchart exists to answer: how tightly should Targets and Strategies be bound in the UI? Four candidate models — tabs, separate pages deep-linked, target-centric, or strategy-centric — each implying a different data model and user flow.
+    </p>
+
+    <div class="rel-proposal">
+      <div class="prop-label">Proposal</div>
+      <h3>Separate pages, deep-linked, with many-to-many relationship</h3>
+      <p>
+        A target can be served by multiple strategies. A strategy can contribute to multiple targets. This is a many-to-many relationship, not a parent-child one — which rules out tabs (implies 1:1) and any owner-centric model (implies one-way hierarchy). Targets and Strategies stay as separate pages, each with its own purpose, linked by explicit references and a shared data layer (M&amp;T, variance engine, emissions baseline). The user's journey moves between them via deep links.
+      </p>
+    </div>
+
+    <div class="rel-model">
+      <div class="rel-entity">
+        <div class="entity-head"><span class="material-symbols-outlined">flag</span>Entity</div>
+        <div class="entity-title">Target</div>
+        <div class="entity-sub">The "where we're going"</div>
+        <div class="entity-props">
+          <div class="entity-prop"><strong>Aim:</strong> "Net Zero by 2038"</div>
+          <div class="entity-prop"><strong>Metric:</strong> Carbon · Energy · Cost</div>
+          <div class="entity-prop"><strong>Scope(s):</strong> 1, 2, or 3 (Carbon only)</div>
+          <div class="entity-prop"><strong>Deadline:</strong> date</div>
+          <div class="entity-prop"><strong>Reduction %:</strong> vs benchmark</div>
+          <div class="entity-prop"><strong>Trajectory:</strong> linear · milestones · curved</div>
+          <div class="entity-prop"><strong>State:</strong> On Track · At Risk · Off Track · Achieved · Missed</div>
+          <div class="entity-prop"><strong>Linked strategies:</strong> 0..N</div>
+        </div>
+      </div>
+
+      <div class="rel-connector">
+        <div class="rel-label">Many ↔ Many</div>
+        <div class="rel-line"></div>
+        <div class="rel-label">Metric match</div>
+      </div>
+
+      <div class="rel-entity">
+        <div class="entity-head"><span class="material-symbols-outlined">route</span>Entity</div>
+        <div class="entity-title">Strategy</div>
+        <div class="entity-sub">The "how we'll get there"</div>
+        <div class="entity-props">
+          <div class="entity-prop"><strong>Name:</strong> e.g. "Baseline 2026"</div>
+          <div class="entity-prop"><strong>Interventions:</strong> 0..N projects</div>
+          <div class="entity-prop"><strong>Horizon:</strong> user-defined</div>
+          <div class="entity-prop"><strong>Outputs:</strong> Carbon · Energy · Cost (all three)</div>
+          <div class="entity-prop"><strong>Forecast:</strong> from calc engine</div>
+          <div class="entity-prop"><strong>Actuals:</strong> live from M&amp;T</div>
+          <div class="entity-prop"><strong>Contributes to:</strong> 0..N targets</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rel-proposal" style="margin-top: 24px; background: var(--white);">
+      <div class="prop-label">Metric-matching rule</div>
+      <h3 style="font-size: 15px;">A strategy contributes to a target only if it produces that target's metric as an output.</h3>
+      <p style="font-size: 13px;">Strategies produce all three metrics by default — carbon impact, energy consumption change, and cost impact — so in practice any well-modelled strategy can contribute to any target metric. The rule matters at the edges: a strategy modelled only for cost savings (with no carbon impact) cannot contribute to a Carbon target. The UI should make this explicit when linking strategies.</p>
+    </div>
+
+    <div class="rel-views">
+      <div class="rel-view-card">
+        <div class="view-label">Targets page</div>
+        <div class="view-title">The progress dashboard</div>
+        <div class="view-question">"Am I on track?"</div>
+        <div class="view-desc">Shows every live target, its lifecycle state, aggregated actuals from linked strategies, and a deep link into the contributing strategies. Read-heavy. This is where a CSO / sustainability lead spends their time.</div>
+      </div>
+      <div class="rel-view-card">
+        <div class="view-label">Strategies page</div>
+        <div class="view-title">The design workspace</div>
+        <div class="view-question">"What am I doing?"</div>
+        <div class="view-desc">Build, compare, and iterate strategies. Each strategy surfaces the targets it contributes to as metadata. Interaction-heavy. This is where an energy/sustainability manager works day-to-day.</div>
+      </div>
+    </div>
+
+    <p class="section-description" style="margin-top: 40px;">
+      Alternatives considered and why they fall short:
+    </p>
+
+    <div class="rel-alt-list">
+      <div class="rel-alt-card">
+        <div class="alt-label">Alternative A</div>
+        <div class="alt-title">One page, tabs (Target | Strategy | Progress)</div>
+        <div class="alt-reason">Implies a 1:1 relationship between a single target and a single strategy. Breaks down the moment a company has multiple targets (2030 Scope 1&amp;2 plus 2038 Net Zero) served by overlapping strategies.</div>
+        <div class="alt-verdict">Rejected · doesn't model many-to-many</div>
+      </div>
+      <div class="rel-alt-card">
+        <div class="alt-label">Alternative B</div>
+        <div class="alt-title">Target-centric — strategies nest inside</div>
+        <div class="alt-reason">Targets "own" strategies. Works for simple cases but a strategy often contributes to several targets simultaneously — nesting forces duplication or arbitrary primary ownership.</div>
+        <div class="alt-verdict">Rejected · hierarchy is wrong shape</div>
+      </div>
+      <div class="rel-alt-card">
+        <div class="alt-label">Alternative C</div>
+        <div class="alt-title">Strategy-centric — targets nest inside</div>
+        <div class="alt-reason">Same problem inverted. A single target spanning multiple strategies can't be shown coherently if it lives under one strategy.</div>
+        <div class="alt-verdict">Rejected · hierarchy is wrong shape</div>
+      </div>
+      <div class="rel-alt-card">
+        <div class="alt-label">Alternative D</div>
+        <div class="alt-title">Merged single page — Targets &amp; Strategies combined</div>
+        <div class="alt-reason">Collapses two distinct user intents ("am I on track" vs "what am I doing") onto one screen. High information density, poor navigability at scale, doesn't match the Schemes-quality benchmark.</div>
+        <div class="alt-verdict">Rejected · conflates two jobs</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: DEPENDENCIES -->
+  <section class="section">
+    <div class="section-header">
+      <span class="num">5</span>
+      <h2>Dependencies</h2>
+      <span class="tag">What Targets V2 rests on</span>
+    </div>
+    <p class="section-description">
+      Most dependencies overlap with Strategy V2 — by design, since the pair share a variance engine, a data layer, and most of the M&amp;T plumbing. Strategy V2 is now itself an upstream dependency: the actuals Targets V2 displays are aggregated from linked strategies.
+    </p>
+
+    <div class="deps-grid">
+      <div class="dep-card">
+        <div class="dep-label">Dependency 1</div>
+        <div class="dep-title">Strategy V2</div>
+        <div class="dep-body">Targets V2 reads actuals from strategies that have contributed to them. Without Strategy V2's live tracking layer, there's no actual line to plot on the target path.</div>
+        <div class="dep-status partial">In flight · design review</div>
+      </div>
+      <div class="dep-card">
+        <div class="dep-label">Dependency 2</div>
+        <div class="dep-title">Shared variance engine</div>
+        <div class="dep-body">Target variance (actual vs target path) and Strategy variance (actual vs forecast) should run through one engine with one set of thresholds. Build once, used twice.</div>
+        <div class="dep-status partial">To align · Otto call</div>
+      </div>
+      <div class="dep-card">
+        <div class="dep-label">Dependency 3</div>
+        <div class="dep-title">M&amp;T API</div>
+        <div class="dep-body">Indirect — Targets V2 consumes M&amp;T data via linked strategies rather than directly. Still affected if coverage gaps exist at monthly granularity.</div>
+        <div class="dep-status partial">Partial · confirm coverage</div>
+      </div>
+      <div class="dep-card">
+        <div class="dep-label">Dependency 4</div>
+        <div class="dep-title">Scope 3 Foundational Update</div>
+        <div class="dep-body">If users can set Scope 3 targets before Scope 3 data quality is solid, the actuals side will be unreliable. Decision needed on whether to gate Scope 3 targets until the update ships.</div>
+        <div class="dep-status partial">Designed · gating TBC</div>
+      </div>
+      <div class="dep-card">
+        <div class="dep-label">Dependency 5</div>
+        <div class="dep-title">Emissions data store</div>
+        <div class="dep-body">Benchmark year selection relies on historical emissions being complete and reliable for the chosen period. Existing data model — no change expected.</div>
+        <div class="dep-status ready">In place</div>
+      </div>
+      <div class="dep-card">
+        <div class="dep-label">Dependency 6</div>
+        <div class="dep-title">Schemes UI pattern</div>
+        <div class="dep-body">Same design blueprint as Strategy V2. Monthly breakdown, stacked chart, M/Q/Y toggle, period controls — all inherited from the Schemes visual system.</div>
+        <div class="dep-status ready">Blueprint in place</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: OPEN QUESTIONS -->
+  <section class="section">
+    <div class="section-header">
+      <span class="num">6</span>
+      <h2>Open logic questions</h2>
+      <span class="tag">Resolve before wireframing</span>
+    </div>
+    <p class="section-description">
+      Eight questions to close before Targets V2 wireframes. Three of them overlap with the Strategy V2 open questions — worth resolving both in the same session with Otto to keep the pair consistent.
+    </p>
+
+    <div class="questions-list">
+      <div class="question">
+        <div class="q-num">1</div>
+        <div class="q-body"><strong>Strategy attribution</strong> — how does a strategy "contribute" to a target? Automatic via metric + scope overlap (any Scope 1 strategy with carbon outputs counts toward any Scope 1 Carbon target), or manual linking by the user? And how explicit should the metric-matching rule be in the UI?</div>
+        <div class="q-owner">Otto</div>
+      </div>
+      <div class="question">
+        <div class="q-num">2</div>
+        <div class="q-body"><strong>Multi-metric targets</strong> — can a single target span metrics (e.g. "reduce carbon 75% AND save £2M by 2038"), or is each target strictly one metric? Simpler to keep them separate; but some sustainability reporting expects combined commitments.</div>
+        <div class="q-owner">Otto · Rochelle</div>
+      </div>
+      <div class="question">
+        <div class="q-num">3</div>
+        <div class="q-body"><strong>Sub-targets / milestones</strong> — should a target support nested sub-targets (e.g. "50% by 2030" sitting inside "Net Zero by 2038")? Or are they treated as separate targets that happen to share a theme? SBTi-aligned reporting may push us toward explicit sub-targets.</div>
+        <div class="q-owner">Otto · Rochelle</div>
+      </div>
+      <div class="question">
+        <div class="q-num">4</div>
+        <div class="q-body"><strong>Trajectory modes</strong> — how many do we offer? Linear is simplest. Milestones (user-placed checkpoints) reflects real projects. Curved (front- or back-loaded) models realistic decarbonisation. Ship all three from day one, or start with linear + milestones?</div>
+        <div class="q-owner">Otto</div>
+      </div>
+      <div class="question">
+        <div class="q-num">5</div>
+        <div class="q-body"><strong>Achieved / Missed UX</strong> — when a target resolves to a terminal state, does it archive automatically, stay visible indefinitely, or prompt the user to create a successor target? CSRD audit trail implications either way.</div>
+        <div class="q-owner">Rochelle</div>
+      </div>
+      <div class="question">
+        <div class="q-num">6</div>
+        <div class="q-body"><strong>Scope 3 gating</strong> — do we allow users to set Scope 3 Carbon targets now, before the Scope 3 Foundational Update is built? Actuals would be unreliable but users may still want to declare intent.</div>
+        <div class="q-owner">Otto</div>
+      </div>
+      <div class="question">
+        <div class="q-num">7</div>
+        <div class="q-body"><strong>Variance thresholds</strong> — inherited from Strategy V2. Platform defaults (±5% / ±15%), customer-configurable, or per-target override? Answer should be the same for both Targets and Strategy.</div>
+        <div class="q-owner">Otto</div>
+      </div>
+      <div class="question">
+        <div class="q-num">8</div>
+        <div class="q-body"><strong>Alert delivery</strong> — also inherited from Strategy V2. If a target drifts to At Risk / Off Track, do we notify externally (email / Teams) or surface only in-platform? Tie-in with Client Notifications.</div>
+        <div class="q-owner">Otto · Rochelle</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    <div>Targets V2 · Logic Flowchart · v2 · multi-metric + non-linear threaded through</div>
+    <div>TrueDI — Control. Clarity. Confidence.</div>
+  </footer>
+
+</div>
+</body>
+</html>
