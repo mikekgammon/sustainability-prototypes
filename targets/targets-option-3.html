@@ -1,0 +1,2377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Targets V2 — Combined</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+<style>
+:root {
+  --primary: #3F2A95;
+  --secondary: #111111;
+  --accent: #3185DA;
+  --highlight: #C04A74;
+  --total: #7F3A84;
+  --success: #63C73B;
+  --warning: #FF9800;
+  --alert: #DC2626;
+  --white: #ffffff;
+  --grey: #F5F5F5;
+  --font: 'Poppins', system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  background: var(--white);
+  color: var(--secondary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.app { max-width: 1440px; margin: 0 auto; padding: 32px 48px 80px; }
+
+/* ---------- VIEW SWITCHING ---------- */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ---------- VERSION BANNER ---------- */
+.version-banner {
+  background: var(--grey);
+  border-left: 4px solid var(--secondary);
+  padding: 14px 20px;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.version-banner-main { font-size: 13px; font-weight: 500; }
+.version-banner-main strong { font-weight: 700; }
+.version-banner-meta {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ---------- TAB NAV ---------- */
+.tabs {
+  display: flex;
+  gap: 40px;
+  border-bottom: 1.5px solid var(--secondary);
+  margin-bottom: 40px;
+}
+.tab {
+  padding: 16px 2px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  cursor: pointer;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1.5px;
+  transition: opacity 150ms ease-out, border-bottom-color 150ms ease-out;
+  background: transparent;
+  font-family: var(--font);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.tab.active { border-bottom-color: var(--secondary); }
+.tab:not(.active):hover { opacity: 0.6; }
+
+/* ---------- BREADCRUMB / BACK ---------- */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.breadcrumb a {
+  color: var(--secondary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep { opacity: 0.4; }
+.breadcrumb .material-symbols-outlined { font-size: 16px; }
+
+/* ---------- BUTTONS ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  border: 1.5px solid var(--secondary);
+  border-radius: 6px;
+  cursor: pointer;
+  background: var(--white);
+  color: var(--secondary);
+  text-decoration: none;
+  transition: background 150ms ease-out, opacity 150ms ease-out;
+}
+.btn:hover { background: var(--grey); }
+.btn .material-symbols-outlined { font-size: 18px; }
+.btn-primary { background: var(--secondary); color: var(--white); }
+.btn-primary:hover { background: var(--secondary); opacity: 0.85; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+
+/* ---------- COMMON: STATUS PILLS ---------- */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.status-pill .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.status-pill.on-track { background: rgba(99,199,59,0.12); }
+.status-pill.on-track .dot { background: var(--success); }
+.status-pill.at-risk { background: rgba(255,152,0,0.12); }
+.status-pill.at-risk .dot { background: var(--warning); }
+.status-pill.off-track { background: rgba(220,38,38,0.12); }
+.status-pill.off-track .dot { background: var(--alert); }
+.status-pill.draft { background: var(--grey); }
+.status-pill.draft .dot { background: var(--secondary); }
+.status-pill.achieved { background: var(--grey); }
+.status-pill.achieved .dot { background: var(--secondary); }
+
+/* ---------- METRIC PILL ---------- */
+.metric-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px 4px 8px;
+  border-radius: 999px;
+  background: var(--secondary);
+  color: var(--white);
+  white-space: nowrap;
+}
+.metric-pill .material-symbols-outlined {
+  font-size: 14px;
+  line-height: 1;
+}
+/* Legacy class kept for any inline use elsewhere */
+.metric-ribbon {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: var(--secondary);
+  color: var(--white);
+}
+
+/* ============================================================
+   VIEW 1 — TARGETS LIST (Asana-inspired)
+   ============================================================ */
+
+.list-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 32px;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.list-title-block { max-width: 720px; }
+.list-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+.list-title {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+.list-sub { font-size: 14px; line-height: 1.5; }
+
+/* Filters bar */
+.filters-bar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 0;
+  border-bottom: 1.5px solid var(--secondary);
+  margin-bottom: 0;
+  flex-wrap: wrap;
+}
+.filter-group { display: flex; align-items: center; gap: 10px; }
+.filter-group-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.chip-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 999px;
+  cursor: pointer;
+  background: var(--white);
+  color: var(--secondary);
+  transition: background 150ms ease-out;
+  font-family: var(--font);
+}
+.chip:hover { background: var(--grey); }
+.chip.selected { background: var(--secondary); color: var(--white); }
+.chip .material-symbols-outlined { font-size: 14px; }
+.filters-spacer { flex: 1; }
+.search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.search-wrap .material-symbols-outlined {
+  position: absolute;
+  left: 10px;
+  font-size: 18px;
+  pointer-events: none;
+}
+.search-input {
+  border: 1.5px solid var(--secondary);
+  border-radius: 6px;
+  padding: 8px 12px 8px 34px;
+  font-family: var(--font);
+  font-size: 13px;
+  background: var(--white);
+  color: var(--secondary);
+  width: 220px;
+}
+.search-input:focus { outline: 2px solid var(--secondary); outline-offset: 2px; }
+
+/* List table */
+.targets-list {
+  width: 100%;
+  border-collapse: collapse;
+}
+.targets-list thead th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 14px 16px;
+  border-bottom: 1.5px solid var(--secondary);
+  background: var(--white);
+  position: relative;
+}
+.targets-list thead th.col-active { width: 90px; text-align: center; }
+.targets-list thead th.col-actions { width: 48px; }
+
+/* Filterable column header */
+.col-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 8px;
+  margin: -4px -8px;
+  border-radius: 4px;
+  transition: background 150ms ease-out;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+}
+.col-filter:hover { background: var(--grey); }
+.col-filter .chevron {
+  font-size: 16px;
+  opacity: 0.5;
+  transition: opacity 150ms ease-out, transform 200ms ease-out;
+}
+.col-filter:hover .chevron,
+.col-filter.open .chevron,
+.col-filter.has-filter .chevron { opacity: 1; }
+.col-filter.open .chevron { transform: rotate(180deg); }
+.col-filter.has-filter::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--secondary);
+  display: inline-block;
+  margin-left: 2px;
+}
+
+.col-popover {
+  display: none;
+  position: absolute;
+  top: calc(100% - 1px);
+  left: 8px;
+  background: var(--white);
+  border: 1.5px solid var(--secondary);
+  border-radius: 6px;
+  padding: 14px 16px;
+  z-index: 30;
+  min-width: 220px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.col-filter.open + .col-popover { display: block; }
+.col-popover .popover-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+.col-popover .chip-row { gap: 6px; }
+.col-popover .chip {
+  font-size: 12px;
+  padding: 5px 10px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+
+.target-row {
+  border-bottom: 1px solid var(--grey);
+  cursor: pointer;
+  transition: background 150ms ease-out;
+}
+.target-row:hover { background: var(--grey); }
+.target-row td {
+  padding: 18px 16px;
+  vertical-align: middle;
+  font-size: 14px;
+}
+.target-row td.col-active { text-align: center; }
+
+.target-name-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.target-name {
+  font-weight: 600;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.target-name-meta {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.target-name-meta span { display: inline-flex; align-items: center; gap: 4px; }
+.target-name-meta .material-symbols-outlined { font-size: 14px; }
+
+/* Active toggle (key Otto requirement: multi-active support) */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 22px;
+}
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  background: var(--white);
+  border: 1.5px solid var(--secondary);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 150ms ease-out;
+}
+.toggle-track::before {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  left: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--secondary);
+  border-radius: 50%;
+  transition: transform 150ms ease-out, background 150ms ease-out;
+}
+.toggle-switch input:checked + .toggle-track { background: var(--secondary); }
+.toggle-switch input:checked + .toggle-track::before {
+  background: var(--white);
+  transform: translate(16px, -50%);
+}
+
+/* Mini progress bar in list */
+.mini-progress { width: 100%; max-width: 140px; }
+.mini-progress-track {
+  width: 100%;
+  height: 6px;
+  background: var(--grey);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.mini-progress-fill {
+  height: 100%;
+  background: var(--secondary);
+  border-radius: 999px;
+}
+.mini-progress-fill.on-track { background: var(--success); }
+.mini-progress-fill.at-risk { background: var(--warning); }
+.mini-progress-fill.off-track { background: var(--alert); }
+.mini-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* Action menu */
+.action-wrapper { position: relative; }
+.actions-btn {
+  background: none;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 4px;
+  color: var(--secondary);
+}
+.actions-btn:hover { background: var(--grey); }
+.actions-btn .material-symbols-outlined { font-size: 20px; }
+.action-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  background: var(--white);
+  border: 1.5px solid var(--secondary);
+  border-radius: 6px;
+  min-width: 180px;
+  z-index: 10;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+.action-wrapper.open .action-menu { display: block; }
+.action-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.action-menu-item:hover { background: var(--grey); }
+.action-menu-item .material-symbols-outlined { font-size: 16px; }
+
+.list-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0;
+  margin-top: 32px;
+  font-size: 12px;
+}
+
+/* ============================================================
+   VIEW 2 — TARGET COCKPIT
+   ============================================================ */
+
+/* Mode-based visibility (Live vs Scenario) */
+[data-mode="scenario"] .live-only { display: none !important; }
+[data-mode="live"] .scenario-only { display: none !important; }
+
+/* Mode toggle */
+.mode-toggle {
+  display: inline-flex;
+  border: 1.5px solid var(--secondary);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.mode-toggle-btn {
+  background: var(--white);
+  border: none;
+  padding: 8px 14px;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  color: var(--secondary);
+  border-right: 1.5px solid var(--secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.mode-toggle-btn:last-child { border-right: none; }
+.mode-toggle-btn .material-symbols-outlined { font-size: 16px; }
+.mode-toggle-btn.active { background: var(--secondary); color: var(--white); }
+.mode-toggle-btn:not(.active):hover { background: var(--grey); }
+
+.cockpit-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1.5px solid var(--secondary);
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.cockpit-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cockpit-title {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+.cockpit-sub {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.cockpit-sub-item { display: inline-flex; align-items: center; gap: 6px; }
+.cockpit-sub-item .material-symbols-outlined { font-size: 16px; }
+
+.cockpit-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Active marker (replaces old switcher — Otto wants explicit active state) */
+.active-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--secondary);
+  color: var(--white);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.active-badge .live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: livePulse 2s ease-out infinite;
+}
+@keyframes livePulse {
+  0% { box-shadow: 0 0 0 0 rgba(99, 199, 59, 0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(99, 199, 59, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(99, 199, 59, 0); }
+}
+
+/* HERO: chart + status rail */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 32px;
+  margin-bottom: 48px;
+}
+.hero-chart-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 24px;
+  background: var(--white);
+}
+.hero-chart-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.chart-title-block .chart-title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.chart-title-block .chart-subtitle {
+  font-size: 12px;
+  margin-top: 2px;
+}
+.toggle-group {
+  display: inline-flex;
+  border: 1.5px solid var(--secondary);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--white);
+}
+.toggle-group button {
+  background: var(--white);
+  border: none;
+  padding: 6px 12px;
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  color: var(--secondary);
+  border-right: 1.5px solid var(--secondary);
+}
+.toggle-group button:last-child { border-right: none; }
+.toggle-group button.active { background: var(--secondary); color: var(--white); }
+.toggle-group button:not(.active):hover { background: var(--grey); }
+
+.hero-chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.hero-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  padding-top: 16px;
+  margin-top: 8px;
+  border-top: 1px solid var(--grey);
+  font-size: 11px;
+  font-weight: 500;
+}
+.legend-item { display: inline-flex; align-items: center; gap: 6px; }
+.legend-swatch {
+  width: 18px;
+  height: 2.5px;
+  background: var(--secondary);
+  display: inline-block;
+}
+.legend-swatch.dashed {
+  background: linear-gradient(to right, var(--secondary) 50%, transparent 50%);
+  background-size: 6px 100%;
+  background-repeat: repeat-x;
+}
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Status rail */
+.status-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.status-hero {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 20px 22px;
+}
+.status-hero.at-risk {
+  background: rgba(255, 152, 0, 0.1);
+  border-color: var(--warning);
+}
+.status-hero.on-track {
+  background: rgba(99, 199, 59, 0.1);
+  border-color: var(--success);
+}
+.status-hero.off-track {
+  background: rgba(220, 38, 38, 0.1);
+  border-color: var(--alert);
+}
+.status-hero-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.status-hero-state {
+  font-size: 26px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+.status-hero-state .status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--warning);
+}
+.status-hero.on-track .status-dot { background: var(--success); }
+.status-hero.off-track .status-dot { background: var(--alert); }
+.status-hero-delta {
+  font-size: 13px;
+  line-height: 1.5;
+}
+.status-hero-delta strong { font-weight: 700; }
+
+/* Stat grid */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.stat-tile {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.stat-tile.full {
+  grid-column: span 2;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.stat-tile-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.stat-tile-label .info-icon {
+  font-size: 13px;
+  cursor: help;
+  opacity: 0.6;
+}
+.stat-tile-value {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.stat-tile-value .unit {
+  font-size: 11px;
+  font-weight: 500;
+  margin-left: 4px;
+  letter-spacing: 0.04em;
+}
+.stat-tile-sub {
+  font-size: 11px;
+  margin-top: 4px;
+}
+.progress-ring-text { flex: 1; }
+
+/* Next checkpoint */
+.milestone-tile {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 16px 18px;
+  background: var(--secondary);
+  color: var(--white);
+}
+.milestone-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.milestone-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.milestone-date {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+}
+.milestone-value { font-size: 16px; font-weight: 700; line-height: 1.3; }
+.milestone-sub { font-size: 11px; margin-top: 4px; opacity: 0.8; }
+
+/* ---------- ACTION GAP (NEW for Otto's tie-back-to-action ask) ---------- */
+.action-gap-section {
+  margin-bottom: 48px;
+}
+.section-head-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1.5px solid var(--secondary);
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.section-head-row h2 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-head-row .count {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 10px;
+  background: var(--grey);
+  border-radius: 999px;
+}
+.section-head-sub { font-size: 12px; }
+
+.gap-list { display: flex; flex-direction: column; gap: 12px; }
+.gap-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 20px;
+  padding: 16px 20px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  align-items: center;
+}
+.gap-item.warning {
+  background: rgba(255, 152, 0, 0.1);
+  border-color: var(--warning);
+}
+.gap-item.alert {
+  background: rgba(220, 38, 38, 0.1);
+  border-color: var(--alert);
+}
+.gap-item.ok {
+  background: rgba(99, 199, 59, 0.1);
+  border-color: var(--success);
+}
+
+.gap-checkpoint {
+  text-align: center;
+  min-width: 60px;
+}
+.gap-checkpoint-year {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+.gap-checkpoint-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+}
+.gap-body strong { font-weight: 700; }
+.gap-body { font-size: 14px; line-height: 1.5; }
+.gap-body-sub {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* ---------- LINKED STRATEGIES ---------- */
+.linked-section { margin-bottom: 48px; }
+.linked-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+.linked-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.linked-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+.linked-card-title { font-size: 15px; font-weight: 700; line-height: 1.3; }
+.linked-card-meta-line { font-size: 12px; }
+.linked-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--grey);
+  font-size: 12px;
+}
+.linked-card-footer strong { font-weight: 700; }
+.linked-card-footer a {
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.linked-card-footer a:hover { text-decoration: underline; }
+.linked-card.add-card {
+  border-style: dashed;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 140px;
+}
+.linked-card.add-card:hover { background: var(--grey); }
+
+/* ---------- THIS MONTH SAVINGS BANNER (Otto: "Is that current carbon saving this month?") ---------- */
+.savings-banner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5px;
+  background: var(--secondary);
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 48px;
+}
+.savings-cell {
+  background: var(--white);
+  padding: 20px 24px;
+}
+.savings-cell-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.savings-cell-label .material-symbols-outlined { font-size: 16px; }
+.savings-cell-value {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.savings-cell-value .unit {
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 4px;
+}
+.savings-cell-sub {
+  font-size: 11px;
+  margin-top: 4px;
+}
+.savings-cell-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 600;
+}
+.trend-down { color: var(--success); }
+.trend-up { color: var(--alert); }
+
+/* ============================================================
+   VIEW 3 — SCENARIO PLANNER (sandbox)
+   ============================================================ */
+
+.sandbox-banner {
+  background: rgba(255, 152, 0, 0.1);
+  border: 1.5px solid var(--warning);
+  color: var(--secondary);
+  padding: 18px 24px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 48px;
+  flex-wrap: wrap;
+}
+.sandbox-banner-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.sandbox-banner-main .material-symbols-outlined {
+  font-size: 28px;
+  padding: 8px;
+  background: var(--warning);
+  color: var(--white);
+  border-radius: 6px;
+}
+.sandbox-banner-title { font-size: 15px; font-weight: 700; }
+.sandbox-banner-sub { font-size: 12px; margin-top: 2px; }
+.sandbox-banner-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.planner-head {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1.5px solid var(--secondary);
+}
+.planner-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.planner-title {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+.planner-sub { font-size: 14px; max-width: 760px; }
+
+/* Planner layout: trajectory left, controls right */
+.planner-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 32px;
+  margin-bottom: 48px;
+}
+
+.traj-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 24px;
+}
+.traj-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.traj-mode-group {
+  display: inline-flex;
+  border: 1.5px solid var(--secondary);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.traj-mode {
+  background: var(--white);
+  border: none;
+  padding: 7px 14px;
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  color: var(--secondary);
+  border-right: 1.5px solid var(--secondary);
+}
+.traj-mode:last-child { border-right: none; }
+.traj-mode.active { background: var(--secondary); color: var(--white); }
+.traj-mode:not(.active):hover { background: var(--grey); }
+
+.drag-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  background: var(--grey);
+  border-radius: 4px;
+}
+.drag-hint .material-symbols-outlined { font-size: 16px; }
+
+#trajSvg { width: 100%; height: auto; user-select: none; }
+
+/* Right column: settings */
+.planner-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.settings-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 18px 20px;
+}
+.settings-card-head {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding-bottom: 10px;
+  border-bottom: 1.5px solid var(--secondary);
+  margin-bottom: 14px;
+}
+.field { margin-bottom: 14px; }
+.field:last-child { margin-bottom: 0; }
+.field-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+  display: block;
+}
+.field-input,
+.field-select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 6px;
+  font-family: var(--font);
+  font-size: 13px;
+  background: var(--white);
+  color: var(--secondary);
+}
+.field-row { display: flex; gap: 10px; }
+.field-row > * { flex: 1; }
+
+/* Picker cards (for baseline/metric quick selection) */
+.pick-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+}
+.pick-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 6px;
+  padding: 10px 8px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  transition: background 150ms ease-out;
+}
+.pick-card:hover { background: var(--grey); }
+.pick-card.selected { background: var(--secondary); color: var(--white); }
+.pick-card .material-symbols-outlined { font-size: 18px; display: block; margin: 0 auto 4px; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.back-to-map-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 32px 24px 0;
+  margin-top: 32px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1100px) {
+  .hero { grid-template-columns: 1fr; }
+  .planner-grid { grid-template-columns: 1fr; }
+  .savings-banner { grid-template-columns: 1fr; }
+  .savings-banner > div + div { border-top: 1.5px solid var(--secondary); }
+}
+@media (max-width: 700px) {
+  .app { padding: 24px 20px 60px; }
+  .cockpit-title, .planner-title, .list-title { font-size: 28px; }
+  .targets-list thead th.col-progress,
+  .targets-list td.col-progress { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Version banner -->
+  <div class="version-banner">
+    <div class="version-banner-main"><strong>Targets V2 · Combined</strong> — list of all targets, with a unified cockpit that flips between Live tracking and Scenario planning on the same page.</div>
+    <div class="version-banner-meta">v4 · Mike Gammon</div>
+  </div>
+
+  <!-- Tab nav (constant) -->
+  <nav class="tabs">
+    <button class="tab" type="button">Overview</button>
+    <button class="tab active" type="button">Targets</button>
+    <button class="tab" type="button">Emissions</button>
+  </nav>
+
+  <!-- ============================================================
+       VIEW 1 — TARGETS LIST
+       ============================================================ -->
+  <div class="view active" id="viewList">
+
+    <!-- Header -->
+    <div class="list-head">
+      <div class="list-title-block">
+        <div class="list-eyebrow">All targets</div>
+        <h1 class="list-title">Targets</h1>
+        <p class="list-sub">Set targets to give your strategies a goal to work toward, and track progress live as M&amp;T data comes in. You can have multiple active targets at once — toggle the <strong>Active</strong> switch to mark a target for live tracking.</p>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <button class="btn btn-primary" id="newTargetBtn" type="button">
+          <span class="material-symbols-outlined">add</span>New target
+        </button>
+      </div>
+    </div>
+
+    <!-- Search row (filters now live in column headers) -->
+    <div class="filters-bar">
+      <div style="font-size: 12px; font-weight: 500;">Click <span class="material-symbols-outlined" style="font-size:14px; vertical-align:middle;">expand_more</span> on any column header to filter</div>
+      <div class="filters-spacer"></div>
+      <div class="search-wrap">
+        <span class="material-symbols-outlined">search</span>
+        <input type="text" class="search-input" placeholder="Search targets...">
+      </div>
+    </div>
+
+    <!-- List table -->
+    <table class="targets-list">
+      <thead>
+        <tr>
+          <th>Target</th>
+          <th>
+            <button class="col-filter" type="button" data-col-filter>
+              Metric
+              <span class="material-symbols-outlined chevron">expand_more</span>
+            </button>
+            <div class="col-popover">
+              <div class="popover-label">Filter by metric</div>
+              <div class="chip-row" data-filter-group="metric">
+                <button class="chip selected" type="button">All</button>
+                <button class="chip" type="button"><span class="material-symbols-outlined">eco</span>Carbon</button>
+                <button class="chip" type="button"><span class="material-symbols-outlined">bolt</span>Energy</button>
+                <button class="chip" type="button"><span class="material-symbols-outlined">payments</span>Cost</button>
+              </div>
+            </div>
+          </th>
+          <th>
+            <button class="col-filter" type="button" data-col-filter>
+              State
+              <span class="material-symbols-outlined chevron">expand_more</span>
+            </button>
+            <div class="col-popover">
+              <div class="popover-label">Filter by state</div>
+              <div class="chip-row" data-filter-group="state">
+                <button class="chip selected" type="button">All</button>
+                <button class="chip" type="button">Active</button>
+                <button class="chip" type="button">Draft</button>
+                <button class="chip" type="button">Achieved</button>
+              </div>
+            </div>
+          </th>
+          <th class="col-progress">Progress</th>
+          <th>Deadline</th>
+          <th class="col-active">Active</th>
+          <th class="col-actions"></th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr class="target-row" data-target="Net Zero by 2038">
+          <td>
+            <div class="target-name-cell">
+              <div class="target-name">Net Zero by 2038</div>
+              <div class="target-name-meta">
+                <span><span class="material-symbols-outlined">layers</span>All Scopes</span>
+                <span><span class="material-symbols-outlined">trending_down</span>75% reduction vs 2021/22</span>
+                <span><span class="material-symbols-outlined">link</span>3 strategies</span>
+              </div>
+            </div>
+          </td>
+          <td><span class="metric-pill"><span class="material-symbols-outlined">eco</span>Carbon</span></td>
+          <td><span class="status-pill at-risk"><span class="dot"></span>At Risk</span></td>
+          <td class="col-progress">
+            <div class="mini-progress">
+              <div class="mini-progress-track"><div class="mini-progress-fill at-risk" style="width: 28%;"></div></div>
+              <div class="mini-progress-label"><span>28% reduced</span><span>11.9 yr</span></div>
+            </div>
+          </td>
+          <td>31 Mar 2038</td>
+          <td class="col-active">
+            <label class="toggle-switch">
+              <input type="checkbox" checked>
+              <span class="toggle-track"></span>
+            </label>
+          </td>
+          <td class="col-actions">
+            <div class="action-wrapper">
+              <button class="actions-btn" data-menu-toggle type="button"><span class="material-symbols-outlined">more_vert</span></button>
+              <div class="action-menu">
+                <div class="action-menu-item" data-action="cockpit"><span class="material-symbols-outlined">visibility</span>Open cockpit</div>
+                <div class="action-menu-item" data-action="sandbox"><span class="material-symbols-outlined">science</span>Open scenario planner</div>
+                <div class="action-menu-item" data-action="duplicate"><span class="material-symbols-outlined">content_copy</span>Duplicate</div>
+                <div class="action-menu-item" data-action="archive"><span class="material-symbols-outlined">archive</span>Archive</div>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <tr class="target-row" data-target="Net Zero Scope 1 & 2 by 2030">
+          <td>
+            <div class="target-name-cell">
+              <div class="target-name">Net Zero Scope 1 &amp; 2 by 2030</div>
+              <div class="target-name-meta">
+                <span><span class="material-symbols-outlined">layers</span>Scopes 1&amp;2</span>
+                <span><span class="material-symbols-outlined">trending_down</span>100% reduction</span>
+                <span><span class="material-symbols-outlined">link</span>2 strategies</span>
+              </div>
+            </div>
+          </td>
+          <td><span class="metric-pill"><span class="material-symbols-outlined">eco</span>Carbon</span></td>
+          <td><span class="status-pill on-track"><span class="dot"></span>On Track</span></td>
+          <td class="col-progress">
+            <div class="mini-progress">
+              <div class="mini-progress-track"><div class="mini-progress-fill on-track" style="width: 47%;"></div></div>
+              <div class="mini-progress-label"><span>47% reduced</span><span>3.9 yr</span></div>
+            </div>
+          </td>
+          <td>01 Mar 2030</td>
+          <td class="col-active">
+            <label class="toggle-switch">
+              <input type="checkbox" checked>
+              <span class="toggle-track"></span>
+            </label>
+          </td>
+          <td class="col-actions">
+            <div class="action-wrapper">
+              <button class="actions-btn" data-menu-toggle type="button"><span class="material-symbols-outlined">more_vert</span></button>
+              <div class="action-menu">
+                <div class="action-menu-item" data-action="cockpit"><span class="material-symbols-outlined">visibility</span>Open cockpit</div>
+                <div class="action-menu-item" data-action="sandbox"><span class="material-symbols-outlined">science</span>Open scenario planner</div>
+                <div class="action-menu-item" data-action="duplicate"><span class="material-symbols-outlined">content_copy</span>Duplicate</div>
+                <div class="action-menu-item" data-action="archive"><span class="material-symbols-outlined">archive</span>Archive</div>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <tr class="target-row" data-target="Reduce energy use 30% by 2029">
+          <td>
+            <div class="target-name-cell">
+              <div class="target-name">Reduce energy use 30% by 2029</div>
+              <div class="target-name-meta">
+                <span><span class="material-symbols-outlined">apartment</span>All sites</span>
+                <span><span class="material-symbols-outlined">trending_down</span>30% reduction in kWh</span>
+                <span><span class="material-symbols-outlined">link</span>1 strategy</span>
+              </div>
+            </div>
+          </td>
+          <td><span class="metric-pill"><span class="material-symbols-outlined">bolt</span>Energy</span></td>
+          <td><span class="status-pill on-track"><span class="dot"></span>On Track</span></td>
+          <td class="col-progress">
+            <div class="mini-progress">
+              <div class="mini-progress-track"><div class="mini-progress-fill on-track" style="width: 63%;"></div></div>
+              <div class="mini-progress-label"><span>63% reduced</span><span>2.4 yr</span></div>
+            </div>
+          </td>
+          <td>31 Dec 2029</td>
+          <td class="col-active">
+            <label class="toggle-switch">
+              <input type="checkbox" checked>
+              <span class="toggle-track"></span>
+            </label>
+          </td>
+          <td class="col-actions">
+            <div class="action-wrapper">
+              <button class="actions-btn" data-menu-toggle type="button"><span class="material-symbols-outlined">more_vert</span></button>
+              <div class="action-menu">
+                <div class="action-menu-item" data-action="cockpit"><span class="material-symbols-outlined">visibility</span>Open cockpit</div>
+                <div class="action-menu-item" data-action="sandbox"><span class="material-symbols-outlined">science</span>Open scenario planner</div>
+                <div class="action-menu-item" data-action="duplicate"><span class="material-symbols-outlined">content_copy</span>Duplicate</div>
+                <div class="action-menu-item" data-action="archive"><span class="material-symbols-outlined">archive</span>Archive</div>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <tr class="target-row" data-target="£2M annual savings by 2030">
+          <td>
+            <div class="target-name-cell">
+              <div class="target-name">£2M cumulative savings by 2030</div>
+              <div class="target-name-meta">
+                <span><span class="material-symbols-outlined">payments</span>Operational</span>
+                <span><span class="material-symbols-outlined">trending_up</span>£2M cumulative</span>
+                <span><span class="material-symbols-outlined">link</span>2 strategies</span>
+              </div>
+            </div>
+          </td>
+          <td><span class="metric-pill"><span class="material-symbols-outlined">payments</span>Cost</span></td>
+          <td><span class="status-pill off-track"><span class="dot"></span>Off Track</span></td>
+          <td class="col-progress">
+            <div class="mini-progress">
+              <div class="mini-progress-track"><div class="mini-progress-fill off-track" style="width: 18%;"></div></div>
+              <div class="mini-progress-label"><span>£362k saved</span><span>3.9 yr</span></div>
+            </div>
+          </td>
+          <td>31 Dec 2030</td>
+          <td class="col-active">
+            <label class="toggle-switch">
+              <input type="checkbox">
+              <span class="toggle-track"></span>
+            </label>
+          </td>
+          <td class="col-actions">
+            <div class="action-wrapper">
+              <button class="actions-btn" data-menu-toggle type="button"><span class="material-symbols-outlined">more_vert</span></button>
+              <div class="action-menu">
+                <div class="action-menu-item" data-action="cockpit"><span class="material-symbols-outlined">visibility</span>Open cockpit</div>
+                <div class="action-menu-item" data-action="sandbox"><span class="material-symbols-outlined">science</span>Open scenario planner</div>
+                <div class="action-menu-item" data-action="duplicate"><span class="material-symbols-outlined">content_copy</span>Duplicate</div>
+                <div class="action-menu-item" data-action="archive"><span class="material-symbols-outlined">archive</span>Archive</div>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <tr class="target-row" data-target="S 1 & 2 Net Zero by 2030">
+          <td>
+            <div class="target-name-cell">
+              <div class="target-name">S 1 &amp; 2 Net Zero by 2030 (alt)</div>
+              <div class="target-name-meta">
+                <span><span class="material-symbols-outlined">layers</span>Scopes 1&amp;2</span>
+                <span><span class="material-symbols-outlined">trending_down</span>100% reduction · accelerated path</span>
+                <span><span class="material-symbols-outlined">science</span>Sandboxed alternative</span>
+              </div>
+            </div>
+          </td>
+          <td><span class="metric-pill"><span class="material-symbols-outlined">eco</span>Carbon</span></td>
+          <td><span class="status-pill draft"><span class="dot"></span>Draft</span></td>
+          <td class="col-progress"><span style="font-size:12px; opacity:0.5;">— not tracking —</span></td>
+          <td>01 Mar 2030</td>
+          <td class="col-active">
+            <label class="toggle-switch">
+              <input type="checkbox">
+              <span class="toggle-track"></span>
+            </label>
+          </td>
+          <td class="col-actions">
+            <div class="action-wrapper">
+              <button class="actions-btn" data-menu-toggle type="button"><span class="material-symbols-outlined">more_vert</span></button>
+              <div class="action-menu">
+                <div class="action-menu-item" data-action="sandbox"><span class="material-symbols-outlined">science</span>Open in scenario planner</div>
+                <div class="action-menu-item" data-action="promote"><span class="material-symbols-outlined">flag</span>Promote to active</div>
+                <div class="action-menu-item" data-action="duplicate"><span class="material-symbols-outlined">content_copy</span>Duplicate</div>
+                <div class="action-menu-item" data-action="archive"><span class="material-symbols-outlined">delete</span>Discard</div>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <div class="list-footer">
+      <div>5 targets · 3 active · 1 draft · 1 inactive</div>
+      <div>Aggregated from M&amp;T data · last sync 29 Apr 2026 09:14</div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================
+       VIEW 2 — TARGET COCKPIT (Live ↔ Scenario modes on one page)
+       ============================================================ -->
+  <div class="view" id="viewCockpit" data-mode="live">
+
+    <div class="breadcrumb">
+      <a id="backToList"><span class="material-symbols-outlined">arrow_back</span>All targets</a>
+      <span class="sep">/</span>
+      <span class="live-only">Cockpit</span>
+      <span class="scenario-only">Scenario planner</span>
+    </div>
+
+    <!-- Cockpit head -->
+    <div class="cockpit-head">
+      <div>
+        <div class="cockpit-eyebrow live-only">
+          <span class="active-badge"><span class="live-dot"></span>Active · live tracking</span>
+        </div>
+        <div class="cockpit-eyebrow scenario-only">
+          <span class="active-badge">
+            <span class="material-symbols-outlined" style="font-size: 14px; color: var(--warning);">science</span>Scenario mode
+          </span>
+        </div>
+        <h1 class="cockpit-title" id="cockpitTitle">Net Zero by 2038</h1>
+        <div class="cockpit-sub">
+          <span class="cockpit-sub-item"><span class="material-symbols-outlined">eco</span>Carbon reduction · tCO₂e</span>
+          <span class="cockpit-sub-item"><span class="material-symbols-outlined">layers</span>All Scopes</span>
+          <span class="cockpit-sub-item"><span class="material-symbols-outlined">flag_circle</span>Started 01 Apr 2022</span>
+          <span class="cockpit-sub-item"><span class="material-symbols-outlined">event</span>Deadline 31 Mar 2038</span>
+          <span class="cockpit-sub-item"><span class="material-symbols-outlined">percent</span>75% reduction vs 2021/22 baseline</span>
+        </div>
+      </div>
+      <div class="cockpit-actions">
+        <div class="mode-toggle">
+          <button class="mode-toggle-btn active" data-mode-target="live" type="button">
+            <span class="material-symbols-outlined">visibility</span>Live
+          </button>
+          <button class="mode-toggle-btn" data-mode-target="scenario" type="button">
+            <span class="material-symbols-outlined">science</span>Scenario
+          </button>
+        </div>
+        <div class="action-wrapper" id="cockpitMenu">
+          <button class="btn" data-menu-toggle type="button">
+            <span class="material-symbols-outlined">more_horiz</span>
+          </button>
+          <div class="action-menu">
+            <div class="action-menu-item" data-cockpit-action="edit"><span class="material-symbols-outlined">edit</span>Edit target</div>
+            <div class="action-menu-item" data-cockpit-action="duplicate"><span class="material-symbols-outlined">content_copy</span>Duplicate</div>
+            <div class="action-menu-item" data-cockpit-action="archive"><span class="material-symbols-outlined">archive</span>Archive</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- This-month savings banner -->
+    <div class="savings-banner live-only">
+      <div class="savings-cell">
+        <div class="savings-cell-label"><span class="material-symbols-outlined">eco</span>This month's reduction</div>
+        <div class="savings-cell-value">18.4<span class="unit">tCO₂e</span></div>
+        <div class="savings-cell-sub"><span class="savings-cell-trend trend-down">▼ 8.4%</span> vs same month 2025</div>
+      </div>
+      <div class="savings-cell">
+        <div class="savings-cell-label"><span class="material-symbols-outlined">savings</span>Cumulative saved</div>
+        <div class="savings-cell-value">224<span class="unit">tCO₂e</span></div>
+        <div class="savings-cell-sub">since baseline · stacked across all linked strategies</div>
+      </div>
+      <div class="savings-cell">
+        <div class="savings-cell-label"><span class="material-symbols-outlined">payments</span>Equivalent £ saved</div>
+        <div class="savings-cell-value">£62.3k</div>
+        <div class="savings-cell-sub">cumulative · indicative at current energy prices</div>
+      </div>
+    </div>
+
+    <!-- Hero: chart + status rail -->
+    <div class="hero">
+      <div class="hero-chart-card">
+        <div class="hero-chart-controls">
+          <div class="chart-title-block">
+            <div class="chart-title live-only">All-Scope reduction trajectory</div>
+            <div class="chart-title scenario-only">Proposed trajectory</div>
+            <div class="chart-subtitle live-only">Live actuals (solid) vs target path (dashed) · monthly base, year view</div>
+            <div class="chart-subtitle scenario-only">Drag any interior checkpoint to reshape · endpoints fixed by start date and deadline</div>
+          </div>
+          <div class="toggle-group">
+            <button type="button">Month</button>
+            <button type="button">Quarter</button>
+            <button class="active" type="button">Year</button>
+          </div>
+        </div>
+
+        <!-- Live chart (read-only) -->
+        <svg class="hero-chart live-only" id="cockpitChart" viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg"></svg>
+
+        <!-- Scenario chart (interactive) -->
+        <svg class="hero-chart scenario-only" id="trajSvg" viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" style="user-select:none;"></svg>
+
+        <div class="hero-chart-legend live-only">
+          <div class="legend-item"><span class="legend-swatch dashed"></span>Target path</div>
+          <div class="legend-item"><span class="legend-swatch"></span>Actual emissions (live M&amp;T)</div>
+          <div class="legend-item"><span class="legend-dot" style="background: var(--warning);"></span>Current position</div>
+          <div class="legend-item"><span class="legend-dot" style="background: var(--secondary);"></span>Checkpoint</div>
+        </div>
+        <div class="hero-chart-legend scenario-only">
+          <div class="legend-item"><span class="legend-swatch dashed"></span>Proposed trajectory</div>
+          <div class="legend-item"><span class="legend-swatch"></span>Actual emissions (live)</div>
+          <div class="legend-item"><span class="legend-dot" style="background: var(--secondary);"></span>Locked endpoint</div>
+          <div class="legend-item"><span class="legend-dot" style="background: var(--white); border: 2px solid var(--secondary);"></span>Draggable checkpoint</div>
+        </div>
+      </div>
+
+      <!-- Right rail — Live mode: status + stats. Scenario mode: settings -->
+      <div class="status-rail live-only">
+
+        <div class="status-hero at-risk">
+          <div class="status-hero-label">Current status</div>
+          <div class="status-hero-state">
+            <span class="status-dot"></span>
+            At Risk
+          </div>
+          <div class="status-hero-delta">
+            Tracking <strong>+9.2%</strong> above target path · exceeds the ±5% threshold
+          </div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-tile">
+            <div class="stat-tile-label">Current emissions</div>
+            <div class="stat-tile-value">586<span class="unit">tCO₂e</span></div>
+            <div class="stat-tile-sub">This month · 12-mo rolling</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-tile-label">
+              Target today
+              <span class="material-symbols-outlined info-icon" title="The on-path emissions value the target trajectory expects at today's date — interpolated from the nearest checkpoints.">info</span>
+            </div>
+            <div class="stat-tile-value">537<span class="unit">tCO₂e</span></div>
+            <div class="stat-tile-sub">on-path value (interpolated)</div>
+          </div>
+
+          <div class="stat-tile full">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="26" fill="none" stroke="#F5F5F5" stroke-width="6"/>
+              <circle cx="32" cy="32" r="26" fill="none" stroke="#111" stroke-width="6"
+                stroke-dasharray="163.4" stroke-dashoffset="117.6" stroke-linecap="round"
+                transform="rotate(-90 32 32)"/>
+              <text x="32" y="37" font-family="Poppins" font-size="14" font-weight="700" fill="#111" text-anchor="middle">28%</text>
+            </svg>
+            <div class="progress-ring-text">
+              <div class="stat-tile-label">Journey progress</div>
+              <div class="stat-tile-value">28% reduced</div>
+              <div class="stat-tile-sub">224 tCO₂e cut from 810 baseline</div>
+            </div>
+          </div>
+
+          <div class="stat-tile">
+            <div class="stat-tile-label">Time remaining</div>
+            <div class="stat-tile-value">11.9<span class="unit">yr</span></div>
+            <div class="stat-tile-sub">to 31 Mar 2038</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-tile-label">12-mo trend</div>
+            <div class="stat-tile-value">−8.4<span class="unit">%</span></div>
+            <div class="stat-tile-sub">reduction rate</div>
+          </div>
+        </div>
+
+        <div class="milestone-tile">
+          <div class="milestone-head">
+            <div class="milestone-label">Next checkpoint</div>
+            <div class="milestone-date">2029</div>
+          </div>
+          <div class="milestone-value">486 tCO₂e · 60% of baseline</div>
+          <div class="milestone-sub">2.8 yr away · a step down of 100 tCO₂e from today</div>
+        </div>
+      </div>
+
+      <!-- Scenario mode: planner settings replace the status rail -->
+      <div class="planner-settings scenario-only">
+
+        <div class="settings-card">
+          <div class="settings-card-head">Trajectory shape</div>
+          <div class="traj-mode-group" style="width: 100%; display: grid; grid-template-columns: 1fr 1fr;">
+            <button class="traj-mode" type="button">Linear</button>
+            <button class="traj-mode active" type="button">Custom</button>
+            <button class="traj-mode" type="button">Front-loaded</button>
+            <button class="traj-mode" type="button">Back-loaded</button>
+          </div>
+        </div>
+
+        <div class="settings-card">
+          <div class="settings-card-head">Target setup</div>
+          <div class="field">
+            <label class="field-label">Name</label>
+            <input class="field-input" type="text" value="Net Zero by 2038">
+          </div>
+          <div class="field">
+            <label class="field-label">Metric</label>
+            <div class="pick-cards">
+              <div class="pick-card selected">
+                <span class="material-symbols-outlined">eco</span>
+                Carbon
+              </div>
+              <div class="pick-card">
+                <span class="material-symbols-outlined">bolt</span>
+                Energy
+              </div>
+              <div class="pick-card">
+                <span class="material-symbols-outlined">payments</span>
+                Cost
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">Direction</label>
+            <div class="pick-cards" style="grid-template-columns: 1fr 1fr;">
+              <div class="pick-card selected">
+                <span class="material-symbols-outlined">trending_down</span>
+                Reduction
+              </div>
+              <div class="pick-card">
+                <span class="material-symbols-outlined">trending_up</span>
+                Cumulative saving
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">Target ambition</label>
+            <div style="display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: stretch;">
+              <input class="field-input" type="text" value="75" id="ambitionValue">
+              <div class="pick-cards" style="grid-template-columns: auto auto; gap: 4px;">
+                <div class="pick-card selected" style="padding: 8px 12px; min-width: 64px;">% of baseline</div>
+                <div class="pick-card" style="padding: 8px 12px; min-width: 64px;">tCO₂e</div>
+              </div>
+            </div>
+            <div style="font-size: 11px; margin-top: 6px;">End at 25% of 2021/22 baseline · ≈ 203 tCO₂e by deadline</div>
+          </div>
+          <div class="field">
+            <label class="field-label">Scope</label>
+            <select class="field-select">
+              <option>All Scopes</option>
+              <option>Scopes 1 &amp; 2 only</option>
+              <option>Scope 1 only</option>
+              <option>Scope 3 only</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-card">
+          <div class="settings-card-head">Timing</div>
+          <div class="field-row">
+            <div>
+              <label class="field-label">Start</label>
+              <input class="field-input" type="text" value="01/04/2022">
+            </div>
+            <div>
+              <label class="field-label">Deadline</label>
+              <input class="field-input" type="text" value="31/03/2038">
+            </div>
+          </div>
+          <div class="field" style="margin-top:14px;">
+            <label class="field-label">Baseline year</label>
+            <select class="field-select">
+              <option>2021/22</option>
+              <option>2020/21</option>
+              <option>Custom range</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-card">
+          <div class="settings-card-head">Threshold</div>
+          <div class="field-row">
+            <div>
+              <label class="field-label">Drift ±%</label>
+              <input class="field-input" type="text" value="5">
+            </div>
+            <div>
+              <label class="field-label">Breach ±%</label>
+              <input class="field-input" type="text" value="15">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Action gap — Live mode -->
+    <section class="action-gap-section live-only">
+      <div class="section-head-row">
+        <h2>Action gap <span class="count">2 risks · 1 ok</span></h2>
+        <div class="section-head-sub">
+          What linked strategies are projected to deliver vs what each checkpoint requires. Surfaces missing action before it costs progress.
+        </div>
+      </div>
+
+      <div class="gap-list">
+
+        <div class="gap-item alert">
+          <div class="gap-checkpoint">
+            <div class="gap-checkpoint-year">2029</div>
+            <div class="gap-checkpoint-label">Checkpoint</div>
+          </div>
+          <div class="gap-body">
+            <strong>Projected gap of 45 tCO₂e</strong> at this checkpoint
+            <div class="gap-body-sub">Linked strategies project 531 tCO₂e by 2029 · target requires 486 tCO₂e. Add a project saving ≥ 45 tCO₂e/yr that completes before Q4 2028 to close the gap.</div>
+          </div>
+          <div>
+            <button class="btn btn-sm" type="button">Find projects →</button>
+          </div>
+        </div>
+
+        <div class="gap-item warning">
+          <div class="gap-checkpoint">
+            <div class="gap-checkpoint-year">2032</div>
+            <div class="gap-checkpoint-label">Checkpoint</div>
+          </div>
+          <div class="gap-body">
+            <strong>Drift risk</strong> — within tolerance but slipping
+            <div class="gap-body-sub">Heat Pump Acceleration is the main contributor and currently At Risk. If it slips below 80% delivery, this checkpoint moves into breach.</div>
+          </div>
+          <div>
+            <button class="btn btn-sm" type="button">Open strategy →</button>
+          </div>
+        </div>
+
+        <div class="gap-item ok">
+          <div class="gap-checkpoint">
+            <div class="gap-checkpoint-year">2035</div>
+            <div class="gap-checkpoint-label">Checkpoint</div>
+          </div>
+          <div class="gap-body">
+            <strong>On track</strong> — projected delivery exceeds target
+            <div class="gap-body-sub">Combined linked strategies project 285 tCO₂e at this checkpoint vs 324 tCO₂e required. Buffer of 39 tCO₂e.</div>
+          </div>
+          <div>
+            <button class="btn btn-sm" type="button">View detail →</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Linked strategies (kept from option 2 — Otto loved this) -->
+    <section class="linked-section">
+      <div class="section-head-row">
+        <h2>Linked strategies <span class="count">3 contributing</span></h2>
+        <div class="section-head-sub">
+          Actuals are aggregated from these strategies. Stacked contributions sum to 100%.
+        </div>
+      </div>
+
+      <div class="linked-grid">
+
+        <div class="linked-card">
+          <div class="linked-card-head">
+            <div class="linked-card-title">Baseline strategy</div>
+            <span class="status-pill on-track"><span class="dot"></span>On Track</span>
+          </div>
+          <div class="linked-card-meta-line">12 interventions · Scopes 1, 2</div>
+          <div class="linked-card-footer">
+            <span>Contributes <strong>64%</strong></span>
+            <a href="#">Open <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span></a>
+          </div>
+        </div>
+
+        <div class="linked-card">
+          <div class="linked-card-head">
+            <div class="linked-card-title">Heat Pump Acceleration</div>
+            <span class="status-pill at-risk"><span class="dot"></span>At Risk</span>
+          </div>
+          <div class="linked-card-meta-line">4 interventions · Scope 1</div>
+          <div class="linked-card-footer">
+            <span>Contributes <strong>22%</strong></span>
+            <a href="#">Open <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span></a>
+          </div>
+        </div>
+
+        <div class="linked-card">
+          <div class="linked-card-head">
+            <div class="linked-card-title">Solar PV Roll-out</div>
+            <span class="status-pill draft"><span class="dot"></span>Draft</span>
+          </div>
+          <div class="linked-card-meta-line">6 interventions · Scope 2</div>
+          <div class="linked-card-footer">
+            <span>Contributes <strong>14%</strong></span>
+            <a href="#">Open <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span></a>
+          </div>
+        </div>
+
+        <div class="linked-card add-card">
+          <span class="material-symbols-outlined" style="font-size:24px;">add_link</span>
+          Link another strategy
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Action gap — Scenario mode (live, recalculates as you drag) -->
+    <section class="action-gap-section scenario-only">
+      <div class="section-head-row">
+        <h2>Projected action gap <span class="count">recalculates as you drag</span></h2>
+        <div class="section-head-sub">
+          For each proposed checkpoint, what linked strategies would deliver vs what the new trajectory requires. This is what makes the scenario actionable rather than theoretical.
+        </div>
+      </div>
+
+      <div class="gap-list">
+
+        <div class="gap-item alert">
+          <div class="gap-checkpoint">
+            <div class="gap-checkpoint-year">2029</div>
+            <div class="gap-checkpoint-label">Proposed</div>
+          </div>
+          <div class="gap-body">
+            <strong>Steeper checkpoint exposes a 78 tCO₂e gap</strong>
+            <div class="gap-body-sub">Your dragged value of 453 tCO₂e is below what current strategies can deliver (531 tCO₂e). Either ease the checkpoint or commit a project ≥ 78 tCO₂e by Q4 2028.</div>
+          </div>
+          <div>
+            <button class="btn btn-sm" type="button">Browse projects →</button>
+          </div>
+        </div>
+
+        <div class="gap-item warning">
+          <div class="gap-checkpoint">
+            <div class="gap-checkpoint-year">2032</div>
+            <div class="gap-checkpoint-label">Proposed</div>
+          </div>
+          <div class="gap-body">
+            <strong>Marginal — within tolerance</strong>
+            <div class="gap-body-sub">Linked strategies just clear the new value. No buffer for slippage in Heat Pump Acceleration.</div>
+          </div>
+          <div>
+            <button class="btn btn-sm" type="button">View contributions →</button>
+          </div>
+        </div>
+
+        <div class="gap-item ok">
+          <div class="gap-checkpoint">
+            <div class="gap-checkpoint-year">2038</div>
+            <div class="gap-checkpoint-label">Endpoint</div>
+          </div>
+          <div class="gap-body">
+            <strong>Endpoint deliverable</strong>
+            <div class="gap-body-sub">Net Zero by 2038 is achievable with current strategies + 1 additional project committed before 2030.</div>
+          </div>
+          <div>
+            <button class="btn btn-sm" type="button">View detail →</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Sandbox banner (scenario mode only — save bar at the foot of the page) -->
+    <div class="sandbox-banner scenario-only">
+      <div class="sandbox-banner-main">
+        <span class="material-symbols-outlined">science</span>
+        <div>
+          <div class="sandbox-banner-title">Scenario mode</div>
+          <div class="sandbox-banner-sub">Changes here don't affect the live target until you save them. Switch back to Live to discard, or save to commit.</div>
+        </div>
+      </div>
+      <div class="sandbox-banner-actions">
+        <button class="btn" type="button"><span class="material-symbols-outlined">save</span>Save as draft</button>
+        <button class="btn btn-primary" type="button"><span class="material-symbols-outlined">flag</span>Replace live target</button>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- Back to map -->
+  <div class="back-to-map-wrapper">
+    <a href="../sustainability-platform-map.html" class="btn" onclick="if(window.opener){window.close();return false;}">
+      <span class="material-symbols-outlined">arrow_back</span>Back to map
+    </a>
+  </div>
+
+</div>
+
+<script>
+/* ==========================================================
+   VIEW SWITCHING
+   ========================================================== */
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+// Switch the cockpit between Live and Scenario modes
+function setCockpitMode(mode) {
+  const cockpit = document.getElementById('viewCockpit');
+  cockpit.dataset.mode = mode;
+  document.querySelectorAll('[data-mode-target]').forEach(b => {
+    b.classList.toggle('active', b.dataset.modeTarget === mode);
+  });
+  // Re-render the relevant chart so it sizes correctly when shown
+  if (mode === 'scenario') drawTrajectory();
+  else drawCockpitChart();
+}
+
+// Open the cockpit on a given target, in a given mode
+function openCockpit(name, mode = 'live') {
+  if (name) document.getElementById('cockpitTitle').textContent = name;
+  showView('viewCockpit');
+  setCockpitMode(mode);
+}
+
+document.getElementById('backToList').addEventListener('click', () => showView('viewList'));
+document.getElementById('newTargetBtn').addEventListener('click', () => {
+  // New target opens the cockpit in scenario mode for shaping the new trajectory
+  openCockpit('New target', 'scenario');
+});
+
+// Mode toggle buttons
+document.querySelectorAll('[data-mode-target]').forEach(btn => {
+  btn.addEventListener('click', () => setCockpitMode(btn.dataset.modeTarget));
+});
+
+// Cockpit ⋮ menu actions
+document.querySelectorAll('[data-cockpit-action]').forEach(item => {
+  item.addEventListener('click', e => {
+    e.stopPropagation();
+    item.closest('.action-wrapper').classList.remove('open');
+    // edit / duplicate / archive are stubs for prototype
+  });
+});
+
+// Row click → cockpit (live mode)
+document.querySelectorAll('.target-row').forEach(row => {
+  row.addEventListener('click', e => {
+    if (e.target.closest('.actions-btn') || e.target.closest('.action-menu') || e.target.closest('.toggle-switch')) return;
+    openCockpit(row.dataset.target, 'live');
+  });
+});
+
+/* ==========================================================
+   ACTION MENUS (row + cockpit)
+   ========================================================== */
+document.querySelectorAll('[data-menu-toggle]').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const wrapper = btn.closest('.action-wrapper');
+    const isOpen = wrapper.classList.contains('open');
+    document.querySelectorAll('.action-wrapper.open').forEach(w => w.classList.remove('open'));
+    if (!isOpen) wrapper.classList.add('open');
+  });
+});
+document.querySelectorAll('.action-menu-item[data-action]').forEach(item => {
+  item.addEventListener('click', e => {
+    e.stopPropagation();
+    const action = item.dataset.action;
+    const row = item.closest('.target-row');
+    const name = row?.dataset.target || 'Target';
+    item.closest('.action-wrapper').classList.remove('open');
+
+    if (action === 'cockpit') {
+      openCockpit(name, 'live');
+    } else if (action === 'sandbox' || action === 'promote') {
+      openCockpit(name, 'scenario');
+    }
+  });
+});
+document.addEventListener('click', () => {
+  document.querySelectorAll('.action-wrapper.open').forEach(w => w.classList.remove('open'));
+});
+
+/* ==========================================================
+   TABS / TOGGLE GROUPS / CHIPS / PICK CARDS
+   ========================================================== */
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+document.querySelectorAll('.toggle-group').forEach(group => {
+  group.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      group.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+});
+document.querySelectorAll('.traj-mode-group').forEach(group => {
+  group.querySelectorAll('.traj-mode').forEach(btn => {
+    btn.addEventListener('click', () => {
+      group.querySelectorAll('.traj-mode').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+});
+document.querySelectorAll('.filter-group').forEach(group => {
+  group.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      group.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+    });
+  });
+});
+
+/* ==========================================================
+   COLUMN HEADER FILTER DROPDOWNS
+   ========================================================== */
+document.querySelectorAll('[data-col-filter]').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const isOpen = btn.classList.contains('open');
+    document.querySelectorAll('[data-col-filter].open').forEach(b => b.classList.remove('open'));
+    if (!isOpen) btn.classList.add('open');
+  });
+});
+
+document.querySelectorAll('[data-filter-group]').forEach(group => {
+  group.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', e => {
+      e.stopPropagation();
+      group.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+      // mark column as having an active filter (everything except 'All')
+      const colFilterBtn = group.closest('th')?.querySelector('[data-col-filter]');
+      if (colFilterBtn) {
+        if (chip.textContent.trim() === 'All') {
+          colFilterBtn.classList.remove('has-filter');
+        } else {
+          colFilterBtn.classList.add('has-filter');
+        }
+      }
+    });
+  });
+});
+
+// Click outside closes column filter popovers
+document.addEventListener('click', () => {
+  document.querySelectorAll('[data-col-filter].open').forEach(b => b.classList.remove('open'));
+});
+document.querySelectorAll('.pick-cards').forEach(group => {
+  group.querySelectorAll('.pick-card').forEach(card => {
+    card.addEventListener('click', () => {
+      group.querySelectorAll('.pick-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+    });
+  });
+});
+
+/* ==========================================================
+   COCKPIT LIVE CHART (read-only)
+   Solid line = actuals, dashed line = target path
+   ========================================================== */
+function drawCockpitChart() {
+  const W = 900, H = 380, padL = 50, padR = 24, padT = 24, padB = 40;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+
+  // Years 2022–2038 (16 years), baseline at 810 tCO2e
+  const baseline = 810;
+  const years = [];
+  for (let y = 2022; y <= 2038; y++) years.push(y);
+
+  // Target path: linear-ish reduction to 25% of baseline (203 tCO2e) by 2038
+  const target = years.map((y, i) => {
+    const t = i / (years.length - 1);
+    return baseline * (1 - 0.75 * t);
+  });
+
+  // Actuals: data exists for years where i <= 4 (2022–2026), drifting above target
+  const actualEnd = 4;
+  const actuals = years.map((y, i) => {
+    if (i > actualEnd) return null;
+    const t = i / (years.length - 1);
+    const onPath = baseline * (1 - 0.75 * t);
+    // overshoot by ~9%
+    const drift = i === 0 ? 0 : 0.09 * onPath;
+    return onPath + drift;
+  });
+
+  const yMin = 0;
+  const yMax = baseline * 1.05;
+  const toX = i => padL + (i / (years.length - 1)) * plotW;
+  const toY = v => padT + plotH - ((v - yMin) / (yMax - yMin)) * plotH;
+
+  let svg = '';
+
+  // Grid lines (4 horizontal)
+  for (let g = 0; g <= 4; g++) {
+    const v = yMin + (g / 4) * (yMax - yMin);
+    const y = toY(v);
+    svg += `<line x1="${padL}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="#111" stroke-opacity="0.06" stroke-width="0.5"/>`;
+    svg += `<text x="${padL - 8}" y="${y + 4}" font-family="Poppins" font-size="10" font-weight="500" fill="#111" text-anchor="end">${Math.round(v)}</text>`;
+  }
+  // Baseline
+  svg += `<line x1="${padL}" x2="${W - padR}" y1="${toY(yMin)}" y2="${toY(yMin)}" stroke="#111" stroke-width="1"/>`;
+
+  // X labels (every 2nd year)
+  years.forEach((y, i) => {
+    if (i % 2 !== 0) return;
+    svg += `<text x="${toX(i)}" y="${H - padB + 16}" font-family="Poppins" font-size="10" font-weight="500" fill="#111" text-anchor="middle">${y}</text>`;
+  });
+
+  // Target path (dashed)
+  let targetD = target.map((v, i) => `${i === 0 ? 'M' : 'L'} ${toX(i)} ${toY(v)}`).join(' ');
+  svg += `<path d="${targetD}" fill="none" stroke="#111" stroke-width="2.5" stroke-dasharray="6,5" stroke-linecap="round"/>`;
+
+  // Target checkpoints (every 3 years) — 2025, 2029, 2032, 2035
+  [3, 7, 10, 13].forEach(i => {
+    const cx = toX(i), cy = toY(target[i]);
+    svg += `<circle cx="${cx}" cy="${cy}" r="4" fill="#111"/>`;
+  });
+
+  // Actuals fill area
+  const actualPts = actuals.filter(v => v !== null);
+  let areaD = `M ${toX(0)} ${toY(0)}`;
+  actualPts.forEach((v, i) => { areaD += ` L ${toX(i)} ${toY(v)}`; });
+  areaD += ` L ${toX(actualPts.length - 1)} ${toY(0)} Z`;
+  svg += `<path d="${areaD}" fill="#111" fill-opacity="0.04"/>`;
+
+  // Actuals line (solid)
+  let actualD = actualPts.map((v, i) => `${i === 0 ? 'M' : 'L'} ${toX(i)} ${toY(v)}`).join(' ');
+  svg += `<path d="${actualD}" fill="none" stroke="#111" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>`;
+
+  // Current position dot (last actual)
+  const ci = actualPts.length - 1;
+  const cx = toX(ci), cy = toY(actualPts[ci]);
+  svg += `<circle cx="${cx}" cy="${cy}" r="11" fill="#FF9800" fill-opacity="0.18"/>`;
+  svg += `<circle cx="${cx}" cy="${cy}" r="5" fill="#FF9800" stroke="#111" stroke-width="1.5"/>`;
+  svg += `<text x="${cx + 12}" y="${cy - 8}" font-family="Poppins" font-size="11" font-weight="700" fill="#111">586 tCO₂e</text>`;
+  svg += `<text x="${cx + 12}" y="${cy + 6}" font-family="Poppins" font-size="10" font-weight="500" fill="#111">+9.2% vs path</text>`;
+
+  // Y-axis label
+  svg += `<text x="14" y="${padT + plotH/2}" font-family="Poppins" font-size="10" font-weight="600" fill="#111" text-anchor="middle" transform="rotate(-90, 14, ${padT + plotH/2})">tCO₂e per year</text>`;
+
+  document.getElementById('cockpitChart').innerHTML = svg;
+}
+
+/* ==========================================================
+   SANDBOX TRAJECTORY (interactive — lifted from option 1)
+   ========================================================== */
+let trajPoints = null;
+function drawTrajectory() {
+  const svg = document.getElementById('trajSvg');
+  if (!svg) return;
+  const W = 900, H = 420, padL = 50, padR = 24, padT = 30, padB = 50;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+
+  if (!trajPoints) {
+    trajPoints = [
+      { year: 2022, x: 0,   y: 1.00, locked: true },
+      { year: 2025, x: 0.19, y: 0.86 },
+      { year: 2029, x: 0.44, y: 0.60 },
+      { year: 2032, x: 0.62, y: 0.42 },
+      { year: 2035, x: 0.81, y: 0.25 },
+      { year: 2038, x: 1.00, y: 0.00, locked: true }
+    ];
+  }
+  const points = trajPoints;
+
+  const toSvgX = x => padL + x * plotW;
+  const toSvgY = y => padT + plotH - y * plotH;
+
+  let s = '';
+
+  // Grid lines
+  [0, 0.25, 0.5, 0.75, 1].forEach(g => {
+    const yy = toSvgY(g);
+    s += `<line x1="${padL}" x2="${W - padR}" y1="${yy}" y2="${yy}" stroke="#111" stroke-opacity="0.06" stroke-width="0.5"/>`;
+    s += `<text x="${padL - 8}" y="${yy + 4}" font-family="Poppins" font-size="10" font-weight="500" fill="#111" text-anchor="end">${Math.round(g * 100)}%</text>`;
+  });
+
+  // Baseline
+  s += `<line x1="${padL}" x2="${W - padR}" y1="${toSvgY(0)}" y2="${toSvgY(0)}" stroke="#111" stroke-width="1"/>`;
+
+  // Live actuals (mocked, drifting)
+  const actuals = [
+    { x: 0,    y: 1.00 },
+    { x: 0.06, y: 0.97 },
+    { x: 0.12, y: 0.92 },
+    { x: 0.19, y: 0.91 },
+    { x: 0.25, y: 0.85 }
+  ];
+  // shaded area
+  let areaD = `M ${toSvgX(0)} ${toSvgY(0)}`;
+  actuals.forEach(p => { areaD += ` L ${toSvgX(p.x)} ${toSvgY(p.y)}`; });
+  areaD += ` L ${toSvgX(actuals[actuals.length - 1].x)} ${toSvgY(0)} Z`;
+  s += `<path d="${areaD}" fill="#111" fill-opacity="0.04"/>`;
+  // actuals line (solid)
+  let actualD = actuals.map((p, i) => `${i === 0 ? 'M' : 'L'} ${toSvgX(p.x)} ${toSvgY(p.y)}`).join(' ');
+  s += `<path d="${actualD}" fill="none" stroke="#111" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>`;
+  // current dot
+  const last = actuals[actuals.length - 1];
+  s += `<circle cx="${toSvgX(last.x)}" cy="${toSvgY(last.y)}" r="5" fill="#FF9800" stroke="#111" stroke-width="1.5"/>`;
+
+  // Proposed target trajectory (dashed)
+  let pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${toSvgX(p.x)} ${toSvgY(p.y)}`).join(' ');
+  s += `<path d="${pathD}" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5,4"/>`;
+
+  // Checkpoints + drag handles
+  points.forEach((p, i) => {
+    const cx = toSvgX(p.x);
+    const cy = toSvgY(p.y);
+    const cursor = p.locked ? 'not-allowed' : 'grab';
+    // Hit area first (drawn underneath, but pointer-events="all" lets it capture
+    // events that pass through the decorative circles above it).
+    s += `<circle cx="${cx}" cy="${cy}" r="14" fill="transparent" class="traj-handle" data-i="${i}" style="cursor:${cursor}" pointer-events="${p.locked ? 'none' : 'all'}"/>`;
+    if (p.locked) {
+      s += `<circle cx="${cx}" cy="${cy}" r="5" fill="#111" pointer-events="none"/>`;
+    } else {
+      s += `<circle cx="${cx}" cy="${cy}" r="7" fill="#fff" stroke="#111" stroke-width="2.5" pointer-events="none"/>`;
+      s += `<circle cx="${cx}" cy="${cy}" r="2.5" fill="#111" pointer-events="none"/>`;
+    }
+    s += `<text x="${cx}" y="${H - padB + 16}" font-family="Poppins" font-size="10" font-weight="600" fill="#111" text-anchor="middle" pointer-events="none">${p.year}</text>`;
+    s += `<text x="${cx}" y="${cy - 14}" font-family="Poppins" font-size="10" font-weight="600" fill="#111" text-anchor="middle" pointer-events="none">${Math.round(p.y * 100)}%</text>`;
+  });
+
+  // Y-axis label
+  s += `<text x="14" y="${padT + plotH/2}" font-family="Poppins" font-size="10" font-weight="600" fill="#111" text-anchor="middle" transform="rotate(-90, 14, ${padT + plotH/2})">% of baseline</text>`;
+
+  svg.innerHTML = s;
+
+  // Drag handlers (rebound each render via event delegation on parent)
+  if (!svg.dataset.bound) {
+    svg.dataset.bound = '1';
+    let dragging = null;
+
+    svg.addEventListener('mousedown', e => {
+      const target = e.target.closest('.traj-handle');
+      if (!target) return;
+      const i = parseInt(target.dataset.i, 10);
+      const p = trajPoints[i];
+      if (!p || p.locked) return;
+      dragging = i;
+    });
+
+    svg.addEventListener('mousemove', e => {
+      if (dragging === null) return;
+      const rect = svg.getBoundingClientRect();
+      const scaleY = H / rect.height;
+      const svgY = (e.clientY - rect.top) * scaleY;
+      let yRatio = 1 - (svgY - padT) / plotH;
+      yRatio = Math.max(0, Math.min(1, yRatio));
+      const prev = trajPoints[dragging - 1].y;
+      const next = trajPoints[dragging + 1].y;
+      // monotonic decreasing
+      yRatio = Math.min(prev, Math.max(next, yRatio));
+      trajPoints[dragging].y = yRatio;
+      drawTrajectory();
+    });
+
+    svg.addEventListener('mouseup', () => { dragging = null; });
+    svg.addEventListener('mouseleave', () => { dragging = null; });
+  }
+}
+
+/* ==========================================================
+   INIT
+   ========================================================== */
+drawCockpitChart();
+</script>
+</body>
+</html>

@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrueDI · EV Co-Modelling</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<style>
+  :root {
+    --secondary:#111111;
+    --grey:#F5F5F5;
+    --white:#ffffff;
+    --success:#63C73B;
+    --warning:#FF9800;
+    --alert:#DC2626;
+    /* Electricity (Power Pink) palette — used for ALL dispatch series */
+    --power:#C04A74;
+    --power-darkest:#5A1E37;
+    --power-dark:#872D52;
+    --power-tint:#E69BB4;
+    --power-faint:#F2D4DE;
+    --font: 'Poppins', system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin:0; padding:0; }
+  html, body { font-family: var(--font); color: var(--secondary); background:var(--white); font-size: 14px; line-height: 1.5; }
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined', sans-serif;
+    font-weight: normal; font-style: normal;
+    font-size: 18px; line-height: 1;
+    display: inline-block; white-space: nowrap;
+    direction: ltr;
+    font-feature-settings: 'liga';
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    vertical-align: middle;
+  }
+
+  /* App shell */
+  .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+  /* Top bar */
+  .topbar {
+    grid-column: 1 / -1;
+    height: 56px;
+    border-bottom: 1.5px solid var(--secondary);
+    display: flex; align-items: center;
+    padding: 0 24px;
+    gap: 24px;
+  }
+  .topbar-logo {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600;
+    border: 1.5px dashed var(--secondary);
+    padding: 5px 12px; border-radius: 6px;
+  }
+  .crumb { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+  .crumb .sep { opacity: 0.5; }
+  .crumb .current { font-weight: 600; }
+  .topbar-spacer { flex: 1; }
+  .topbar-action {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1.5px solid var(--secondary);
+    padding: 6px 12px; border-radius: 6px;
+    font-size: 12px; font-weight: 600;
+    background: var(--white); cursor: pointer;
+    font-family: var(--font);
+  }
+  .topbar-action:hover { background: var(--grey); }
+  .topbar-user {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--secondary); color: var(--white);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600;
+  }
+
+  /* Sidebar */
+  .sidebar { border-right: 1.5px solid var(--secondary); padding: 24px 0; }
+  .nav-section { margin-bottom: 20px; }
+  .nav-section-label {
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    padding: 0 24px 8px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 9px 24px;
+    font-size: 13px; font-weight: 500;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+  }
+  .nav-item:hover { background: var(--grey); }
+  .nav-item.active {
+    background: var(--grey);
+    border-left-color: var(--secondary);
+    font-weight: 600;
+  }
+  .nav-item .material-symbols-outlined { font-size: 18px; }
+
+  /* Canvas */
+  .canvas { background: var(--white); }
+  .canvas-inner { padding: 24px 32px 48px; max-width: 1480px; }
+
+  /* Page header */
+  .page-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 18px; gap: 24px;
+  }
+  .page-title-block .eyebrow {
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+  .page-title { font-size: 31px; font-weight: 700; line-height: 1.2; }
+  .page-sub { font-size: 13px; font-weight: 400; margin-top: 4px; }
+  .page-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1.5px solid var(--secondary);
+    padding: 8px 16px; border-radius: 6px;
+    font-size: 13px; font-weight: 600;
+    background: var(--white); color: var(--secondary);
+    cursor: pointer; font-family: var(--font);
+  }
+  .btn:hover { background: var(--grey); }
+  .btn.filled { background: var(--secondary); color: var(--white); }
+  .btn .material-symbols-outlined { font-size: 16px; }
+
+  /* Scenario chips row — no border, no background */
+  .controls-bar {
+    display: flex; align-items: center; gap: 14px;
+    padding: 0;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .controls-label {
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .scenario-chips { display: inline-flex; gap: 6px; align-items: center; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 11px;
+    border: 1.5px solid var(--secondary);
+    border-radius: 999px;
+    font-size: 11.5px; font-weight: 600;
+    background: var(--white);
+    cursor: pointer; font-family: var(--font);
+  }
+  .chip:hover { background: var(--grey); }
+  .chip.active { background: var(--secondary); color: var(--white); }
+  .chip .npv { font-variant-numeric: tabular-nums; opacity: 0.95; font-weight: 700; }
+  .chip.add { padding: 6px 8px; }
+  .chip.add .material-symbols-outlined { font-size: 14px; }
+  .controls-divider { width: 1.5px; height: 24px; background: var(--secondary); margin: 0 4px; }
+  .inputs-summary {
+    display: inline-flex; align-items: center; gap: 12px;
+    flex-wrap: wrap;
+    font-size: 11.5px; font-weight: 500;
+  }
+  .inputs-summary .key { font-weight: 600; opacity: 0.7; margin-right: 2px; }
+  .pip { width: 3px; height: 3px; border-radius: 50%; background: var(--secondary); display: inline-block; opacity: 0.4; }
+  .controls-bar .right-side { margin-left: auto; display: inline-flex; gap: 6px; }
+
+  /* Trust stats — unboxed inline row */
+  .trust-strip {
+    display: flex; align-items: center; gap: 22px;
+    padding: 4px 0;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .trust-stat {
+    display: inline-flex; align-items: baseline; gap: 8px;
+    padding-right: 18px;
+    border-right: 1px solid var(--secondary);
+  }
+  .trust-stat:last-of-type { border-right: none; }
+  .trust-stat .label {
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    opacity: 0.7;
+  }
+  .trust-stat .value { font-size: 14px; font-weight: 700; line-height: 1; }
+  .trust-stat .note { font-size: 10.5px; font-weight: 400; opacity: 0.85; }
+  .live-pill {
+    margin-left: auto;
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600;
+    border: 1.5px solid var(--secondary);
+    padding: 4px 10px; border-radius: 999px;
+  }
+  .live-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--success);
+    animation: livePulse 2s ease-out infinite;
+  }
+  @keyframes livePulse {
+    0% { box-shadow: 0 0 0 0 rgba(99, 199, 59, 0.5); }
+    70% { box-shadow: 0 0 0 8px rgba(99, 199, 59, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(99, 199, 59, 0); }
+  }
+
+  /* Metrics row — full width */
+  .metrics-row {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  .metric-card {
+    border: 1.5px solid var(--secondary);
+    border-radius: 8px;
+    padding: 18px 20px;
+    background: var(--white);
+  }
+  .metric-card.dark { background: var(--secondary); color: var(--white); }
+  .metric-card .m-label {
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .metric-card .m-value {
+    font-size: 30px; font-weight: 700; line-height: 1.05;
+    margin-bottom: 4px;
+  }
+  .metric-card .m-value .unit { font-size: 14px; font-weight: 400; }
+  .metric-card .m-trend {
+    font-size: 12px; font-weight: 600;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .metric-card .m-meta {
+    font-size: 10.5px; font-weight: 500;
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+  .metric-card .m-meta strong { font-weight: 600; }
+  .trend-good { color: var(--success); }
+  .trend-bad { color: var(--alert); }
+
+  .conf-band { margin-top: 10px; height: 24px; position: relative; }
+  .conf-band-track {
+    position: absolute; left: 0; right: 0; top: 11px;
+    height: 2px; background: var(--secondary); opacity: 0.15;
+  }
+  .metric-card.dark .conf-band-track { background: var(--white); opacity: 0.4; }
+  .conf-band-range {
+    position: absolute; height: 6px; top: 9px;
+    background: var(--secondary); opacity: 0.85;
+    border-radius: 3px;
+  }
+  .metric-card.dark .conf-band-range { background: var(--white); opacity: 0.7; }
+  .conf-band-marker {
+    position: absolute; width: 2px; top: 4px; height: 16px;
+    background: var(--secondary);
+  }
+  .metric-card.dark .conf-band-marker { background: var(--white); }
+  .conf-band-labels {
+    position: absolute; left: 0; right: 0; bottom: -2px;
+    display: flex; justify-content: space-between;
+    font-size: 9px; font-weight: 500;
+    opacity: 0.85;
+  }
+
+  /* Chart card — full width */
+  .chart-card {
+    border: 1.5px solid var(--secondary);
+    border-radius: 8px;
+    padding: 24px 28px;
+    background: var(--white);
+    margin-bottom: 22px;
+  }
+  .chart-head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 14px; gap: 16px;
+  }
+  .chart-title { font-size: 16px; font-weight: 700; line-height: 1.2; }
+  .chart-sub { font-size: 11.5px; font-weight: 400; margin-top: 3px; }
+  .chart-controls { display: flex; gap: 8px; align-items: center; }
+  .toggle-group {
+    display: flex; border: 1.5px solid var(--secondary); border-radius: 6px;
+    overflow: hidden;
+  }
+  .toggle-btn {
+    border: none; background: var(--white); color: var(--secondary);
+    padding: 6px 12px;
+    font-size: 11px; font-weight: 600;
+    font-family: var(--font); cursor: pointer;
+  }
+  .toggle-btn:not(:last-child) { border-right: 1.5px solid var(--secondary); }
+  .toggle-btn.active { background: var(--secondary); color: var(--white); }
+
+  .legend {
+    display: flex; gap: 18px; flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-size: 11px; font-weight: 500;
+  }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-swatch { width: 14px; height: 8px; border-radius: 2px; }
+  .legend-swatch.dashed {
+    background: transparent;
+    border-top: 1.5px dashed var(--secondary);
+    height: 0; width: 16px;
+  }
+  .legend-swatch.line {
+    background: transparent;
+    border-top: 2px solid var(--secondary);
+    height: 0; width: 16px;
+  }
+
+  /* Bottom row */
+  .bottom-row {
+    display: grid; grid-template-columns: 1fr 380px; gap: 20px;
+    align-items: stretch;
+  }
+  .compare-card, .ai-card {
+    border: 1.5px solid var(--secondary);
+    border-radius: 8px;
+    padding: 20px 22px;
+    background: var(--white);
+  }
+  .compare-card h3, .ai-card h3 {
+    font-size: 14px; font-weight: 700; margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .ai-card h3 small { font-size: 11px; font-weight: 500; opacity: 0.7; }
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .compare-table th, .compare-table td {
+    text-align: left; padding: 10px 8px;
+    border-bottom: 1px solid var(--secondary);
+  }
+  .compare-table th {
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--secondary);
+  }
+  .compare-table tr.highlighted td { background: var(--grey); font-weight: 600; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table .num { font-variant-numeric: tabular-nums; text-align: right; font-weight: 600; }
+
+  .ai-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 0;
+    border-top: 1px solid var(--secondary);
+    font-size: 12px;
+  }
+  .ai-row:first-of-type { border-top: 1.5px solid var(--secondary); margin-top: 6px; }
+  .icon-circle {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--secondary); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .icon-circle .material-symbols-outlined { font-size: 13px; }
+  .ai-row p { line-height: 1.45; }
+  .ai-row strong { font-weight: 600; }
+
+  .axis-text { font-size: 10px; font-weight: 500; fill: var(--secondary); font-family: var(--font); }
+  .axis-line { stroke: var(--secondary); stroke-width: 1; }
+  .grid-line { stroke: var(--secondary); stroke-width: 0.5; opacity: 0.06; }
+
+  .working-callout {
+    margin-top: 14px;
+    background: rgba(99,199,59,0.1);
+    border-left: 4px solid var(--success);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    font-size: 12px; line-height: 1.45;
+  }
+  .working-callout strong { font-weight: 600; }
+  .working-callout .label {
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    margin-bottom: 2px;
+  }
+</style>
+</head>
+<body>
+
+<main class="canvas">
+    <div class="canvas-inner">
+
+      <!-- Page header -->
+      <div class="page-header">
+        <div class="page-title-block">
+          <h1 class="page-title">Riverside Logistics — Manchester depot</h1>
+          <div class="page-sub">2.4 MW PV · 1.2 MWh BESS · 18 vehicle fleet · MIC 1,500 kVA · Connected via Virta API</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn"><span class="material-symbols-outlined">tune</span> Edit inputs</button>
+          <button class="btn"><span class="material-symbols-outlined">file_download</span> Export</button>
+          <button class="btn"><span class="material-symbols-outlined">share</span> Share</button>
+        </div>
+      </div>
+
+      <!-- Scenario chips (no border, just inline chips) -->
+      <div class="controls-bar">
+        <span class="controls-label">Scenario</span>
+        <div class="scenario-chips">
+          <button class="chip">PV only <span class="npv">£0.94m</span></button>
+          <button class="chip active">PV + BESS + V2G <span class="npv">£2.12m</span></button>
+          <button class="chip">Larger BESS <span class="npv">£1.61m</span></button>
+          <button class="chip">PV + V2G <span class="npv">£1.43m</span></button>
+          <button class="chip add"><span class="material-symbols-outlined">add</span></button>
+        </div>
+        <span class="live-pill" style="margin-left:auto;"><span class="live-dot"></span> Live · model v3.2</span>
+      </div>
+
+      <!-- Trust stats -->
+      <div class="trust-strip">
+        <div class="trust-stat"><span class="label">Forecast accuracy</span><span class="value">91%</span><span class="note">PV gen, last 90 days</span></div>
+        <div class="trust-stat"><span class="label">Telemetry</span><span class="value">12,450 hrs</span><span class="note">3-second intervals</span></div>
+        <div class="trust-stat"><span class="label">Confidence</span><span class="value">P10·P50·P90</span><span class="note">200 weather × tariff runs</span></div>
+        <div class="trust-stat"><span class="label">Refreshed</span><span class="value">2 hrs ago</span></div>
+      </div>
+
+      <!-- METRICS — full width row -->
+      <div class="metrics-row">
+        <div class="metric-card">
+          <div class="m-label">15-yr NPV</div>
+          <div class="m-value">£2.12<span class="unit">m</span></div>
+          <div class="m-trend trend-good"><span style="font-weight:700;">▲</span> +£1.18m vs baseline</div>
+          <div class="conf-band">
+            <div class="conf-band-track"></div>
+            <div class="conf-band-range" style="left:14%;right:18%;"></div>
+            <div class="conf-band-marker" style="left:50%;"></div>
+            <div class="conf-band-labels"><span>P10 · 1.74</span><span>P50</span><span>P90 · 2.46</span></div>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="m-label">Self-consumption</div>
+          <div class="m-value">78<span class="unit">%</span></div>
+          <div class="m-trend trend-good"><span style="font-weight:700;">▲</span> +24pp vs baseline</div>
+          <div class="m-meta">EV-attributed: <strong>34%</strong> · Site loads: <strong>44%</strong></div>
+        </div>
+        <div class="metric-card">
+          <div class="m-label">Grid import</div>
+          <div class="m-value">↓42<span class="unit">%</span></div>
+          <div class="m-trend trend-good"><span style="font-weight:700;">▼</span> £218k saved / yr</div>
+          <div class="m-meta">Peak hours avoided: <strong>91%</strong></div>
+        </div>
+        <div class="metric-card">
+          <div class="m-label">V2G revenue</div>
+          <div class="m-value">£47<span class="unit">k / yr</span></div>
+          <div class="m-trend"><span style="font-weight:600;">DFS + Agile arbitrage</span></div>
+          <div class="m-meta">After degradation: <strong>£35k net</strong></div>
+        </div>
+        <div class="metric-card dark">
+          <div class="m-label">Payback</div>
+          <div class="m-value">5.8<span class="unit"> yrs</span></div>
+          <div class="m-trend" style="color:#fff;">Capex £1.46m</div>
+          <div class="conf-band">
+            <div class="conf-band-track"></div>
+            <div class="conf-band-range" style="left:18%;right:22%;"></div>
+            <div class="conf-band-marker" style="left:50%;"></div>
+            <div class="conf-band-labels"><span>4.9</span><span>P50</span><span>7.2</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHART — full width -->
+      <div class="chart-card">
+        <div class="chart-head">
+          <div>
+            <div class="chart-title">Half-hourly dispatch · typical weekday</div>
+            <div class="chart-sub">Stacked: PV generation, BESS, EV charge, V2G discharge. Line: site load (predicted vs actual).</div>
+          </div>
+          <div class="chart-controls">
+            <div class="toggle-group">
+              <button class="toggle-btn active">Day</button>
+              <button class="toggle-btn">Week</button>
+              <button class="toggle-btn">Year</button>
+            </div>
+            <button class="btn" style="padding:6px 10px;font-size:11px;"><span class="material-symbols-outlined" style="font-size:14px;">tune</span> Customise</button>
+          </div>
+        </div>
+
+        <div class="legend">
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--power);"></span> PV generation</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--power-dark);"></span> BESS dispatch</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--power-tint);"></span> EV charge</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--power-darkest);"></span> V2G discharge</span>
+          <span class="legend-item"><span class="legend-swatch line"></span> Site load · actual</span>
+          <span class="legend-item"><span class="legend-swatch dashed"></span> Site load · predicted</span>
+        </div>
+
+        <svg viewBox="0 0 1380 380" width="100%" style="display:block;">
+          <g>
+            <line class="grid-line" x1="70" y1="40"  x2="1360" y2="40"/>
+            <line class="grid-line" x1="70" y1="110" x2="1360" y2="110"/>
+            <line class="grid-line" x1="70" y1="180" x2="1360" y2="180"/>
+            <line class="axis-line" x1="70" y1="250" x2="1360" y2="250"/>
+            <line class="grid-line" x1="70" y1="320" x2="1360" y2="320"/>
+          </g>
+
+          <g class="axis-text">
+            <text x="60" y="44"  text-anchor="end">2400 kW</text>
+            <text x="60" y="114" text-anchor="end">1600 kW</text>
+            <text x="60" y="184" text-anchor="end">800 kW</text>
+            <text x="60" y="254" text-anchor="end">0</text>
+            <text x="60" y="324" text-anchor="end">−800 kW</text>
+          </g>
+
+          <g class="axis-text">
+            <text x="70"   y="362" text-anchor="middle">00:00</text>
+            <text x="285"  y="362" text-anchor="middle">04:00</text>
+            <text x="500"  y="362" text-anchor="middle">08:00</text>
+            <text x="715"  y="362" text-anchor="middle">12:00</text>
+            <text x="930"  y="362" text-anchor="middle">16:00</text>
+            <text x="1145" y="362" text-anchor="middle">20:00</text>
+            <text x="1360" y="362" text-anchor="middle">24:00</text>
+          </g>
+
+          <!-- PV generation (full Power Pink) -->
+          <g fill="#C04A74">
+            <rect x="396"  y="236" width="46" height="14"/>
+            <rect x="450"  y="216" width="46" height="34"/>
+            <rect x="504"  y="192" width="46" height="58"/>
+            <rect x="558"  y="155" width="46" height="95"/>
+            <rect x="612"  y="120" width="46" height="130"/>
+            <rect x="666"  y="92"  width="46" height="158"/>
+            <rect x="720"  y="74"  width="46" height="176"/>
+            <rect x="774"  y="82"  width="46" height="168"/>
+            <rect x="828"  y="100" width="46" height="150"/>
+            <rect x="882"  y="130" width="46" height="120"/>
+            <rect x="936"  y="166" width="46" height="84"/>
+            <rect x="990"  y="200" width="46" height="50"/>
+            <rect x="1044" y="232" width="46" height="18"/>
+          </g>
+
+          <!-- BESS dispatch (dark Power) -->
+          <g fill="#872D52">
+            <rect x="72"  y="236" width="46" height="14"/>
+            <rect x="126" y="236" width="46" height="14"/>
+            <rect x="180" y="236" width="46" height="14"/>
+            <rect x="234" y="240" width="46" height="10"/>
+            <rect x="288" y="244" width="46" height="6"/>
+            <rect x="612" y="98"  width="46" height="22"/>
+            <rect x="666" y="68"  width="46" height="24"/>
+            <rect x="720" y="50"  width="46" height="24"/>
+            <rect x="774" y="60"  width="46" height="22"/>
+            <rect x="828" y="80"  width="46" height="20"/>
+            <rect x="990"  y="250" width="46" height="40"/>
+            <rect x="1044" y="250" width="46" height="55"/>
+            <rect x="1098" y="250" width="46" height="46"/>
+            <rect x="1152" y="250" width="46" height="22"/>
+          </g>
+
+          <!-- EV charge (light Power tint) — stacks on top of BESS/PV when present, otherwise reaches baseline (y=250) -->
+          <g fill="#E69BB4">
+            <!-- Overnight 00-03: stacks on BESS -->
+            <rect x="72"  y="200" width="46" height="36"/>
+            <rect x="126" y="190" width="46" height="46"/>
+            <rect x="180" y="190" width="46" height="46"/>
+            <rect x="234" y="200" width="46" height="40"/>
+            <!-- Midday 11-13: stacks on top of BESS (which is on top of PV) -->
+            <rect x="612" y="68"  width="46" height="30"/>
+            <rect x="666" y="36"  width="46" height="32"/>
+            <rect x="720" y="18"  width="46" height="32"/>
+            <!-- Evening 17-18: stacks on top of remaining PV -->
+            <rect x="990"  y="158" width="46" height="42"/>
+            <rect x="1044" y="182" width="46" height="50"/>
+            <!-- Evening 19-23: no PV/BESS above zero — sit on baseline (y=250) -->
+            <rect x="1098" y="190" width="46" height="60"/>
+            <rect x="1152" y="195" width="46" height="55"/>
+            <rect x="1206" y="210" width="46" height="40"/>
+            <rect x="1260" y="220" width="46" height="30"/>
+            <rect x="1314" y="228" width="46" height="22"/>
+          </g>
+
+          <!-- V2G discharge (darkest Power) — below zero -->
+          <g fill="#5A1E37">
+            <rect x="1044" y="305" width="46" height="20"/>
+            <rect x="1098" y="296" width="46" height="32"/>
+            <rect x="1152" y="272" width="46" height="22"/>
+          </g>
+
+          <!-- Predicted load (dashed) -->
+          <polyline fill="none" stroke="#111111" stroke-width="1.5" stroke-dasharray="5 4"
+            points="70,196 126,188 180,184 234,192 288,200 342,196 396,184 450,170 504,160 558,148 612,138 666,128 720,128 774,134 828,142 882,150 936,138 990,118 1044,114 1098,128 1152,150 1206,170 1260,184 1360,194"/>
+
+          <!-- Actual load (solid) -->
+          <polyline fill="none" stroke="#111111" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"
+            points="70,200 126,190 180,180 234,190 288,202 342,200 396,186 450,172 504,160 558,150 612,134 666,124 720,130 774,138 828,148 882,156 936,144 990,122 1044,118 1098,132 1152,156 1206,176 1260,190 1360,200"/>
+
+          <g>
+            <line x1="745" y1="22" x2="745" y2="74" stroke="#111111" stroke-width="1" stroke-dasharray="2 2"/>
+            <text x="750" y="20" class="axis-text" style="font-weight:600;">PV peak · BESS charges from surplus</text>
+          </g>
+          <g>
+            <line x1="1075" y1="22" x2="1075" y2="320" stroke="#5A1E37" stroke-width="1" stroke-dasharray="2 2"/>
+            <text x="1080" y="20" class="axis-text" style="font-weight:600;fill:#5A1E37;">17–19 peak · V2G discharge into DFS</text>
+          </g>
+        </svg>
+
+        <div class="working-callout">
+          <div class="label">Show your working</div>
+          <p>This day uses <strong>10 May 2026</strong> from the last 90 days of telemetry. PV forecast accuracy on this day was <strong>93%</strong> against actual. The MILP solver re-runs every 30 minutes and re-bid V2G into DFS at <strong>16:30, 17:30 and 18:00</strong> — earning £42 across the evening peak.</p>
+        </div>
+      </div>
+
+      <!-- Bottom row -->
+      <div class="bottom-row">
+        <div class="compare-card">
+          <h3>Scenario comparison</h3>
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th class="num">15-yr NPV</th>
+                <th class="num">Self-con</th>
+                <th class="num">V2G rev</th>
+                <th class="num">Payback</th>
+                <th class="num">P10 NPV</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>PV only · ToU charging</td>
+                <td class="num">£0.94m</td><td class="num">54%</td><td class="num">—</td><td class="num">8.4 yrs</td><td class="num">£0.71m</td>
+              </tr>
+              <tr class="highlighted">
+                <td>PV + BESS + V2G ◀ selected</td>
+                <td class="num">£2.12m</td><td class="num">78%</td><td class="num">£47k / yr</td><td class="num">5.8 yrs</td><td class="num">£1.74m</td>
+              </tr>
+              <tr>
+                <td>Larger BESS, no V2G</td>
+                <td class="num">£1.61m</td><td class="num">81%</td><td class="num">—</td><td class="num">7.1 yrs</td><td class="num">£1.32m</td>
+              </tr>
+              <tr>
+                <td>PV + V2G only</td>
+                <td class="num">£1.43m</td><td class="num">61%</td><td class="num">£51k / yr</td><td class="num">6.4 yrs</td><td class="num">£1.08m</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ai-card">
+          <h3>What the model decided <small>6 decision points</small></h3>
+          <div class="ai-row">
+            <span class="icon-circle"><span class="material-symbols-outlined">bolt</span></span>
+            <p><strong>05:00 ·</strong> Held BESS at 32% — knew solar was coming. Avoided the early Agile peak.</p>
+          </div>
+          <div class="ai-row">
+            <span class="icon-circle"><span class="material-symbols-outlined">solar_power</span></span>
+            <p><strong>11:30 ·</strong> Diverted surplus PV to 4 vehicles still on site instead of grid export. <strong>+£18 vs SEG.</strong></p>
+          </div>
+          <div class="ai-row">
+            <span class="icon-circle"><span class="material-symbols-outlined">trending_up</span></span>
+            <p><strong>17:30 ·</strong> V2G discharge into DFS event — 8 vehicles, 240 kWh. <strong>£42 earned</strong>, degradation £18.</p>
+          </div>
+          <div class="ai-row">
+            <span class="icon-circle"><span class="material-symbols-outlined">battery_charging_full</span></span>
+            <p><strong>22:00 ·</strong> Resumed fleet charging on Agile off-peak. All 18 vehicles at 90%+ by 06:00.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>

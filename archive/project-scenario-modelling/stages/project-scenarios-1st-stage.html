@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scenario Modelling — Wireframe</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f0f0f0;
+  color: #111111;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+/* ── Page footer ── */
+.page-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-top: 1px solid #111111;
+}
+.footer-btn {
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 150ms, opacity 150ms;
+  border: 1px solid #111111;
+}
+.footer-back {
+  background: #ffffff;
+  color: #111111;
+}
+.footer-back:hover { background: #F5F5F5; }
+.footer-finish {
+  background: #111111;
+  color: #ffffff;
+  border-color: #111111;
+}
+.footer-finish:hover { opacity: 0.8; }
+
+/* ── Wireframe badge ── */
+.wf-badge {
+  display: inline-block;
+  background: #111111;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+.wf-note {
+  font-size: 11px;
+  font-weight: 400;
+  color: #111111;
+  margin-bottom: 20px;
+  line-height: 1.6;
+  max-width: 700px;
+}
+
+/* ── Page shell ── */
+.page {
+  background: #ffffff;
+  border: 1px solid #111111;
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 1200px;
+}
+
+/* ── Page header ── */
+.page-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #111111;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.page-header-text { flex: 1; }
+.page-header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111111;
+  margin-bottom: 4px;
+}
+.page-header p {
+  font-size: 13px;
+  font-weight: 400;
+  color: #111111;
+}
+
+.download-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111111;
+  background: #ffffff;
+  border: 1px solid #111111;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: background 150ms;
+}
+.download-btn:hover { background: #F5F5F5; }
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #111111;
+  padding: 0 24px;
+}
+.tab {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 14px 16px 12px;
+  cursor: pointer;
+  color: #111111;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  user-select: none;
+}
+.tab.active { border-bottom-color: #111111; }
+.tab:hover:not(.active) { background: #F5F5F5; }
+
+/* ── Summary row ── */
+.summary-row {
+  padding: 12px 24px;
+  border-bottom: 1px solid #111111;
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.summary-pill {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.summary-pill .label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #111111;
+  background: #F5F5F5;
+  padding: 2px 7px;
+  border-radius: 3px;
+  display: inline-block;
+}
+.summary-pill .value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111111;
+}
+
+/* ── Main layout ── */
+.main-layout {
+  display: flex;
+  min-height: 620px;
+}
+
+/* ── Left panel ── */
+.left-panel {
+  width: 260px;
+  flex-shrink: 0;
+  border-right: 1px solid #111111;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.panel-section {
+  border: 1px solid #111111;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.panel-section-header {
+  background: #111111;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px 12px;
+}
+.panel-section-body {
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Evaluation period toggle */
+.eval-toggle {
+  display: flex;
+  gap: 6px;
+}
+.eval-btn {
+  flex: 1;
+  padding: 6px 4px;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  border: 1px solid #111111;
+  border-radius: 4px;
+  background: #ffffff;
+  cursor: pointer;
+  text-align: center;
+  transition: background 150ms;
+}
+.eval-btn.active {
+  background: #111111;
+  color: #ffffff;
+}
+.eval-btn:hover:not(.active) { background: #F5F5F5; }
+
+/* Scenario Modelling — NEW PANEL */
+.scenario-panel {
+  border: 1px solid #111111;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.scenario-panel-header {
+  background: #111111;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.scenario-panel-header .new-tag {
+  font-size: 8px;
+  font-weight: 700;
+  background: #111111;
+  color: #ffffff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.06em;
+}
+.scenario-panel-body {
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Layer toggle rows */
+.layer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.layer-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #111111;
+  flex: 1;
+  line-height: 1.3;
+}
+.layer-label small {
+  display: block;
+  font-size: 10px;
+  font-weight: 400;
+}
+.toggle {
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  border: 1px solid #111111;
+  background: #ffffff;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 150ms;
+}
+.toggle.on {
+  background: #111111;
+}
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #111111;
+  top: 2px;
+  left: 2px;
+  transition: transform 150ms, background 150ms;
+}
+.toggle.on::after {
+  background: #ffffff;
+  transform: translateX(16px);
+}
+
+.layer-color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Named scenario selector */
+.scenario-select {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 7px 10px;
+  border: 1px solid #111111;
+  border-radius: 4px;
+  background: #ffffff;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23111'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  outline: none;
+}
+.scenario-select:focus {
+  outline: 2px solid #111111;
+  outline-offset: 2px;
+}
+
+.divider {
+  height: 1px;
+  background: #111111;
+  opacity: 0.12;
+}
+
+.field-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #111111;
+  margin-bottom: 5px;
+}
+
+.reset-btn {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 7px;
+  border: 1px solid #111111;
+  border-radius: 4px;
+  background: #ffffff;
+  cursor: pointer;
+}
+.reset-btn:hover { background: #F5F5F5; }
+
+/* ── Right panel — chart area ── */
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Chart tabs */
+.chart-tabs {
+  display: flex;
+  border-bottom: 1px solid #111111;
+  padding: 0 24px;
+}
+.chart-tab {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 12px 14px 10px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  color: #111111;
+  user-select: none;
+}
+.chart-tab.active { border-bottom-color: #111111; }
+.chart-tab:hover:not(.active) { background: #F5F5F5; }
+
+/* Impact summary strip */
+.impact-strip {
+  display: flex;
+  gap: 16px;
+  padding: 16px 24px;
+}
+.impact-cell {
+  flex: 1;
+  padding: 20px 24px;
+  border: 1.5px solid #111111;
+  border-radius: 8px;
+  background: #ffffff;
+}
+.impact-cell .impact-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #111111;
+  margin-bottom: 6px;
+}
+.impact-cell .impact-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111111;
+  line-height: 1.2;
+}
+.impact-cell .impact-delta {
+  font-size: 12px;
+  font-weight: 400;
+  color: #111111;
+  margin-top: 4px;
+}
+.delta-up { color: #111111; font-weight: 600; }
+.delta-neutral { color: #111111; }
+
+/* Chart container */
+/* State switcher */
+.state-switcher {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.state-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #111111;
+  flex-shrink: 0;
+}
+.state-toggle {
+  display: flex;
+  border: 1px solid #111111;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.state-btn {
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 14px;
+  border: none;
+  background: #ffffff;
+  cursor: pointer;
+  color: #111111;
+  transition: background 150ms;
+  border-right: 1px solid #111111;
+}
+.state-btn:last-child { border-right: none; }
+.state-btn.active { background: #111111; color: #ffffff; }
+.state-btn:hover:not(.active) { background: #F5F5F5; }
+
+.chart-area {
+  flex: 1;
+  padding: 20px 24px 16px;
+  display: flex;
+  flex-direction: column;
+}
+.chart-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: #111111;
+  margin-bottom: 4px;
+}
+.chart-subtitle {
+  font-size: 11px;
+  font-weight: 400;
+  color: #111111;
+  margin-bottom: 16px;
+}
+.chart-subtitle .annotation {
+  display: inline-block;
+  background: #111111;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* SVG chart */
+#curve-chart {
+  width: 100%;
+  flex: 1;
+  cursor: crosshair;
+  min-height: 300px;
+}
+
+/* Legend */
+.chart-legend {
+  display: flex;
+  gap: 20px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 400;
+}
+.legend-line {
+  width: 20px;
+  height: 2px;
+  flex-shrink: 0;
+}
+.legend-dashed {
+  width: 20px;
+  height: 2px;
+  flex-shrink: 0;
+  background: repeating-linear-gradient(90deg, #111 0, #111 5px, transparent 5px, transparent 9px);
+}
+
+/* Tooltip */
+.chart-tooltip {
+  position: fixed;
+  background: #111111;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  pointer-events: none;
+  display: none;
+  z-index: 999;
+  line-height: 1.5;
+}
+.chart-tooltip .tt-year { font-weight: 700; font-size: 12px; }
+
+/* Wireframe annotation overlays */
+.annotation-callout {
+  position: relative;
+  display: inline-block;
+}
+.callout-badge {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #111111;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 18px;
+  margin-left: 4px;
+  vertical-align: middle;
+  cursor: help;
+  position: relative;
+}
+
+/* Notes panel at bottom */
+</style>
+</head>
+<body>
+
+<div class="wf-badge">Wireframe — Low fidelity · Scenario Modelling v0.1</div>
+<p class="wf-note">This wireframe replaces the current Scenario Planning panel with an interactive energy cost curve editor. Users drag existing data points to reshape the 30-year forecast. The chart updates in real time and the impact summary reflects the change. Annotations numbered in purple.</p>
+
+<div class="page">
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="page-header-text">
+      <h1>Project Analysis for Install energy-efficient machinery</h1>
+      <p>Your current and future market-reflective energy prices are used in the calculations to enhance the accuracy of your result.</p>
+    </div>
+    <button class="download-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+        <path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="#111111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Download
+    </button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active">Summary</div>
+    <div class="tab">Meters</div>
+    <div class="tab">Costs</div>
+    <div class="tab">Consumption &amp; Savings</div>
+    <div class="tab">Energy Export</div>
+  </div>
+
+  <!-- Summary row -->
+  <div class="summary-row">
+    <div class="summary-pill">
+      <span class="label">Lifespan</span>
+      <span class="value">10 Years</span>
+    </div>
+    <div class="summary-pill">
+      <span class="label">Total Costs</span>
+      <span class="value">£207.0k</span>
+    </div>
+  </div>
+
+  <!-- Main layout -->
+  <div class="main-layout">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+
+      <!-- Evaluation Period (unchanged) -->
+      <div class="panel-section">
+        <div class="panel-section-header">Evaluation Period</div>
+        <div class="panel-section-body">
+          <div class="eval-toggle">
+            <button class="eval-btn" onclick="setEval(this)">5 Years</button>
+            <button class="eval-btn active" onclick="setEval(this)">10 Years</button>
+            <button class="eval-btn" onclick="setEval(this)">2050</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENARIO MODELLING — replaces old panel -->
+      <div class="scenario-panel">
+        <div class="scenario-panel-header">
+          Scenario Modelling
+          <span class="new-tag">New</span>
+        </div>
+        <div class="scenario-panel-body">
+
+          <!-- Named scenario preset -->
+          <div>
+            <div class="field-label">Scenario preset</div>
+            <select class="scenario-select" onchange="applyPreset(this.value)">
+              <option value="custom">Custom (edit below)</option>
+              <option value="mid">Mid — stable market</option>
+              <option value="high">High — price inflation</option>
+              <option value="low">Low — market decline</option>
+            </select>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Active layers -->
+          <div>
+            <div class="field-label" style="margin-bottom:10px;">Active layers</div>
+
+            <div class="layer-row" id="layer-energy">
+              <div class="layer-color-dot" style="background:#111111;"></div>
+              <div class="layer-label">Energy cost<small>p/kWh over time</small></div>
+              <div class="toggle on"></div>
+            </div>
+
+            <div class="layer-row" style="margin-top:10px;" id="layer-noncommodity">
+              <div class="layer-color-dot" style="border:1.5px dashed #111111; background:transparent;"></div>
+              <div class="layer-label">Non-commodity costs<small>T&amp;D, levies, grants</small></div>
+              <div class="toggle" id="toggle-nc" onclick="setAllLayers(true)"></div>
+            </div>
+
+            <div class="layer-row" style="margin-top:10px;" id="layer-degradation">
+              <div class="layer-color-dot" style="border:1.5px dashed #111111; background:transparent;"></div>
+              <div class="layer-label">System degradation<small>Declining kWh output</small></div>
+              <div class="toggle" id="toggle-deg" onclick="setAllLayers(true)"></div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div style="font-size:11px; color:#111111; line-height:1.6; background:#F5F5F5; padding:8px 10px; border-radius:4px;">
+            <strong>Drag any point</strong> on the chart to adjust the forecast. The impact summary updates automatically.
+          </div>
+
+          <button class="reset-btn" onclick="resetCurve()">Reset to baseline</button>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+
+      <!-- Chart tabs -->
+      <div class="chart-tabs">
+        <div class="chart-tab">Cash Flow</div>
+        <div class="chart-tab">Energy Costs</div>
+        <div class="chart-tab active">Scenarios <span style="font-size:9px;font-weight:700;background:#111111;color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px;">New</span></div>
+      </div>
+
+      <!-- Impact summary strip -->
+      <div class="impact-strip">
+        <div class="impact-cell">
+          <div class="impact-label">Est. Net Savings</div>
+          <div class="impact-value" id="val-savings">£90,022</div>
+          <div class="impact-delta delta-neutral" id="delta-savings">Baseline</div>
+        </div>
+        <div class="impact-cell">
+          <div class="impact-label">Payback Term</div>
+          <div class="impact-value" id="val-payback">77 <span style="font-size:14px;font-weight:400;">months</span></div>
+          <div class="impact-delta delta-neutral" id="delta-payback">Baseline</div>
+        </div>
+        <div class="impact-cell">
+          <div class="impact-label">Carbon Savings</div>
+          <div class="impact-value">293.4 <span style="font-size:14px;font-weight:400;">tCO₂e</span></div>
+          <div class="impact-delta delta-neutral">Unaffected by energy cost</div>
+        </div>
+      </div>
+
+      <!-- Chart area -->
+      <div class="chart-area">
+
+        <!-- State switcher -->
+        <div class="state-switcher">
+          <span class="state-label">View state</span>
+          <div class="state-toggle">
+            <button class="state-btn active" id="btn-single" onclick="setState('single')">Single layer</button>
+            <button class="state-btn" id="btn-all" onclick="setState('all')">All layers</button>
+          </div>
+        </div>
+
+        <div class="chart-title" id="chart-title">Energy cost forecast — 30-year view
+        </div>
+        <div class="chart-subtitle" id="chart-subtitle">
+          Drag points to reshape the forecast. Solid line = your scenario. Dashed = baseline.
+          <span class="annotation">Drag to edit</span>
+        </div>
+
+        <svg id="curve-chart" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet"></svg>
+
+        <div class="chart-legend" id="chart-legend">
+          <div class="legend-item"><div class="legend-line" style="background:#111111; height:2.5px;"></div>Energy cost</div>
+          <div class="legend-item legend-extra" style="display:none;"><div class="legend-line" style="background:#111111; height:2.5px; opacity:0.5;"></div>Non-commodity</div>
+          <div class="legend-item legend-extra" style="display:none;"><div class="legend-dashed" style="opacity:0.5;"></div>Degradation</div>
+          <div class="legend-item"><div class="legend-dashed"></div>Baseline</div>
+          <div class="legend-item"><div class="legend-line" style="background:#DC2626; width:2px; height:14px;"></div>Contract end</div>
+        </div>
+      </div>
+
+      <!-- Wireframe notes -->
+    </div>
+  </div>
+
+  <!-- Page footer -->
+  <div class="page-footer">
+    <button class="footer-btn footer-back">← Back</button>
+    <button class="footer-btn footer-finish">Finish</button>
+  </div>
+
+</div>
+
+<!-- Wireframe notes — outside the UI -->
+
+
+<div class="chart-tooltip" id="tooltip">
+  <div class="tt-year" id="tt-year"></div>
+  <div id="tt-value"></div>
+</div>
+
+<script>
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const svg = document.getElementById('curve-chart');
+const tooltip = document.getElementById('tooltip');
+
+// Chart dimensions
+const PAD = { top: 20, right: 20, bottom: 40, left: 52 };
+const VW = 800, VH = 300;
+const CW = VW - PAD.left - PAD.right;
+const CH = VH - PAD.top - PAD.bottom;
+const YEARS = 30;
+const CONTRACT_END_YEAR = 4; // fixed contract ends at year 4
+
+// Baseline energy cost data (p/kWh) — flat-ish with small rise
+function baseline(yr) {
+  if (yr <= CONTRACT_END_YEAR) return 22 + yr * 0.3; // fixed contract
+  return 23.2 + (yr - CONTRACT_END_YEAR) * 0.8 + Math.sin(yr * 0.4) * 0.5;
+}
+
+// User-editable points (only post-contract)
+let userPoints = [];
+for (let y = 0; y <= YEARS; y++) {
+  userPoints.push({ year: y, value: baseline(y), locked: y <= CONTRACT_END_YEAR });
+}
+
+// Coordinate helpers
+function xPos(year) { return PAD.left + (year / YEARS) * CW; }
+function yPos(val) {
+  const minV = 10, maxV = 50;
+  return PAD.top + CH - ((val - minV) / (maxV - minV)) * CH;
+}
+function yToVal(y) {
+  const minV = 10, maxV = 50;
+  return maxV - ((y - PAD.top) / CH) * (maxV - minV);
+}
+
+let dragging = null;
+let svgRect = null;
+
+function buildChart() {
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  svgRect = svg.getBoundingClientRect();
+
+  // Grid lines + Y axis labels
+  [10, 20, 30, 40, 50].forEach(v => {
+    const y = yPos(v);
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', PAD.left); line.setAttribute('x2', VW - PAD.right);
+    line.setAttribute('y1', y); line.setAttribute('y2', y);
+    line.setAttribute('stroke', '#111'); line.setAttribute('stroke-width', '0.5');
+    line.setAttribute('stroke-opacity', '0.07');
+    svg.appendChild(line);
+
+    const lbl = document.createElementNS(SVG_NS, 'text');
+    lbl.setAttribute('x', PAD.left - 6); lbl.setAttribute('y', y + 4);
+    lbl.setAttribute('text-anchor', 'end');
+    lbl.setAttribute('font-size', '9'); lbl.setAttribute('font-family', 'Poppins, sans-serif');
+    lbl.setAttribute('fill', '#111');
+    lbl.textContent = v + 'p';
+    svg.appendChild(lbl);
+  });
+
+  // X axis labels (every 5 years)
+  for (let y = 0; y <= YEARS; y += 5) {
+    const x = xPos(y);
+    const lbl = document.createElementNS(SVG_NS, 'text');
+    lbl.setAttribute('x', x); lbl.setAttribute('y', VH - PAD.bottom + 14);
+    lbl.setAttribute('text-anchor', 'middle');
+    lbl.setAttribute('font-size', '9'); lbl.setAttribute('font-family', 'Poppins, sans-serif');
+    lbl.setAttribute('fill', '#111');
+    lbl.textContent = 'Yr ' + y;
+    svg.appendChild(lbl);
+  }
+
+  // Baseline line (dashed)
+  const baselinePts = userPoints.map(p => `${xPos(p.year)},${yPos(baseline(p.year))}`).join(' ');
+  const bLine = document.createElementNS(SVG_NS, 'polyline');
+  bLine.setAttribute('points', baselinePts);
+  bLine.setAttribute('fill', 'none');
+  bLine.setAttribute('stroke', '#111');
+  bLine.setAttribute('stroke-width', '1.5');
+  bLine.setAttribute('stroke-dasharray', '5 4');
+  bLine.setAttribute('stroke-opacity', '0.25');
+  svg.appendChild(bLine);
+
+  // Contract end vertical line
+  const cx = xPos(CONTRACT_END_YEAR);
+  const cLine = document.createElementNS(SVG_NS, 'line');
+  cLine.setAttribute('x1', cx); cLine.setAttribute('x2', cx);
+  cLine.setAttribute('y1', PAD.top); cLine.setAttribute('y2', VH - PAD.bottom);
+  cLine.setAttribute('stroke', '#DC2626');
+  cLine.setAttribute('stroke-width', '1.5');
+  cLine.setAttribute('stroke-dasharray', '4 3');
+  svg.appendChild(cLine);
+
+  // Contract end label
+  const cLbl = document.createElementNS(SVG_NS, 'text');
+  cLbl.setAttribute('x', cx + 4); cLbl.setAttribute('y', PAD.top + 12);
+  cLbl.setAttribute('font-size', '8'); cLbl.setAttribute('font-family', 'Poppins, sans-serif');
+  cLbl.setAttribute('fill', '#DC2626'); cLbl.setAttribute('font-weight', '600');
+  cLbl.textContent = 'Contract end';
+  svg.appendChild(cLbl);
+
+  // Locked region shade
+  const shade = document.createElementNS(SVG_NS, 'rect');
+  shade.setAttribute('x', PAD.left);
+  shade.setAttribute('y', PAD.top);
+  shade.setAttribute('width', cx - PAD.left);
+  shade.setAttribute('height', CH);
+  shade.setAttribute('fill', '#F5F5F5');
+  shade.setAttribute('opacity', '0.6');
+  svg.insertBefore(shade, svg.firstChild);
+
+  // Locked label
+  const lockLbl = document.createElementNS(SVG_NS, 'text');
+  lockLbl.setAttribute('x', PAD.left + (cx - PAD.left) / 2); lockLbl.setAttribute('y', VH - PAD.bottom - 8);
+  lockLbl.setAttribute('text-anchor', 'middle');
+  lockLbl.setAttribute('font-size', '8'); lockLbl.setAttribute('font-family', 'Poppins, sans-serif');
+  lockLbl.setAttribute('fill', '#111'); lockLbl.setAttribute('opacity', '0.4');
+  lockLbl.textContent = 'Fixed contract (read-only)';
+  svg.appendChild(lockLbl);
+
+  // User scenario line (energy cost — always shown, draggable)
+  const pts = userPoints.map(p => `${xPos(p.year)},${yPos(p.value)}`).join(' ');
+  const uLine = document.createElementNS(SVG_NS, 'polyline');
+  uLine.setAttribute('points', pts);
+  uLine.setAttribute('fill', 'none');
+  uLine.setAttribute('stroke', '#111111');
+  uLine.setAttribute('stroke-width', '2.5');
+  svg.appendChild(uLine);
+
+  // Extra layers in all-layers state
+  if (viewState === 'all') {
+    // Non-commodity: energy cost + fixed offset (e.g. +8p/kWh, representing T&D/levies)
+    const ncPts = userPoints.map(p => `${xPos(p.year)},${yPos(p.value + 8)}`).join(' ');
+    const ncLine = document.createElementNS(SVG_NS, 'polyline');
+    ncLine.setAttribute('points', ncPts);
+    ncLine.setAttribute('fill', 'none');
+    ncLine.setAttribute('stroke', '#111111');
+    ncLine.setAttribute('stroke-width', '1.5');
+    ncLine.setAttribute('stroke-opacity', '0.45');
+    svg.appendChild(ncLine);
+
+    // Degradation: declining curve showing output drop (starts at energy cost, drops ~20% by yr 30)
+    const degPts = userPoints.map(p => {
+      const degradeFactor = 1 - (p.year / YEARS) * 0.22;
+      return `${xPos(p.year)},${yPos(p.value * degradeFactor)}`;
+    }).join(' ');
+    const degLine = document.createElementNS(SVG_NS, 'polyline');
+    degLine.setAttribute('points', degPts);
+    degLine.setAttribute('fill', 'none');
+    degLine.setAttribute('stroke', '#111111');
+    degLine.setAttribute('stroke-width', '1.5');
+    degLine.setAttribute('stroke-dasharray', '3 3');
+    degLine.setAttribute('stroke-opacity', '0.4');
+    svg.appendChild(degLine);
+
+    // Annotation labels on chart
+    const ncLbl = document.createElementNS(SVG_NS, 'text');
+    ncLbl.setAttribute('x', xPos(28)); ncLbl.setAttribute('y', yPos(userPoints[28].value + 8) - 6);
+    ncLbl.setAttribute('font-size', '8'); ncLbl.setAttribute('font-family', 'Poppins, sans-serif');
+    ncLbl.setAttribute('fill', '#111111'); ncLbl.setAttribute('opacity', '0.5');
+    ncLbl.setAttribute('text-anchor', 'end');
+    ncLbl.textContent = 'Non-commodity';
+    svg.appendChild(ncLbl);
+
+    const degLbl = document.createElementNS(SVG_NS, 'text');
+    degLbl.setAttribute('x', xPos(28)); degLbl.setAttribute('y', yPos(userPoints[28].value * (1 - (28/YEARS)*0.22)) + 12);
+    degLbl.setAttribute('font-size', '8'); degLbl.setAttribute('font-family', 'Poppins, sans-serif');
+    degLbl.setAttribute('fill', '#111111'); degLbl.setAttribute('opacity', '0.5');
+    degLbl.setAttribute('text-anchor', 'end');
+    degLbl.textContent = 'Degradation';
+    svg.appendChild(degLbl);
+  }
+
+  // Draggable points (post-contract only)
+  userPoints.forEach((p, i) => {
+    if (p.locked) return;
+    const circle = document.createElementNS(SVG_NS, 'circle');
+    circle.setAttribute('cx', xPos(p.year));
+    circle.setAttribute('cy', yPos(p.value));
+    circle.setAttribute('r', '5');
+    circle.setAttribute('fill', '#111111');
+    circle.setAttribute('stroke', '#ffffff');
+    circle.setAttribute('stroke-width', '2');
+    circle.setAttribute('cursor', 'grab');
+    circle.dataset.idx = i;
+
+    circle.addEventListener('mouseenter', (e) => {
+      circle.setAttribute('r', '7');
+      tooltip.style.display = 'block';
+      document.getElementById('tt-year').textContent = 'Year ' + p.year;
+      document.getElementById('tt-value').textContent = p.value.toFixed(1) + 'p / kWh';
+    });
+    circle.addEventListener('mouseleave', () => {
+      if (dragging !== i) circle.setAttribute('r', '5');
+      tooltip.style.display = 'none';
+    });
+    circle.addEventListener('mousemove', (e) => {
+      tooltip.style.left = (e.clientX + 14) + 'px';
+      tooltip.style.top  = (e.clientY - 10) + 'px';
+    });
+    circle.addEventListener('mousedown', (e) => {
+      dragging = i;
+      circle.setAttribute('cursor', 'grabbing');
+      e.preventDefault();
+    });
+    svg.appendChild(circle);
+  });
+
+  // Axis baseline
+  const axis = document.createElementNS(SVG_NS, 'line');
+  axis.setAttribute('x1', PAD.left); axis.setAttribute('x2', VW - PAD.right);
+  axis.setAttribute('y1', VH - PAD.bottom); axis.setAttribute('y2', VH - PAD.bottom);
+  axis.setAttribute('stroke', '#111'); axis.setAttribute('stroke-width', '1');
+  svg.appendChild(axis);
+}
+
+// Mouse move / up on SVG
+svg.addEventListener('mousemove', (e) => {
+  if (dragging === null) return;
+  const rect = svg.getBoundingClientRect();
+  const scaleY = VH / rect.height;
+  const svgY = (e.clientY - rect.top) * scaleY;
+  let val = yToVal(svgY);
+  val = Math.max(10, Math.min(50, val));
+  userPoints[dragging].value = parseFloat(val.toFixed(1));
+  buildChart();
+  updateImpact();
+  // Keep tooltip visible while dragging
+  tooltip.style.display = 'block';
+  document.getElementById('tt-year').textContent = 'Year ' + userPoints[dragging].year;
+  document.getElementById('tt-value').textContent = val.toFixed(1) + 'p / kWh';
+  tooltip.style.left = (e.clientX + 14) + 'px';
+  tooltip.style.top  = (e.clientY - 10) + 'px';
+});
+
+svg.addEventListener('mouseup', () => { dragging = null; tooltip.style.display = 'none'; });
+svg.addEventListener('mouseleave', () => { dragging = null; });
+
+function updateImpact() {
+  // Simple delta: compare avg user value vs avg baseline (post-contract)
+  const postContract = userPoints.filter(p => !p.locked);
+  const avgUser = postContract.reduce((s, p) => s + p.value, 0) / postContract.length;
+  const avgBase = postContract.reduce((s, p) => s + baseline(p.year), 0) / postContract.length;
+  const delta = avgUser - avgBase;
+
+  const savingsEl = document.getElementById('val-savings');
+  const deltaSavings = document.getElementById('delta-savings');
+  const paybackEl = document.getElementById('val-payback');
+  const deltaPayback = document.getElementById('delta-payback');
+
+  if (Math.abs(delta) < 0.1) {
+    savingsEl.textContent = '£90,022';
+    deltaSavings.textContent = 'Baseline';
+    deltaSavings.className = 'impact-delta delta-neutral';
+    paybackEl.innerHTML = '77 <span style="font-size:13px;font-weight:400;">months</span>';
+    deltaPayback.textContent = 'Baseline';
+    deltaPayback.className = 'impact-delta delta-neutral';
+  } else {
+    const savingsChange = Math.round(-delta * 1200);
+    const newSavings = 90022 + savingsChange;
+    savingsEl.textContent = '£' + newSavings.toLocaleString();
+    const sign = savingsChange >= 0 ? '+' : '';
+    deltaSavings.textContent = sign + '£' + Math.abs(savingsChange).toLocaleString() + ' vs baseline';
+    deltaSavings.className = 'impact-delta ' + (savingsChange >= 0 ? 'delta-neutral' : 'delta-up');
+
+    const paybackChange = Math.round(delta * 2);
+    const newPayback = 77 + paybackChange;
+    paybackEl.innerHTML = newPayback + ' <span style="font-size:13px;font-weight:400;">months</span>';
+    const psign = paybackChange >= 0 ? '+' : '';
+    deltaPayback.textContent = psign + paybackChange + ' months vs baseline';
+    deltaPayback.className = 'impact-delta ' + (paybackChange > 0 ? 'delta-up' : 'delta-neutral');
+  }
+}
+
+function resetCurve() {
+  userPoints.forEach(p => { p.value = baseline(p.year); });
+  buildChart();
+  updateImpact();
+  document.querySelector('.scenario-select').value = 'custom';
+}
+
+function applyPreset(val) {
+  userPoints.forEach(p => {
+    if (p.locked) return;
+    const b = baseline(p.year);
+    if (val === 'high') p.value = parseFloat((b * 1.18 + (p.year - CONTRACT_END_YEAR) * 0.4).toFixed(1));
+    else if (val === 'low') p.value = parseFloat((b * 0.85 - (p.year - CONTRACT_END_YEAR) * 0.1).toFixed(1));
+    else if (val === 'mid') p.value = parseFloat(b.toFixed(1));
+    else return;
+    p.value = Math.max(10, Math.min(50, p.value));
+  });
+  buildChart();
+  updateImpact();
+}
+
+let viewState = 'single'; // 'single' | 'all'
+
+function setState(state) {
+  viewState = state;
+  document.getElementById('btn-single').classList.toggle('active', state === 'single');
+  document.getElementById('btn-all').classList.toggle('active', state === 'all');
+
+  // Update left panel layer rows
+  const nc = document.getElementById('layer-noncommodity');
+  const deg = document.getElementById('layer-degradation');
+  const toggleNc = document.getElementById('toggle-nc');
+  const toggleDeg = document.getElementById('toggle-deg');
+
+  if (state === 'all') {
+    nc.style.opacity = '1';
+    deg.style.opacity = '1';
+    toggleNc.classList.add('on');
+    toggleDeg.classList.add('on');
+    document.getElementById('chart-title').innerHTML = 'Energy cost forecast — all layers active';
+    document.getElementById('chart-subtitle').innerHTML = 'Drag energy cost points to reshape. Non-commodity and degradation curves update relative to it. <span class="annotation">3 layers</span>';
+    document.querySelectorAll('.legend-extra').forEach(el => el.style.display = 'flex');
+  } else {
+    nc.style.opacity = '0.35';
+    deg.style.opacity = '0.35';
+    toggleNc.classList.remove('on');
+    toggleDeg.classList.remove('on');
+    document.getElementById('chart-title').innerHTML = 'Energy cost forecast — 30-year view';
+    document.getElementById('chart-subtitle').innerHTML = 'Drag points to reshape the forecast. Solid line = your scenario. Dashed = baseline. <span class="annotation">Drag to edit</span>';
+    document.querySelectorAll('.legend-extra').forEach(el => el.style.display = 'none');
+  }
+  buildChart();
+}
+
+function setAllLayers(on) {
+  setState(on ? 'all' : 'single');
+}
+
+function toggleLayer(el, layer) {
+  el.classList.toggle('on');
+}
+
+function setEval(btn) {
+  document.querySelectorAll('.eval-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// Init
+buildChart();
+// Set initial layer panel opacity for single-layer state
+document.getElementById('layer-noncommodity').style.opacity = '0.35';
+document.getElementById('layer-degradation').style.opacity = '0.35';
+window.addEventListener('resize', buildChart);
+</script>
+</body>
+</html>

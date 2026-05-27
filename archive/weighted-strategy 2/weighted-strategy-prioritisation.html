@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrueDI — Weighted Strategy Prioritisation</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<style>
+  :root {
+    --primary: #3F2A95;
+    --secondary: #111111;
+    --accent: #3185DA;
+    --highlight: #C04A74;
+    --success: #63C73B;
+    --warning: #FF9800;
+    --alert: #DC2626;
+    --white: #ffffff;
+    --font: 'Poppins', system-ui, -apple-system, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font);
+    color: #111111;
+    background: #FFFFFF;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    vertical-align: middle;
+  }
+
+  /* Layout */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px;
+  }
+
+  .page-header {
+    margin-bottom: 48px;
+  }
+
+  .page-title {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+
+  .page-subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  /* Wireframe annotation */
+  .annotation {
+    font-size: 11px;
+    font-weight: 500;
+    color: #111;
+    background: #FFF3CD;
+    border: 1.5px dashed #FF9800;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-bottom: 16px;
+    display: inline-block;
+  }
+
+  /* Section Tabs */
+  .section-tabs {
+    display: flex;
+    margin-bottom: 48px;
+  }
+
+  .section-tabs button {
+    flex: 1;
+    border: 1.5px solid #111;
+    background: #FFF;
+    color: #111;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 150ms ease-out;
+  }
+
+  .section-tabs button:first-child { border-radius: 8px 0 0 8px; }
+  .section-tabs button:last-child { border-radius: 0 8px 8px 0; }
+  .section-tabs button:not(:first-child) { border-left: none; }
+  .section-tabs button.active { background: #111; color: #FFF; }
+  .section-tabs button:hover:not(.active) { background: #F5F5F5; }
+
+  /* Step panels */
+  .step-panel { display: none; }
+  .step-panel.active { display: block; }
+
+  /* Section title */
+  .section-title {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+
+  .section-description {
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 32px;
+  }
+
+  /* Driver cards */
+  .drivers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+
+  .driver-card {
+    border: 1.5px solid #111;
+    border-radius: 8px;
+    padding: 24px;
+    position: relative;
+  }
+
+  .driver-card .overline {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  .driver-card .driver-name {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .driver-card .driver-desc {
+    font-size: 12px;
+    font-weight: 400;
+    margin-bottom: 24px;
+  }
+
+  /* Weight slider */
+  .weight-control {
+    margin-bottom: 16px;
+  }
+
+  .weight-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .weight-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .weight-value {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .weight-unit {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  /* Slider track */
+  .slider-track {
+    width: 100%;
+    height: 8px;
+    background: #F5F5F5;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .slider-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: #111;
+    transition: width 150ms ease-out;
+  }
+
+  .slider-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #111;
+    border: 2px solid #FFF;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    cursor: grab;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    background: #F5F5F5;
+    border-radius: 4px;
+    outline: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #111;
+    border: 2px solid #FFF;
+    cursor: grab;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+
+  /* Weight distribution bar */
+  .weight-distribution {
+    margin-bottom: 48px;
+  }
+
+  .dist-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .dist-bar {
+    display: flex;
+    height: 32px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1.5px solid #111;
+  }
+
+  .dist-segment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #FFF;
+    transition: flex 300ms ease-out;
+    min-width: 40px;
+  }
+
+  .dist-segment.carbon { background: var(--success); }
+  .dist-segment.cost { background: var(--accent); }
+  .dist-segment.compliance { background: var(--primary); }
+
+  .dist-legend {
+    display: flex;
+    gap: 24px;
+    margin-top: 12px;
+  }
+
+  .dist-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .dist-legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* Budget input */
+  .budget-section {
+    border: 1.5px solid #111;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 48px;
+  }
+
+  .budget-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .budget-input-wrap {
+    position: relative;
+    flex: 1;
+    max-width: 280px;
+  }
+
+  .budget-prefix {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .budget-input {
+    width: 100%;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px 16px 12px 28px;
+    border: 1.5px solid #111;
+    border-radius: 8px;
+    outline: none;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .budget-input:focus { outline: 2px solid #111; outline-offset: 2px; }
+
+  .budget-period {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px 16px;
+    border: 1.5px solid #111;
+    border-radius: 8px;
+    background: #FFF;
+    font-family: var(--font);
+    cursor: pointer;
+  }
+
+  /* Buttons */
+  .btn-filled {
+    background: #111;
+    color: #FFF;
+    border: 1.5px solid #111;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 150ms ease-out;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-filled:hover { opacity: 0.8; }
+
+  .btn-outline {
+    background: #FFF;
+    color: #111;
+    border: 1.5px solid #111;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 150ms ease-out;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-outline:hover { background: #F5F5F5; }
+
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+  }
+
+  /* ===== STEP 2: Comparison Table ===== */
+
+  .comparison-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .strategies-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-bottom: 32px;
+  }
+
+  .strategies-table thead th {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 12px 16px;
+    border-bottom: 2px solid #111;
+    text-align: left;
+  }
+
+  .strategies-table thead th.score-col {
+    text-align: center;
+  }
+
+  .strategies-table tbody td {
+    padding: 16px;
+    border-bottom: 1px solid #111;
+    vertical-align: top;
+  }
+
+  .strategies-table tbody tr:last-child td {
+    border-bottom: 2px solid #111;
+  }
+
+  .strategies-table tbody tr:hover {
+    background: rgba(17,17,17,0.03);
+  }
+
+  .strategy-name {
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .strategy-desc {
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  /* Score cells */
+  .score-cell {
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .score-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .score-bar-track {
+    flex: 1;
+    height: 8px;
+    background: #F5F5F5;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 300ms ease-out;
+  }
+
+  .score-bar-fill.carbon { background: var(--success); }
+  .score-bar-fill.cost { background: var(--accent); }
+  .score-bar-fill.compliance { background: var(--primary); }
+
+  .score-number {
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    min-width: 28px;
+    text-align: right;
+  }
+
+  /* Weighted total */
+  .weighted-total {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .weighted-total .unit {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #111;
+    color: #FFF;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .rank-badge.top { background: var(--success); }
+
+  /* ===== STEP 3: Results ===== */
+
+  .results-summary {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 32px;
+    margin-bottom: 48px;
+  }
+
+  .top-strategy-card {
+    border: 1.5px solid #111;
+    border-radius: 8px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .top-strategy-overline {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  .top-strategy-name {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .top-strategy-score {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+
+  .top-strategy-score .suffix {
+    font-size: 20px;
+    font-weight: 400;
+  }
+
+  .top-strategy-context {
+    font-size: 14px;
+    font-weight: 400;
+    margin-top: 16px;
+  }
+
+  /* Radar / breakdown chart */
+  .breakdown-card {
+    border: 1.5px solid #111;
+    border-radius: 8px;
+    padding: 32px;
+  }
+
+  .breakdown-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  .breakdown-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .breakdown-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    width: 100px;
+    flex-shrink: 0;
+  }
+
+  .breakdown-bar-track {
+    flex: 1;
+    height: 24px;
+    background: #F5F5F5;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .breakdown-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+  }
+
+  .breakdown-bar-fill.carbon { background: var(--success); }
+  .breakdown-bar-fill.cost { background: var(--accent); }
+  .breakdown-bar-fill.compliance { background: var(--primary); }
+
+  .breakdown-bar-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #FFF;
+  }
+
+  .breakdown-score {
+    font-size: 14px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    width: 40px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* Ranked list */
+  .ranked-list {
+    margin-bottom: 48px;
+  }
+
+  .ranked-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid #111;
+  }
+
+  .ranked-item:last-child { border-bottom: 2px solid #111; }
+  .ranked-item:first-child { border-top: 2px solid #111; }
+
+  .ranked-position {
+    font-size: 28px;
+    font-weight: 700;
+    width: 40px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .ranked-info { flex: 1; }
+
+  .ranked-name {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .ranked-detail {
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .ranked-score-bar {
+    width: 200px;
+    flex-shrink: 0;
+  }
+
+  .ranked-score-value {
+    font-size: 14px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    width: 50px;
+    flex-shrink: 0;
+  }
+
+  .stacked-bar {
+    display: flex;
+    height: 24px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .stacked-segment {
+    height: 100%;
+    transition: flex 300ms ease-out;
+  }
+
+  .stacked-segment.carbon { background: var(--success); }
+  .stacked-segment.cost { background: var(--accent); }
+  .stacked-segment.compliance { background: var(--primary); }
+
+  /* Profile snapshot */
+  .profile-snapshot {
+    border: 1.5px solid #111;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 48px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .profile-snapshot .snapshot-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .profile-snapshot .snapshot-values {
+    display: flex;
+    gap: 32px;
+  }
+
+  .snapshot-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .snapshot-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .snapshot-text {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* Footer */
+  .wireframe-footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid #111;
+    font-size: 11px;
+    font-weight: 400;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-title">Weighted Strategy Prioritisation</div>
+    <div class="page-subtitle">Set your sustainability drivers, then compare strategies to find the best fit for your organisation.</div>
+  </div>
+
+  <!-- Step Tabs -->
+  <div class="section-tabs">
+    <button class="active" onclick="showStep(1)">1. Sustainability Profile</button>
+    <button onclick="showStep(2)">2. Strategy Comparison</button>
+    <button onclick="showStep(3)">3. Results</button>
+  </div>
+
+  <!-- ==================== STEP 1: Sustainability Profile ==================== -->
+  <div class="step-panel active" id="step1">
+
+    <div class="annotation">
+      <span class="material-symbols-outlined" style="font-size: 14px; margin-right: 4px;">info</span>
+      Wireframe — captures customer drivers upfront to weight all downstream comparisons. Similar to procurement risk profile.
+    </div>
+
+    <div class="section-title">What matters most to your organisation?</div>
+    <div class="section-description">Adjust the weighting for each driver. This shapes how strategies are scored and ranked.</div>
+
+    <!-- Driver Cards -->
+    <div class="drivers-grid">
+
+      <!-- Carbon -->
+      <div class="driver-card">
+        <div class="overline" style="color: var(--success);">
+          <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle; color: var(--success);">eco</span>
+          Driver 1
+        </div>
+        <div class="driver-name">Carbon Reduction</div>
+        <div class="driver-desc">How important is reducing carbon emissions and meeting net-zero targets?</div>
+        <div class="weight-control">
+          <div class="weight-label-row">
+            <span class="weight-label">Weight</span>
+            <div><span class="weight-value" id="carbonVal">50</span><span class="weight-unit">%</span></div>
+          </div>
+          <input type="range" min="0" max="100" value="50" id="carbonSlider" oninput="updateWeights()">
+        </div>
+      </div>
+
+      <!-- Cost -->
+      <div class="driver-card">
+        <div class="overline" style="color: var(--accent);">
+          <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle; color: var(--accent);">payments</span>
+          Driver 2
+        </div>
+        <div class="driver-name">Cost Efficiency</div>
+        <div class="driver-desc">How sensitive is your organisation to upfront investment and payback periods?</div>
+        <div class="weight-control">
+          <div class="weight-label-row">
+            <span class="weight-label">Weight</span>
+            <div><span class="weight-value" id="costVal">30</span><span class="weight-unit">%</span></div>
+          </div>
+          <input type="range" min="0" max="100" value="30" id="costSlider" oninput="updateWeights()">
+        </div>
+      </div>
+
+      <!-- Compliance -->
+      <div class="driver-card">
+        <div class="overline" style="color: var(--primary);">
+          <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle; color: var(--primary);">verified</span>
+          Driver 3
+        </div>
+        <div class="driver-name">Compliance Impact</div>
+        <div class="driver-desc">How critical is regulatory compliance — SECR, ESOS, CCA, RE100?</div>
+        <div class="weight-control">
+          <div class="weight-label-row">
+            <span class="weight-label">Weight</span>
+            <div><span class="weight-value" id="complianceVal">20</span><span class="weight-unit">%</span></div>
+          </div>
+          <input type="range" min="0" max="100" value="20" id="complianceSlider" oninput="updateWeights()">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Weight Distribution -->
+    <div class="weight-distribution">
+      <div class="dist-label">Weight Distribution</div>
+      <div class="dist-bar">
+        <div class="dist-segment carbon" id="distCarbon" style="flex: 50;">50%</div>
+        <div class="dist-segment cost" id="distCost" style="flex: 30;">30%</div>
+        <div class="dist-segment compliance" id="distCompliance" style="flex: 20;">20%</div>
+      </div>
+      <div class="dist-legend">
+        <div class="dist-legend-item"><div class="dist-legend-dot" style="background: var(--success);"></div> Carbon Reduction</div>
+        <div class="dist-legend-item"><div class="dist-legend-dot" style="background: var(--accent);"></div> Cost Efficiency</div>
+        <div class="dist-legend-item"><div class="dist-legend-dot" style="background: var(--primary);"></div> Compliance Impact</div>
+      </div>
+    </div>
+
+    <!-- Annual Budget -->
+    <div class="budget-section">
+      <div class="overline" style="margin-bottom: 16px;">
+        <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle;">account_balance</span>
+        Annual Sustainability Budget
+      </div>
+      <div class="budget-row">
+        <div class="budget-input-wrap">
+          <span class="budget-prefix">£</span>
+          <input type="text" class="budget-input" value="500,000" placeholder="Enter budget">
+        </div>
+        <select class="budget-period">
+          <option>Per Year</option>
+          <option>Over 3 Years</option>
+          <option>Over 5 Years</option>
+        </select>
+        <div style="font-size: 12px; font-weight: 400; margin-left: 8px;">Strategies exceeding this budget are flagged but not excluded.</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-outline" onclick="showStep(1)">Reset Profile</button>
+      <button class="btn-filled" onclick="showStep(2)">
+        Compare Strategies
+        <span class="material-symbols-outlined" style="font-size: 18px; color: #FFF;">arrow_forward</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ==================== STEP 2: Strategy Comparison ==================== -->
+  <div class="step-panel" id="step2">
+
+    <div class="annotation">
+      <span class="material-symbols-outlined" style="font-size: 14px; margin-right: 4px;">info</span>
+      Wireframe — strategies scored against the customer's weighted profile. Scores are illustrative.
+    </div>
+
+    <!-- Profile snapshot -->
+    <div class="profile-snapshot">
+      <div>
+        <div class="snapshot-label">Your Profile</div>
+      </div>
+      <div class="snapshot-values">
+        <div class="snapshot-item">
+          <div class="snapshot-dot" style="background: var(--success);"></div>
+          <span class="snapshot-text">Carbon 50%</span>
+        </div>
+        <div class="snapshot-item">
+          <div class="snapshot-dot" style="background: var(--accent);"></div>
+          <span class="snapshot-text">Cost 30%</span>
+        </div>
+        <div class="snapshot-item">
+          <div class="snapshot-dot" style="background: var(--primary);"></div>
+          <span class="snapshot-text">Compliance 20%</span>
+        </div>
+        <div class="snapshot-item">
+          <span class="snapshot-text" style="font-weight: 400;">Budget: £500k/yr</span>
+        </div>
+      </div>
+      <button class="btn-outline" style="margin-left: auto; padding: 8px 16px; font-size: 12px;" onclick="showStep(1)">Edit Profile</button>
+    </div>
+
+    <div class="section-title">Strategy Comparison</div>
+    <div class="section-description">Each strategy is scored against your drivers. The weighted total reflects your priorities.</div>
+
+    <table class="strategies-table">
+      <thead>
+        <tr>
+          <th style="width: 40px;">#</th>
+          <th style="width: 240px;">Strategy</th>
+          <th class="score-col">
+            <span style="color: var(--success);">Carbon</span>
+            <span style="font-weight: 400; text-transform: none; letter-spacing: 0;"> (50%)</span>
+          </th>
+          <th class="score-col">
+            <span style="color: var(--accent);">Cost</span>
+            <span style="font-weight: 400; text-transform: none; letter-spacing: 0;"> (30%)</span>
+          </th>
+          <th class="score-col">
+            <span style="color: var(--primary);">Compliance</span>
+            <span style="font-weight: 400; text-transform: none; letter-spacing: 0;"> (20%)</span>
+          </th>
+          <th class="score-col" style="width: 100px;">Weighted Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="rank-badge top">1</span></td>
+          <td>
+            <div class="strategy-name">LED + Building Fabric</div>
+            <div class="strategy-desc">Full LED retrofit with insulation upgrades across portfolio</div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar-track"><div class="score-bar-fill carbon" style="width: 85%;"></div></div>
+              <span class="score-number">8.5</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar-track"><div class="score-bar-fill cost" style="width: 70%;"></div></div>
+              <span class="score-number">7.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar-track"><div class="score-bar-fill compliance" style="width: 60%;"></div></div>
+              <span class="score-number">6.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="weighted-total">7.55<span class="unit"> /10</span></div>
+          </td>
+        </tr>
+
+        <tr>
+          <td><span class="rank-badge">2</span></td>
+          <td>
+            <div class="strategy-name">On-Site Solar + Storage</div>
+            <div class="strategy-desc">Rooftop PV with battery storage at key sites</div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar-track"><div class="score-bar-fill carbon" style="width: 90%;"></div></div>
+              <span class="score-number">9.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar-track"><div class="score-bar-fill cost" style="width: 40%;"></div></div>
+              <span class="score-number">4.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar-track"><div class="score-bar-fill compliance" style="width: 75%;"></div></div>
+              <span class="score-number">7.5</span>
+            </div>
+          </td>
+          <td>
+            <div class="weighted-total">7.20<span class="unit"> /10</span></div>
+          </td>
+        </tr>
+
+        <tr>
+          <td><span class="rank-badge">3</span></td>
+          <td>
+            <div class="strategy-name">HVAC Optimisation</div>
+            <div class="strategy-desc">Smart controls and heat pump transition programme</div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar-track"><div class="score-bar-fill carbon" style="width: 65%;"></div></div>
+              <span class="score-number">6.5</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar-track"><div class="score-bar-fill cost" style="width: 80%;"></div></div>
+              <span class="score-number">8.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar-track"><div class="score-bar-fill compliance" style="width: 55%;"></div></div>
+              <span class="score-number">5.5</span>
+            </div>
+          </td>
+          <td>
+            <div class="weighted-total">6.75<span class="unit"> /10</span></div>
+          </td>
+        </tr>
+
+        <tr>
+          <td><span class="rank-badge">4</span></td>
+          <td>
+            <div class="strategy-name">Fleet Electrification</div>
+            <div class="strategy-desc">Phased EV rollout with charger infrastructure</div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar-track"><div class="score-bar-fill carbon" style="width: 75%;"></div></div>
+              <span class="score-number">7.5</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar-track"><div class="score-bar-fill cost" style="width: 30%;"></div></div>
+              <span class="score-number">3.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar-track"><div class="score-bar-fill compliance" style="width: 80%;"></div></div>
+              <span class="score-number">8.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="weighted-total">6.25<span class="unit"> /10</span></div>
+          </td>
+        </tr>
+
+        <tr>
+          <td><span class="rank-badge">5</span></td>
+          <td>
+            <div class="strategy-name">PPA (Corporate)</div>
+            <div class="strategy-desc">Long-term power purchase agreement for renewable supply</div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar-track"><div class="score-bar-fill carbon" style="width: 70%;"></div></div>
+              <span class="score-number">7.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar-track"><div class="score-bar-fill cost" style="width: 50%;"></div></div>
+              <span class="score-number">5.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar-track"><div class="score-bar-fill compliance" style="width: 90%;"></div></div>
+              <span class="score-number">9.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="weighted-total">6.80<span class="unit"> /10</span></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="btn-row">
+      <button class="btn-outline" onclick="showStep(1)">
+        <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span>
+        Edit Profile
+      </button>
+      <button class="btn-filled" onclick="showStep(3)">
+        View Results
+        <span class="material-symbols-outlined" style="font-size: 18px; color: #FFF;">arrow_forward</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ==================== STEP 3: Results ==================== -->
+  <div class="step-panel" id="step3">
+
+    <div class="annotation">
+      <span class="material-symbols-outlined" style="font-size: 14px; margin-right: 4px;">info</span>
+      Wireframe — recommended strategy + ranked breakdown showing how the weighting shaped the outcome.
+    </div>
+
+    <div class="section-title">Recommended Strategy</div>
+    <div class="section-description">Based on your sustainability profile, here's how the strategies rank.</div>
+
+    <!-- Top strategy + breakdown -->
+    <div class="results-summary">
+
+      <div class="top-strategy-card">
+        <div class="top-strategy-overline">
+          <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle; color: var(--success);">emoji_events</span>
+          Best Match
+        </div>
+        <div class="top-strategy-name">LED + Building Fabric</div>
+        <div class="top-strategy-score">7.55<span class="suffix"> /10</span></div>
+        <div class="top-strategy-context">
+          Scores highest across your weighted drivers. Strong carbon impact with reasonable payback and moderate compliance benefit.
+        </div>
+      </div>
+
+      <div class="breakdown-card">
+        <div class="breakdown-title">Score Breakdown — LED + Building Fabric</div>
+
+        <div class="breakdown-row">
+          <div class="breakdown-label">Carbon</div>
+          <div class="breakdown-bar-track">
+            <div class="breakdown-bar-fill carbon" style="width: 85%;">
+              <span class="breakdown-bar-label">8.5 × 50%</span>
+            </div>
+          </div>
+          <div class="breakdown-score">4.25</div>
+        </div>
+
+        <div class="breakdown-row">
+          <div class="breakdown-label">Cost</div>
+          <div class="breakdown-bar-track">
+            <div class="breakdown-bar-fill cost" style="width: 70%;">
+              <span class="breakdown-bar-label">7.0 × 30%</span>
+            </div>
+          </div>
+          <div class="breakdown-score">2.10</div>
+        </div>
+
+        <div class="breakdown-row">
+          <div class="breakdown-label">Compliance</div>
+          <div class="breakdown-bar-track">
+            <div class="breakdown-bar-fill compliance" style="width: 60%;">
+              <span class="breakdown-bar-label">6.0 × 20%</span>
+            </div>
+          </div>
+          <div class="breakdown-score">1.20</div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; padding-top: 12px; border-top: 1.5px solid #111; margin-top: 16px;">
+          <div style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 12px;">Total</div>
+          <div class="breakdown-score" style="font-size: 18px;">7.55</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Full rankings -->
+    <div class="section-title" style="font-size: 18px; margin-bottom: 16px;">Full Rankings</div>
+
+    <div class="ranked-list">
+
+      <div class="ranked-item">
+        <div class="ranked-position">1</div>
+        <div class="ranked-info">
+          <div class="ranked-name">LED + Building Fabric</div>
+          <div class="ranked-detail">Full LED retrofit with insulation upgrades</div>
+        </div>
+        <div class="ranked-score-bar">
+          <div class="stacked-bar">
+            <div class="stacked-segment carbon" style="flex: 4.25;"></div>
+            <div class="stacked-segment cost" style="flex: 2.10;"></div>
+            <div class="stacked-segment compliance" style="flex: 1.20;"></div>
+          </div>
+        </div>
+        <div class="ranked-score-value">7.55</div>
+      </div>
+
+      <div class="ranked-item">
+        <div class="ranked-position">2</div>
+        <div class="ranked-info">
+          <div class="ranked-name">On-Site Solar + Storage</div>
+          <div class="ranked-detail">Rooftop PV with battery storage</div>
+        </div>
+        <div class="ranked-score-bar">
+          <div class="stacked-bar">
+            <div class="stacked-segment carbon" style="flex: 4.50;"></div>
+            <div class="stacked-segment cost" style="flex: 1.20;"></div>
+            <div class="stacked-segment compliance" style="flex: 1.50;"></div>
+          </div>
+        </div>
+        <div class="ranked-score-value">7.20</div>
+      </div>
+
+      <div class="ranked-item">
+        <div class="ranked-position">3</div>
+        <div class="ranked-info">
+          <div class="ranked-name">PPA (Corporate)</div>
+          <div class="ranked-detail">Long-term renewable power purchase agreement</div>
+        </div>
+        <div class="ranked-score-bar">
+          <div class="stacked-bar">
+            <div class="stacked-segment carbon" style="flex: 3.50;"></div>
+            <div class="stacked-segment cost" style="flex: 1.50;"></div>
+            <div class="stacked-segment compliance" style="flex: 1.80;"></div>
+          </div>
+        </div>
+        <div class="ranked-score-value">6.80</div>
+      </div>
+
+      <div class="ranked-item">
+        <div class="ranked-position">4</div>
+        <div class="ranked-info">
+          <div class="ranked-name">HVAC Optimisation</div>
+          <div class="ranked-detail">Smart controls and heat pump transition</div>
+        </div>
+        <div class="ranked-score-bar">
+          <div class="stacked-bar">
+            <div class="stacked-segment carbon" style="flex: 3.25;"></div>
+            <div class="stacked-segment cost" style="flex: 2.40;"></div>
+            <div class="stacked-segment compliance" style="flex: 1.10;"></div>
+          </div>
+        </div>
+        <div class="ranked-score-value">6.75</div>
+      </div>
+
+      <div class="ranked-item">
+        <div class="ranked-position">5</div>
+        <div class="ranked-info">
+          <div class="ranked-name">Fleet Electrification</div>
+          <div class="ranked-detail">Phased EV rollout with charger infrastructure</div>
+        </div>
+        <div class="ranked-score-bar">
+          <div class="stacked-bar">
+            <div class="stacked-segment carbon" style="flex: 3.75;"></div>
+            <div class="stacked-segment cost" style="flex: 0.90;"></div>
+            <div class="stacked-segment compliance" style="flex: 1.60;"></div>
+          </div>
+        </div>
+        <div class="ranked-score-value">6.25</div>
+      </div>
+
+    </div>
+
+    <div class="dist-legend" style="margin-bottom: 48px;">
+      <div class="dist-legend-item"><div class="dist-legend-dot" style="background: var(--success);"></div> Carbon (50%)</div>
+      <div class="dist-legend-item"><div class="dist-legend-dot" style="background: var(--accent);"></div> Cost (30%)</div>
+      <div class="dist-legend-item"><div class="dist-legend-dot" style="background: var(--primary);"></div> Compliance (20%)</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-outline" onclick="showStep(2)">
+        <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span>
+        Back to Comparison
+      </button>
+      <button class="btn-outline">
+        <span class="material-symbols-outlined" style="font-size: 18px;">download</span>
+        Export Report
+      </button>
+      <button class="btn-filled">
+        <span class="material-symbols-outlined" style="font-size: 18px; color: #FFF;">add</span>
+        Add to Strategy
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="wireframe-footer">
+    <span>TrueDI — Weighted Strategy Prioritisation Wireframe</span>
+    <span>Mike Gammon · April 2026 · Discussion Draft</span>
+  </div>
+
+</div>
+
+<script>
+  function showStep(n) {
+    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.section-tabs button').forEach(b => b.classList.remove('active'));
+    document.getElementById('step' + n).classList.add('active');
+    document.querySelectorAll('.section-tabs button')[n - 1].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateWeights() {
+    const c = parseInt(document.getElementById('carbonSlider').value);
+    const co = parseInt(document.getElementById('costSlider').value);
+    const cp = parseInt(document.getElementById('complianceSlider').value);
+    const total = c + co + cp || 1;
+    const cn = Math.round(c / total * 100);
+    const con = Math.round(co / total * 100);
+    const cpn = 100 - cn - con;
+
+    document.getElementById('carbonVal').textContent = cn;
+    document.getElementById('costVal').textContent = con;
+    document.getElementById('complianceVal').textContent = cpn;
+
+    document.getElementById('distCarbon').style.flex = cn;
+    document.getElementById('distCarbon').textContent = cn + '%';
+    document.getElementById('distCost').style.flex = con;
+    document.getElementById('distCost').textContent = con + '%';
+    document.getElementById('distCompliance').style.flex = cpn;
+    document.getElementById('distCompliance').textContent = cpn + '%';
+  }
+</script>
+
+</body>
+</html>

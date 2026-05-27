@@ -1,0 +1,12 @@
+# Videos / recordings (kept out of the repo — too large / not needed on GitHub)
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.m4v
+*.wmv
+*.flv
+
+# macOS
+.DS_Store

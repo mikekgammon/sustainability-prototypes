@@ -674,6 +674,23 @@ body {
 </style>
 </head>
 <body>
+<!-- Back to map button -->
+<style>
+.back-to-map {
+  position: fixed; top: 16px; left: 16px;
+  z-index: 1000;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; background: #FFFFFF; color: #111111;
+  border: 1px solid #111111; border-radius: 4px;
+  font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 500;
+  text-decoration: none; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: background 0.15s;
+}
+.back-to-map:hover { background: #F0F0F0; }
+</style>
+<a href="../sustainability-platform-map.html" class="back-to-map" onclick="if(window.opener){window.close();return false;}">← Back to map</a>
+
 <div class="app">
 
   <!-- Version banner (prototype context only) -->
@@ -818,36 +835,8 @@ body {
           </td>
         </tr>
 
-        <!-- Row 2: Collapsed, Achieved -->
-        <tr class="target-row">
-          <td class="expand-cell">
-            <button class="expand-btn"><span class="material-symbols-outlined">chevron_right</span></button>
-          </td>
-          <td>
-            <div class="target-name">Achieve Net Zero Scope 1 &amp; 2 by 2030</div>
-            <div class="target-name-sub">Scopes 1 and 2 · 90% reduction vs 2021/22</div>
-          </td>
-          <td><span class="metric-badge">Carbon</span></td>
-          <td>01/03/2030</td>
-          <td>47% of path</td>
-          <td><span class="status-pill on-track"><span class="dot"></span>On Track</span></td>
-          <td class="actions">
-            <div class="action-wrapper">
-              <button class="actions-btn" data-menu-toggle><span class="material-symbols-outlined">more_vert</span></button>
-              <div class="action-menu">
-                <button class="action-menu-item" data-menu-action="edit"><span class="material-symbols-outlined">edit</span>Edit target</button>
-                <button class="action-menu-item" data-menu-action="duplicate"><span class="material-symbols-outlined">content_copy</span>Duplicate</button>
-                <button class="action-menu-item" data-menu-action="link"><span class="material-symbols-outlined">hub</span>Manage linked strategies</button>
-                <hr class="action-menu-divider" />
-                <button class="action-menu-item" data-menu-action="archive"><span class="material-symbols-outlined">archive</span>Archive</button>
-                <button class="action-menu-item danger" data-menu-action="delete"><span class="material-symbols-outlined">delete</span>Delete</button>
-              </div>
-            </div>
-          </td>
-        </tr>
-
-        <!-- Row 3: Collapsed, Energy target (new metric type - Otto enhancement) -->
-        <tr class="target-row">
+        <!-- Row 3: Expanded — Energy target -->
+        <tr class="target-row expanded" data-target="energy-30-2029">
           <td class="expand-cell">
             <button class="expand-btn"><span class="material-symbols-outlined">chevron_right</span></button>
           </td>
@@ -873,9 +862,71 @@ body {
             </div>
           </td>
         </tr>
+        <tr class="expand-content">
+          <td colspan="7">
+            <div class="expand-inner">
+              <div class="chart-card">
+                <div class="chart-head">
+                  <div>
+                    <div class="chart-title">Projected Energy Reduction Path</div>
+                    <div class="chart-subtitle">Target trajectory (dashed) vs live actuals (solid) · updated daily from M&amp;T</div>
+                  </div>
+                  <div class="toggle-group">
+                    <button>M</button>
+                    <button>Q</button>
+                    <button class="active">Y</button>
+                  </div>
+                </div>
 
-        <!-- Row 4: Collapsed, Cost target (new metric type - Otto enhancement) -->
-        <tr class="target-row">
+                <svg class="chart-svg" id="energyChart" viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg"></svg>
+
+                <div class="chart-legend">
+                  <div class="legend-item"><span class="legend-swatch" style="background: var(--accent);"></span>Electricity target</div>
+                  <div class="legend-item"><span class="legend-swatch" style="background: var(--highlight);"></span>Gas target</div>
+                  <div class="legend-item"><span class="legend-swatch" style="background: var(--total);"></span>Total energy target</div>
+                  <div class="legend-item"><span class="legend-swatch dashed" style="border-color: var(--secondary);"></span>Target path</div>
+                  <div class="legend-item"><span class="legend-swatch solid"></span>Live actuals</div>
+                </div>
+              </div>
+
+              <div class="status-panel">
+                <div class="status-banner on-track">
+                  <div class="status-banner-label">Status · On Track</div>
+                  <div class="status-banner-desc">Actuals are 4.1% ahead of plan. Heat pump and LED rollout strategies are pulling consumption down faster than forecast.</div>
+                </div>
+
+                <div class="stat-card">
+                  <div class="stat-label">Current consumption</div>
+                  <div class="stat-value">8.4<span class="stat-unit">GWh</span></div>
+                  <div class="stat-sub">Target for today: 8.7 GWh · <strong>−4.1%</strong></div>
+                </div>
+
+                <div class="stat-card">
+                  <div class="stat-label">Time remaining</div>
+                  <div class="stat-value">3.7<span class="stat-unit">yr</span></div>
+                  <div class="stat-sub">Deadline: 31 December 2029</div>
+                </div>
+
+                <div class="stat-card linked-strategies">
+                  <div class="stat-label">Linked strategies (2)</div>
+                  <ul class="linked-list">
+                    <li class="linked-item">
+                      <span>LED &amp; controls upgrade</span>
+                      <span class="linked-item-meta">On Track</span>
+                    </li>
+                    <li class="linked-item">
+                      <span>Heat Pump Acceleration</span>
+                      <span class="linked-item-meta">At Risk</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 4: Expanded — Cost target -->
+        <tr class="target-row expanded" data-target="cost-2m-2030">
           <td class="expand-cell">
             <button class="expand-btn"><span class="material-symbols-outlined">chevron_right</span></button>
           </td>
@@ -887,6 +938,100 @@ body {
           <td>31/12/2030</td>
           <td>18% of path</td>
           <td><span class="status-pill off-track"><span class="dot"></span>Off Track</span></td>
+          <td class="actions">
+            <div class="action-wrapper">
+              <button class="actions-btn" data-menu-toggle><span class="material-symbols-outlined">more_vert</span></button>
+              <div class="action-menu">
+                <button class="action-menu-item" data-menu-action="edit"><span class="material-symbols-outlined">edit</span>Edit target</button>
+                <button class="action-menu-item" data-menu-action="duplicate"><span class="material-symbols-outlined">content_copy</span>Duplicate</button>
+                <button class="action-menu-item" data-menu-action="link"><span class="material-symbols-outlined">hub</span>Manage linked strategies</button>
+                <hr class="action-menu-divider" />
+                <button class="action-menu-item" data-menu-action="archive"><span class="material-symbols-outlined">archive</span>Archive</button>
+                <button class="action-menu-item danger" data-menu-action="delete"><span class="material-symbols-outlined">delete</span>Delete</button>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="expand-content">
+          <td colspan="7">
+            <div class="expand-inner">
+              <div class="chart-card">
+                <div class="chart-head">
+                  <div>
+                    <div class="chart-title">Annual Savings Trajectory</div>
+                    <div class="chart-subtitle">Target trajectory (dashed) vs live actuals (solid) · cumulative annualised savings</div>
+                  </div>
+                  <div class="toggle-group">
+                    <button>M</button>
+                    <button>Q</button>
+                    <button class="active">Y</button>
+                  </div>
+                </div>
+
+                <svg class="chart-svg" id="costChart" viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg"></svg>
+
+                <div class="chart-legend">
+                  <div class="legend-item"><span class="legend-swatch" style="background: var(--primary);"></span>Energy cost savings</div>
+                  <div class="legend-item"><span class="legend-swatch" style="background: var(--accent);"></span>Operational savings</div>
+                  <div class="legend-item"><span class="legend-swatch" style="background: var(--total);"></span>Total savings target</div>
+                  <div class="legend-item"><span class="legend-swatch dashed" style="border-color: var(--secondary);"></span>Target path</div>
+                  <div class="legend-item"><span class="legend-swatch solid"></span>Live actuals</div>
+                </div>
+              </div>
+
+              <div class="status-panel">
+                <div class="status-banner off-track">
+                  <div class="status-banner-label">Status · Off Track</div>
+                  <div class="status-banner-desc">Realised savings are running 32% behind plan. Several strategies remain in draft and have yet to begin generating returns.</div>
+                </div>
+
+                <div class="stat-card">
+                  <div class="stat-label">Annualised savings</div>
+                  <div class="stat-value">£362k<span class="stat-unit"></span></div>
+                  <div class="stat-sub">Target for today: £530k · <strong>−32%</strong></div>
+                </div>
+
+                <div class="stat-card">
+                  <div class="stat-label">Time remaining</div>
+                  <div class="stat-value">4.7<span class="stat-unit">yr</span></div>
+                  <div class="stat-sub">Deadline: 31 December 2030</div>
+                </div>
+
+                <div class="stat-card linked-strategies">
+                  <div class="stat-label">Linked strategies (3)</div>
+                  <ul class="linked-list">
+                    <li class="linked-item">
+                      <span>Solar PV Roll-out</span>
+                      <span class="linked-item-meta">Draft</span>
+                    </li>
+                    <li class="linked-item">
+                      <span>PPA procurement</span>
+                      <span class="linked-item-meta">Draft</span>
+                    </li>
+                    <li class="linked-item">
+                      <span>LED &amp; controls upgrade</span>
+                      <span class="linked-item-meta">On Track</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 4: Collapsed, Achieved -->
+        <tr class="target-row">
+          <td class="expand-cell">
+            <button class="expand-btn"><span class="material-symbols-outlined">chevron_right</span></button>
+          </td>
+          <td>
+            <div class="target-name">Achieve Net Zero Scope 1 &amp; 2 by 2030</div>
+            <div class="target-name-sub">Scopes 1 and 2 · 90% reduction vs 2021/22</div>
+          </td>
+          <td><span class="metric-badge">Carbon</span></td>
+          <td>01/03/2030</td>
+          <td>47% of path</td>
+          <td><span class="status-pill on-track"><span class="dot"></span>On Track</span></td>
           <td class="actions">
             <div class="action-wrapper">
               <button class="actions-btn" data-menu-toggle><span class="material-symbols-outlined">more_vert</span></button>
@@ -1125,57 +1270,24 @@ body {
 
 <script>
 /* ==========================================================
-   MAIN CHART — target path (dashed) + live actuals (solid)
+   TARGET CHARTS — target path (dashed) + live actuals (solid)
+   Generalised so multiple targets (Carbon, Energy, Cost) all
+   render with the same look using their own data + units.
    ========================================================== */
-(function renderMainChart() {
+function renderTargetChart(cfg) {
+  const el = document.getElementById(cfg.elementId);
+  if (!el) return;
+
   const W = 800, H = 320;
-  const padL = 50, padR = 30, padT = 20, padB = 40;
+  const padL = 60, padR = 30, padT = 20, padB = 40;
   const plotW = W - padL - padR;
   const plotH = H - padT - padB;
 
-  const startYear = 2021, endYear = 2038;
+  const startYear = cfg.startYear, endYear = cfg.endYear;
   const years = endYear - startYear + 1;
-  const yMax = 900;
+  const yMax = cfg.yMax;
   const xForYear = y => padL + ((y - startYear) / (years - 1)) * plotW;
   const yForVal = v => padT + (1 - v / yMax) * plotH;
-
-  // Target end-state 75% below benchmark
-  const benchmarkAll = 810;
-  const targetAll = benchmarkAll * 0.25;
-  const benchmarkS1 = 200;
-  const targetS1 = benchmarkS1 * 0.25;
-  const benchmarkS2 = 610;
-  const targetS2 = benchmarkS2 * 0.25;
-
-  // Non-linear path (checkpoints every 3-4 years)
-  const checkpoints = [
-    { year: 2021, pct: 1.00 },
-    { year: 2025, pct: 0.85 },
-    { year: 2029, pct: 0.60 },
-    { year: 2033, pct: 0.42 },
-    { year: 2038, pct: 0.25 }
-  ];
-
-  function pathFor(benchmark, target) {
-    return checkpoints.map(cp => ({
-      year: cp.year,
-      val: cp.pct * benchmark
-    }));
-  }
-
-  const pathS1 = pathFor(benchmarkS1, targetS1);
-  const pathS2 = pathFor(benchmarkS2, targetS2);
-  const pathAll = pathFor(benchmarkAll, targetAll);
-
-  // Actuals (past only, through 2026)
-  const actualsAll = [
-    { year: 2021, val: 810 },
-    { year: 2022, val: 790 },
-    { year: 2023, val: 745 },
-    { year: 2024, val: 690 },
-    { year: 2025, val: 640 },
-    { year: 2026, val: 586 }
-  ];
 
   let svg = '';
 
@@ -1184,10 +1296,11 @@ body {
     const v = (yMax / 5) * i;
     const y = yForVal(v);
     svg += `<line x1="${padL}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="#111" stroke-opacity="0.06" stroke-width="0.5" />`;
-    svg += `<text x="${padL - 8}" y="${y + 4}" font-size="10" font-weight="500" fill="#111" text-anchor="end">${v}</text>`;
+    const label = cfg.formatY ? cfg.formatY(v) : v;
+    svg += `<text x="${padL - 8}" y="${y + 4}" font-size="10" font-weight="500" fill="#111" text-anchor="end">${label}</text>`;
   }
 
-  // X axis labels
+  // X axis labels — every 3 years plus endpoints
   for (let year = startYear; year <= endYear; year++) {
     if (year % 3 === 0 || year === startYear || year === endYear) {
       const x = xForYear(year);
@@ -1195,40 +1308,142 @@ body {
     }
   }
 
-  // Baseline line
+  // Baseline
   svg += `<line x1="${padL}" x2="${W - padR}" y1="${H - padB}" y2="${H - padB}" stroke="#111" stroke-width="1" />`;
 
-  // "Today" marker (2026)
+  // "TODAY" marker (2026)
   const todayX = xForYear(2026);
   svg += `<line x1="${todayX}" x2="${todayX}" y1="${padT}" y2="${H - padB}" stroke="#111" stroke-width="1" stroke-dasharray="2,3" stroke-opacity="0.4" />`;
   svg += `<text x="${todayX}" y="${padT + 12}" font-size="10" font-weight="600" fill="#111" text-anchor="middle">TODAY</text>`;
 
-  // Draw target paths (dashed) — three scopes
+  // Dashed target paths
   function drawPath(points, color) {
     const d = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${xForYear(p.year)} ${yForVal(p.val)}`).join(' ');
     return `<path d="${d}" fill="none" stroke="${color}" stroke-width="2" stroke-dasharray="5,4" stroke-linecap="round" stroke-linejoin="round" />` +
       points.map(p => `<circle cx="${xForYear(p.year)}" cy="${yForVal(p.val)}" r="3.5" fill="#fff" stroke="${color}" stroke-width="2" />`).join('');
   }
 
-  svg += drawPath(pathS1, 'var(--primary)');
-  svg += drawPath(pathS2, 'var(--highlight)');
-  svg += drawPath(pathAll, 'var(--total)');
+  cfg.targetPaths.forEach(tp => {
+    svg += drawPath(tp.points, tp.color);
+  });
 
-  // Draw actuals (solid, all-scopes)
-  const actD = actualsAll.map((p, i) => `${i === 0 ? 'M' : 'L'} ${xForYear(p.year)} ${yForVal(p.val)}`).join(' ');
+  // Solid actuals
+  const actD = cfg.actuals.map((p, i) => `${i === 0 ? 'M' : 'L'} ${xForYear(p.year)} ${yForVal(p.val)}`).join(' ');
   svg += `<path d="${actD}" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
-  actualsAll.forEach(p => {
+  cfg.actuals.forEach(p => {
     svg += `<circle cx="${xForYear(p.year)}" cy="${yForVal(p.val)}" r="4" fill="#111" />`;
   });
 
-  // Highlight the last actuals point (current position)
-  const last = actualsAll[actualsAll.length - 1];
+  // Highlight last actuals point
+  const last = cfg.actuals[cfg.actuals.length - 1];
   svg += `<circle cx="${xForYear(last.year)}" cy="${yForVal(last.val)}" r="8" fill="none" stroke="#FF9800" stroke-width="2" />`;
 
   // Y axis label
-  svg += `<text transform="translate(14, ${padT + plotH / 2}) rotate(-90)" font-size="10" font-weight="600" fill="#111" text-anchor="middle" letter-spacing="0.1em">EMISSIONS tCO₂e</text>`;
+  svg += `<text transform="translate(14, ${padT + plotH / 2}) rotate(-90)" font-size="10" font-weight="600" fill="#111" text-anchor="middle" letter-spacing="0.1em">${cfg.yAxisLabel}</text>`;
 
-  document.getElementById('mainChart').innerHTML = svg;
+  el.innerHTML = svg;
+}
+
+/* ----------- 1. Carbon target chart ----------- */
+(function renderCarbonChart() {
+  const benchmarkAll = 810;
+  const benchmarkS1 = 200;
+  const benchmarkS2 = 610;
+  const checkpoints = [
+    { year: 2021, pct: 1.00 },
+    { year: 2025, pct: 0.85 },
+    { year: 2029, pct: 0.60 },
+    { year: 2033, pct: 0.42 },
+    { year: 2038, pct: 0.25 }
+  ];
+  const pathFor = b => checkpoints.map(cp => ({ year: cp.year, val: cp.pct * b }));
+
+  renderTargetChart({
+    elementId: 'mainChart',
+    startYear: 2021, endYear: 2038,
+    yMax: 900,
+    yAxisLabel: 'EMISSIONS tCO₂e',
+    formatY: v => v,
+    targetPaths: [
+      { points: pathFor(benchmarkS1), color: 'var(--primary)' },
+      { points: pathFor(benchmarkS2), color: 'var(--highlight)' },
+      { points: pathFor(benchmarkAll), color: 'var(--total)' }
+    ],
+    actuals: [
+      { year: 2021, val: 810 },
+      { year: 2022, val: 790 },
+      { year: 2023, val: 745 },
+      { year: 2024, val: 690 },
+      { year: 2025, val: 640 },
+      { year: 2026, val: 586 }
+    ]
+  });
+})();
+
+/* ----------- 2. Energy target chart ----------- */
+(function renderEnergyChart() {
+  // 30% reduction by 2029 vs 2024 benchmark; near-linear path with checkpoints
+  const benchmarkTotal = 12.0;     // GWh in 2024
+  const benchmarkElec = 7.5;
+  const benchmarkGas = 4.5;
+  const checkpoints = [
+    { year: 2024, pct: 1.00 },
+    { year: 2026, pct: 0.86 },
+    { year: 2028, pct: 0.76 },
+    { year: 2029, pct: 0.70 }
+  ];
+  const pathFor = b => checkpoints.map(cp => ({ year: cp.year, val: +(cp.pct * b).toFixed(1) }));
+
+  renderTargetChart({
+    elementId: 'energyChart',
+    startYear: 2024, endYear: 2029,
+    yMax: 14,
+    yAxisLabel: 'CONSUMPTION GWh',
+    formatY: v => v.toFixed(0),
+    targetPaths: [
+      { points: pathFor(benchmarkElec), color: 'var(--accent)' },
+      { points: pathFor(benchmarkGas), color: 'var(--highlight)' },
+      { points: pathFor(benchmarkTotal), color: 'var(--total)' }
+    ],
+    actuals: [
+      { year: 2024, val: 12.0 },
+      { year: 2025, val: 10.6 },
+      { year: 2026, val: 8.4 }
+    ]
+  });
+})();
+
+/* ----------- 3. Cost target chart ----------- */
+(function renderCostChart() {
+  // Cumulative annualised savings building up to £2M by 2030
+  const targetTotal = 2000;        // £k
+  const targetEnergy = 1300;
+  const targetOps = 700;
+  const checkpoints = [
+    { year: 2024, pct: 0.00 },
+    { year: 2026, pct: 0.27 },
+    { year: 2028, pct: 0.65 },
+    { year: 2030, pct: 1.00 }
+  ];
+  const pathFor = t => checkpoints.map(cp => ({ year: cp.year, val: Math.round(cp.pct * t) }));
+
+  renderTargetChart({
+    elementId: 'costChart',
+    startYear: 2024, endYear: 2030,
+    yMax: 2200,
+    yAxisLabel: 'ANNUALISED SAVINGS £k',
+    formatY: v => v >= 1000 ? `£${(v/1000).toFixed(1)}M` : `£${v}k`,
+    targetPaths: [
+      { points: pathFor(targetEnergy), color: 'var(--primary)' },
+      { points: pathFor(targetOps), color: 'var(--accent)' },
+      { points: pathFor(targetTotal), color: 'var(--total)' }
+    ],
+    actuals: [
+      { year: 2024, val: 0 },
+      { year: 2025, val: 180 },
+      { year: 2026, val: 362 }
+    ]
+  });
 })();
 
 

@@ -1,0 +1,532 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrueDI — Project Upload Template Flowchart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #111111;
+      --white: #FFFFFF;
+      --hover: #F5F5F5;
+      --success: #63C73B;
+      --warning: #FF9800;
+      --alert: #DC2626;
+      --accent: #3185DA;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+      background: var(--white);
+      color: var(--black);
+      padding: 48px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .page-header { margin-bottom: 40px; }
+    .page-header .overline {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 8px;
+    }
+    .page-header h1 { font-size: 32px; font-weight: 700; line-height: 1.3; margin-bottom: 8px; }
+    .page-header p { font-size: 14px; font-weight: 400; line-height: 1.6; max-width: 720px; }
+
+    .annotation {
+      border-left: 3px solid var(--warning);
+      padding: 12px 16px; margin-bottom: 40px;
+      font-size: 12px; font-weight: 400; line-height: 1.6;
+      background: rgba(255,152,0,0.05); border-radius: 0 6px 6px 0;
+    }
+    .annotation strong { font-weight: 600; }
+    .annotation-success {
+      border-left-color: var(--success);
+      background: rgba(99,199,59,0.05);
+    }
+
+    .key-strip {
+      display: flex; gap: 24px; margin-bottom: 40px; flex-wrap: wrap;
+    }
+    .key-item { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; }
+    .key-swatch {
+      width: 32px; height: 18px; border-radius: 4px; border: 1.5px solid var(--black);
+    }
+    .key-swatch-start { background: var(--black); }
+    .key-swatch-process { background: var(--white); }
+    .key-swatch-decision { background: var(--white); border-style: dashed; border-width: 2px; }
+    .key-swatch-ai { background: var(--white); border-color: var(--accent); }
+
+    /* ── Flow ── */
+    .flow-section { margin-bottom: 56px; }
+    .flow-section-title {
+      font-size: 14px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 24px; padding-bottom: 8px;
+      border-bottom: 2px solid var(--black);
+    }
+    .flow-container {
+      display: flex; flex-direction: column; align-items: center; gap: 0;
+    }
+
+    .flow-node {
+      width: 520px; border: 1.5px solid var(--black); border-radius: 8px;
+      padding: 16px 20px; background: var(--white);
+    }
+    .flow-node .fn-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .flow-node .fn-desc { font-size: 12px; font-weight: 400; line-height: 1.6; }
+    .flow-node .fn-tag {
+      display: inline-block; font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      padding: 2px 8px; border-radius: 4px; margin-bottom: 6px;
+    }
+
+    .node-start {
+      background: var(--black); color: var(--white); text-align: center; width: 360px;
+    }
+    .node-start .fn-title, .node-start .fn-desc { color: var(--white); }
+    .node-end {
+      background: var(--black); color: var(--white); text-align: center; width: 360px;
+    }
+    .node-end .fn-title, .node-end .fn-desc { color: var(--white); }
+
+    .node-process .fn-tag { background: rgba(17,17,17,0.08); }
+    .node-decision { border-style: dashed; border-width: 2px; }
+    .node-decision .fn-tag { background: rgba(255,152,0,0.1); }
+    .node-ai { border-color: var(--accent); }
+    .node-ai .fn-tag { background: rgba(49,133,218,0.1); }
+
+    .flow-arrow {
+      display: flex; flex-direction: column; align-items: center; height: 36px;
+    }
+    .flow-arrow-line { width: 1.5px; flex: 1; background: var(--black); }
+    .flow-arrow-head {
+      width: 0; height: 0;
+      border-left: 5px solid transparent; border-right: 5px solid transparent;
+      border-top: 6px solid var(--black);
+    }
+
+    .decision-branches {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 32px; width: 100%; max-width: 720px;
+    }
+    .decision-branches-3 {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px; width: 100%; max-width: 820px;
+    }
+    .branch {
+      display: flex; flex-direction: column; align-items: center; gap: 0;
+    }
+    .branch-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 8px; padding: 2px 10px; border-radius: 4px;
+    }
+    .branch-label-yes { background: rgba(99,199,59,0.15); }
+    .branch-label-no { background: rgba(220,38,38,0.1); }
+    .branch-label-neutral { background: rgba(17,17,17,0.08); }
+    .branch .flow-node { width: 100%; }
+
+    .merge-label {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.04em; padding: 4px 12px; border-radius: 4px;
+      background: rgba(17,17,17,0.06); margin: 16px 0 8px;
+    }
+
+    /* Template fields */
+    .template-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+      margin-top: 10px;
+    }
+    .template-field {
+      font-size: 11px; font-weight: 500; padding: 5px 10px;
+      border: 1.5px solid var(--black); border-radius: 4px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .template-field .tf-req {
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.04em; padding: 1px 5px; border-radius: 3px;
+    }
+    .tf-required { background: rgba(220,38,38,0.1); }
+    .tf-optional { background: rgba(17,17,17,0.06); }
+
+    .footer-note {
+      margin-top: 32px; font-size: 12px; font-weight: 400; line-height: 1.6;
+    }
+
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <div class="overline">Foundation Phase &middot; Requirement 04</div>
+    <h1>Project Upload Template</h1>
+    <p>Flowchart mapping the bulk project upload workflow — template structure, validation logic, upload processing, the edit/update cycle for existing projects, and the AI proposal scraping feature. Currently the most mature item in Phase 1 (In Progress).</p>
+  </div>
+
+  <div class="annotation">
+    <strong>Problem:</strong> The sustainability team currently creates projects one at a time in the platform. For large client accounts with dozens of energy measures, this is slow and error-prone. A standardised upload template lets the team prepare project data offline (or scrape it from proposals), then batch-upload it into TrueDI in one go.
+  </div>
+
+  <div class="key-strip">
+    <div class="key-item"><div class="key-swatch key-swatch-start"></div>Start / End</div>
+    <div class="key-item"><div class="key-swatch key-swatch-process"></div>Process Step</div>
+    <div class="key-item"><div class="key-swatch key-swatch-decision"></div>Decision / Validation</div>
+    <div class="key-item"><div class="key-swatch key-swatch-ai"></div>AI Feature</div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- FLOW 1: Template Structure            -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="flow-section">
+    <div class="flow-section-title">1. Template Structure &amp; Field Definitions</div>
+
+    <div class="flow-container">
+
+      <div class="flow-node node-start">
+        <div class="fn-title">Consultant needs to upload projects in bulk</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Download</div>
+        <div class="fn-title">Download upload template from platform</div>
+        <div class="fn-desc">Standardised spreadsheet template (.xlsx) available from the project management area. Pre-formatted with column headers matching the TrueDI project data model. Includes a reference sheet with valid values for dropdowns (project types, fuel types, units, technology categories).</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Template fields</div>
+        <div class="fn-title">Template column structure</div>
+        <div class="fn-desc">Each row = one project. Columns map to the TrueDI project data model. Required fields must be populated for upload to succeed; optional fields enhance reporting.</div>
+        <div class="template-grid">
+          <div class="template-field">Project Name <span class="tf-req tf-required">Required</span></div>
+          <div class="template-field">Project Type <span class="tf-req tf-required">Required</span></div>
+          <div class="template-field">Technology / Measure <span class="tf-req tf-required">Required</span></div>
+          <div class="template-field">Scope (1 / 2 / 3) <span class="tf-req tf-required">Required</span></div>
+          <div class="template-field">Baseline Consumption <span class="tf-req tf-required">Required</span></div>
+          <div class="template-field">Unit (kWh / litres / etc.) <span class="tf-req tf-required">Required</span></div>
+          <div class="template-field">Projected Consumption <span class="tf-req tf-required">Required</span></div>
+          <div class="template-field">Saving (annual) <span class="tf-req tf-required">Required</span></div>
+          <div class="template-field">Capital Cost <span class="tf-req tf-optional">Optional</span></div>
+          <div class="template-field">Payback Period <span class="tf-req tf-optional">Optional</span></div>
+          <div class="template-field">Carbon Saving (tCO&#8322;e) <span class="tf-req tf-optional">Optional</span></div>
+          <div class="template-field">Fuel Type <span class="tf-req tf-optional">Optional</span></div>
+          <div class="template-field">Site / Location <span class="tf-req tf-optional">Optional</span></div>
+          <div class="template-field">Notes / Description <span class="tf-req tf-optional">Optional</span></div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Populate</div>
+        <div class="fn-title">Consultant fills in the template</div>
+        <div class="fn-desc">Can be done manually from audit reports, proposals, or client data. For large datasets, the AI scraping feature (Flow 4) can auto-populate the template from proposal documents. Template supports multiple projects per sheet — one row per project.</div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- FLOW 2: Upload & Validation           -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="flow-section">
+    <div class="flow-section-title">2. Upload &amp; Validation Pipeline</div>
+
+    <div class="flow-container">
+
+      <div class="flow-node node-start">
+        <div class="fn-title">Consultant uploads completed template</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Parse</div>
+        <div class="fn-title">Platform reads and parses the file</div>
+        <div class="fn-desc">Accepts .xlsx format. Reads column headers and maps to internal data model. Counts rows to determine number of projects. Ignores blank rows and the reference sheet.</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-decision">
+        <div class="fn-tag">Validation</div>
+        <div class="fn-title">Row-level validation</div>
+        <div class="fn-desc">Each row checked against validation rules: required fields populated? Values within expected ranges? Project type and unit valid against reference list? Numbers parseable? No duplicate project names?</div>
+      </div>
+
+      <div style="height:16px;"></div>
+
+      <div class="decision-branches">
+        <div class="branch">
+          <div class="branch-label branch-label-yes">All rows valid</div>
+          <div style="height:8px;"></div>
+          <div class="flow-node node-process">
+            <div class="fn-tag">Preview</div>
+            <div class="fn-title">Show upload preview</div>
+            <div class="fn-desc">Summary screen: X projects to be created, auto-calculated carbon savings, total investment, breakdown by project type. Consultant reviews before confirming.</div>
+          </div>
+        </div>
+        <div class="branch">
+          <div class="branch-label branch-label-no">Errors found</div>
+          <div style="height:8px;"></div>
+          <div class="flow-node node-process" style="border-color:var(--alert);">
+            <div class="fn-tag" style="background:rgba(220,38,38,0.1);">Error report</div>
+            <div class="fn-title">Validation error summary</div>
+            <div class="fn-desc">List of rows with errors: row number, field name, issue description (e.g. "Row 14: Unit — 'gallons' not in valid list"). Consultant fixes in the spreadsheet and re-uploads. Partial uploads not allowed — all or nothing.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:24px;"></div>
+      <div class="merge-label">On successful validation</div>
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Confirm</div>
+        <div class="fn-title">Consultant confirms upload</div>
+        <div class="fn-desc">Single confirm action creates all projects in the client account. Each project gets full data model record including emission factor auto-lookup (if carbon saving not provided, platform calculates from consumption and unit). Projects immediately available in comparisons and strategies.</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Result</div>
+        <div class="fn-title">Upload confirmation report</div>
+        <div class="fn-desc">Summary: X projects created successfully. Link to each project. Any auto-calculated fields highlighted for review (e.g. "carbon saving derived from DEFRA factor — verify"). Upload logged in audit trail with consultant identity and timestamp.</div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- FLOW 3: Edit Existing Projects        -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="flow-section">
+    <div class="flow-section-title">3. Editing Existing Projects via Template</div>
+
+    <div class="flow-container">
+
+      <div class="flow-node node-start">
+        <div class="fn-title">Savings updated — need to edit projects in bulk</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Export</div>
+        <div class="fn-title">Export existing projects as template</div>
+        <div class="fn-desc">Consultant downloads current projects for a client account as a pre-filled template. Same format as the upload template but populated with live data. Includes a project_id column (hidden/locked) so the platform can match edits to existing records.</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Edit</div>
+        <div class="fn-title">Consultant edits values in spreadsheet</div>
+        <div class="fn-desc">Update savings figures, costs, consumption values, or any other field. Can also add new rows for new projects (blank project_id = new project). Can remove rows to leave those projects untouched — only rows present in the upload are processed.</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Re-upload</div>
+        <div class="fn-title">Upload edited template</div>
+        <div class="fn-desc">Same validation pipeline as Flow 2. Platform detects project_id column and switches to update mode.</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-decision">
+        <div class="fn-tag">Decision</div>
+        <div class="fn-title">New or existing project?</div>
+        <div class="fn-desc">For each row, platform checks whether a project_id is present.</div>
+      </div>
+
+      <div style="height:16px;"></div>
+
+      <div class="decision-branches">
+        <div class="branch">
+          <div class="branch-label branch-label-neutral">Has project_id</div>
+          <div style="height:8px;"></div>
+          <div class="flow-node node-process">
+            <div class="fn-tag">Update</div>
+            <div class="fn-title">Update existing project</div>
+            <div class="fn-desc">Platform diffs the uploaded values against the current record. Shows a change summary: "Saving changed from 45,000 to 52,000 kWh" for each modified field. Consultant confirms. Previous values retained in version history.</div>
+          </div>
+        </div>
+        <div class="branch">
+          <div class="branch-label branch-label-neutral">No project_id</div>
+          <div style="height:8px;"></div>
+          <div class="flow-node node-process">
+            <div class="fn-tag">Create</div>
+            <div class="fn-title">Create new project</div>
+            <div class="fn-desc">Treated as a new upload. Same creation logic as Flow 2. Allows mixed uploads — update some projects, create others, all in one template.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:24px;"></div>
+      <div class="merge-label">Both processed together</div>
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Result</div>
+        <div class="fn-title">Update confirmation report</div>
+        <div class="fn-desc">Summary: X projects updated, Y projects created, Z fields changed. Change log for audit trail. Carbon and cost totals recalculated for the account. Strategies and comparisons that reference updated projects are flagged for review.</div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- FLOW 4: AI Proposal Scraping          -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="flow-section">
+    <div class="flow-section-title">4. AI Proposal Scraping (Future Enhancement)</div>
+
+    <div class="flow-container">
+
+      <div class="flow-node node-start">
+        <div class="fn-title">Consultant has a proposal document (PDF/Word)</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-ai">
+        <div class="fn-tag">AI — Upload</div>
+        <div class="fn-title">Upload proposal document</div>
+        <div class="fn-desc">Consultant uploads an energy audit report, investment proposal, or client tender response. Could be PDF, Word, or Excel. The platform ingests the document for AI extraction.</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-ai">
+        <div class="fn-tag">AI — Extract</div>
+        <div class="fn-title">AI extracts project data from document</div>
+        <div class="fn-desc">Natural language processing identifies energy measures, technologies, savings figures, costs, payback periods, and site information from the proposal text and tables. Maps extracted values to the upload template fields. Handles common proposal formats (e.g. ESOS audit reports, investment grade proposals).</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-ai">
+        <div class="fn-tag">AI — Populate</div>
+        <div class="fn-title">Auto-populate upload template</div>
+        <div class="fn-desc">AI-extracted data fills the standard template. Each field marked with a confidence indicator: high (exact match from document), medium (inferred from context), low (best guess — needs review). Consultant reviews and corrects before uploading.</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-decision">
+        <div class="fn-tag">Review</div>
+        <div class="fn-title">Consultant reviews AI output</div>
+        <div class="fn-desc">Pre-upload review screen showing the extracted data alongside the source document. Low-confidence fields highlighted for attention. Consultant can edit any field, accept or reject individual rows, or discard and start again.</div>
+      </div>
+
+      <div style="height:16px;"></div>
+
+      <div class="decision-branches">
+        <div class="branch">
+          <div class="branch-label branch-label-yes">Accepted</div>
+          <div style="height:8px;"></div>
+          <div class="flow-node node-process">
+            <div class="fn-tag">Upload</div>
+            <div class="fn-title">Proceed to standard upload</div>
+            <div class="fn-desc">Template enters the same validation pipeline as Flow 2. AI-populated data treated identically to manually-entered data from this point forward.</div>
+          </div>
+        </div>
+        <div class="branch">
+          <div class="branch-label branch-label-no">Needs corrections</div>
+          <div style="height:8px;"></div>
+          <div class="flow-node node-process">
+            <div class="fn-tag">Edit</div>
+            <div class="fn-title">Download as editable template</div>
+            <div class="fn-desc">Export the AI-populated template as .xlsx for offline editing. Consultant corrects values, adds missing data, then uploads manually via Flow 2.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- FLOW 5: Data Integrity & Audit        -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="flow-section">
+    <div class="flow-section-title">5. Data Integrity &amp; Audit Trail</div>
+
+    <div class="flow-container">
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Integrity</div>
+        <div class="fn-title">Upload audit logging</div>
+        <div class="fn-desc">Every upload (create or update) is logged with: consultant identity, timestamp, client account, number of projects affected, source (manual template or AI-scraped), and a snapshot of the uploaded data. Enables rollback if needed.</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Versioning</div>
+        <div class="fn-title">Project version history</div>
+        <div class="fn-desc">Each project maintains a version history. When updated via template re-upload, previous values are preserved. Consultant or client can view change log: "Saving changed from 45,000 to 52,000 kWh on 16 Apr 2026 by Otto Terrell via template upload".</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-process">
+        <div class="fn-tag">Downstream</div>
+        <div class="fn-title">Impact propagation</div>
+        <div class="fn-desc">When projects are updated, the platform recalculates affected comparisons and strategies. If a saving figure changes, the strategy's total carbon and cost projections update automatically. Users of affected strategies receive a notification that source data has changed.</div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-head"></div></div>
+
+      <div class="flow-node node-end">
+        <div class="fn-title">Projects uploaded, validated, and integrated</div>
+        <div class="fn-desc" style="font-size:11px;">Bulk create &middot; Bulk update &middot; AI-assisted &middot; Fully audited</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="annotation annotation-success">
+    <strong>Asana subtasks mapped:</strong> (1) Create skeleton upload template based on True — Flow 1. (2) Discuss with Otto — template field definitions informed by existing data model. (3) Implement minor comments from Otto — iteration on template. (4) Define requirements for how data is inputted and taken — Flows 2 &amp; 3. (5) Create upload tool using template — Flow 2 validation pipeline. (6) Automated proposal scraping — Flow 4.
+  </div>
+
+  <div class="footer-note">
+    Source: Asana task #1212996905407721 &middot; Priority: High &middot; Type: Template &middot; Status: In Progress &middot; Follower: Sohil Mangat &middot; V0.1 April 2026
+  </div>
+
+<!-- Back to map button -->
+<style>
+.back-to-map-wrapper {
+  display: flex; justify-content: center;
+  padding: 32px 24px 24px 24px;
+  margin-top: 16px;
+}
+.back-to-map {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 18px; background: #FFFFFF; color: #111111;
+  border: 1px solid #111111; border-radius: 4px;
+  font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;
+  text-decoration: none; cursor: pointer;
+  transition: background 0.15s;
+}
+.back-to-map:hover { background: #F0F0F0; }
+</style>
+<div class="back-to-map-wrapper">
+  <a href="../../strategy%20and%20roadmap/archive/st2/sustainability-platform-map.html" class="back-to-map" onclick="if(window.opener){window.close();return false;}">← Back to map</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,2048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scenario Modelling — Wireframe</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f0f0f0;
+  color: #111111;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+/* ── Page footer ── */
+.page-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-top: 1px solid #111111;
+}
+.footer-btn {
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 150ms, opacity 150ms;
+  border: 1px solid #111111;
+}
+.footer-back {
+  background: #ffffff;
+  color: #111111;
+}
+.footer-back:hover { background: #F5F5F5; }
+.footer-finish {
+  background: #111111;
+  color: #ffffff;
+  border-color: #111111;
+}
+.footer-finish:hover { opacity: 0.8; }
+
+/* ── Wireframe badge ── */
+.wf-badge {
+  display: inline-block;
+  background: #111111;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+.wf-note {
+  font-size: 11px;
+  font-weight: 400;
+  color: #111111;
+  margin-bottom: 20px;
+  line-height: 1.6;
+  max-width: 700px;
+}
+
+/* ── Page shell ── */
+.page {
+  background: #ffffff;
+  border: 1px solid #111111;
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 1200px;
+}
+
+/* ── Page header ── */
+.page-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #111111;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.page-header-text { flex: 1; }
+.page-header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111111;
+  margin-bottom: 4px;
+}
+.page-header p {
+  font-size: 13px;
+  font-weight: 400;
+  color: #111111;
+}
+.project-notes {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px 10px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #111111;
+  background: #ffffff;
+  border: 1px solid #111111;
+  border-radius: 4px;
+  resize: vertical;
+  min-height: 48px;
+  line-height: 1.5;
+  outline: none;
+}
+.project-notes::placeholder { color: #111111; opacity: 0.45; }
+.project-notes:focus { outline: 2px solid #111111; outline-offset: 1px; }
+
+.download-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111111;
+  background: #ffffff;
+  border: 1px solid #111111;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: background 150ms;
+}
+.download-btn:hover { background: #F5F5F5; }
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #111111;
+  padding: 0 24px;
+}
+.tab {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 14px 16px 12px;
+  cursor: pointer;
+  color: #111111;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  user-select: none;
+}
+.tab.active { border-bottom-color: #111111; }
+.tab:hover:not(.active) { background: #F5F5F5; }
+
+/* ── Summary row ── */
+.summary-row {
+  padding: 12px 24px;
+  border-bottom: 1px solid #111111;
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.summary-pill {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.summary-pill .label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #111111;
+  background: #F5F5F5;
+  padding: 2px 7px;
+  border-radius: 3px;
+  display: inline-block;
+}
+.summary-pill .value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111111;
+}
+
+/* ── Main layout ── */
+.main-layout {
+  display: flex;
+  min-height: 620px;
+}
+
+/* ── Left panel ── */
+.left-panel {
+  width: 260px;
+  flex-shrink: 0;
+  border-right: 1px solid #111111;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.panel-section {
+  border: 1px solid #111111;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.panel-section-header {
+  background: #111111;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px 12px;
+}
+.panel-section-body {
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Evaluation period toggle */
+.eval-toggle {
+  display: flex;
+  gap: 6px;
+}
+.eval-btn {
+  flex: 1;
+  padding: 6px 4px;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  border: 1px solid #111111;
+  border-radius: 4px;
+  background: #ffffff;
+  cursor: pointer;
+  text-align: center;
+  transition: background 150ms;
+}
+.eval-btn.active {
+  background: #111111;
+  color: #ffffff;
+}
+.eval-btn:hover:not(.active) { background: #F5F5F5; }
+
+/* Scenario Modelling — NEW PANEL */
+.scenario-panel {
+  border: 1px solid #111111;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.scenario-panel-header {
+  background: #111111;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.scenario-panel-header .new-tag {
+  font-size: 8px;
+  font-weight: 700;
+  background: #111111;
+  color: #ffffff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.06em;
+}
+.scenario-panel-body {
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Layer toggle rows */
+.layer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.layer-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #111111;
+  flex: 1;
+  line-height: 1.3;
+}
+.layer-label small {
+  display: block;
+  font-size: 10px;
+  font-weight: 400;
+}
+.toggle {
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  border: 1px solid #111111;
+  background: #ffffff;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 150ms;
+}
+.toggle.on {
+  background: #111111;
+}
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #111111;
+  top: 2px;
+  left: 2px;
+  transition: transform 150ms, background 150ms;
+}
+.toggle.on::after {
+  background: #ffffff;
+  transform: translateX(16px);
+}
+
+.layer-color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Named scenario selector */
+.scenario-select {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 7px 10px;
+  border: 1px solid #111111;
+  border-radius: 4px;
+  background: #ffffff;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23111'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  outline: none;
+}
+.scenario-select:focus {
+  outline: 2px solid #111111;
+  outline-offset: 2px;
+}
+
+/* Scenario date input */
+.scenario-date {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 7px 10px;
+  border: 1px solid #111111;
+  border-radius: 4px;
+  background: #ffffff;
+  outline: none;
+  color: #111111;
+}
+.scenario-date:focus {
+  outline: 2px solid #111111;
+  outline-offset: 2px;
+}
+
+.divider {
+  height: 1px;
+  background: #111111;
+  opacity: 0.12;
+}
+
+.field-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #111111;
+  margin-bottom: 5px;
+}
+
+.reset-btn {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 7px;
+  border: 1px solid #111111;
+  border-radius: 4px;
+  background: #ffffff;
+  cursor: pointer;
+}
+.reset-btn:hover { background: #F5F5F5; }
+
+/* Custom preset save UI */
+.save-preset-btn {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px 8px;
+  border: 1px dashed #111111;
+  border-radius: 4px;
+  background: #ffffff;
+  cursor: pointer;
+  color: #111111;
+}
+.save-preset-btn:hover { background: #F5F5F5; }
+.preset-name-input {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  padding: 6px 8px;
+  border: 1px solid #111111;
+  border-radius: 4px;
+  background: #ffffff;
+  outline: none;
+}
+.preset-name-input:focus { outline: 2px solid #111111; outline-offset: 1px; }
+.preset-form-btn {
+  flex: 1;
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px;
+  border: 1px solid #111111;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.preset-form-save { background: #111111; color: #ffffff; }
+.preset-form-cancel { background: #ffffff; color: #111111; }
+.preset-form-save:hover { opacity: 0.85; }
+.preset-form-cancel:hover { background: #F5F5F5; }
+.saved-preset-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 4px 3px 8px;
+  border: 1px solid #111111;
+  border-radius: 12px;
+  background: #ffffff;
+  cursor: pointer;
+  color: #111111;
+}
+.saved-preset-chip:hover { background: #F5F5F5; }
+.saved-preset-chip .chip-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  color: #111111;
+  padding: 0;
+}
+.saved-preset-chip .chip-delete:hover { background: #F5F5F5; }
+
+/* ── Right panel — chart area ── */
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Chart tabs */
+.chart-tabs {
+  display: flex;
+  border-bottom: 1px solid #111111;
+  padding: 0 24px;
+}
+.chart-tab {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 12px 14px 10px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  color: #111111;
+  user-select: none;
+}
+.chart-tab.active { border-bottom-color: #111111; }
+.chart-tab:hover:not(.active) { background: #F5F5F5; }
+
+/* Impact summary strip */
+.impact-strip {
+  display: flex;
+  gap: 16px;
+  padding: 16px 24px;
+}
+.impact-cell {
+  flex: 1;
+  padding: 20px 24px;
+  border: 1.5px solid #111111;
+  border-radius: 8px;
+  background: #ffffff;
+}
+.impact-cell .impact-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #111111;
+  margin-bottom: 6px;
+}
+.impact-cell .impact-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111111;
+  line-height: 1.2;
+}
+.impact-cell .impact-delta {
+  font-size: 12px;
+  font-weight: 400;
+  color: #111111;
+  margin-top: 4px;
+}
+.delta-up { color: #111111; font-weight: 600; }
+.delta-neutral { color: #111111; }
+
+/* Chart container */
+/* State switcher */
+.state-switcher {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.state-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #111111;
+  flex-shrink: 0;
+}
+.state-toggle {
+  display: flex;
+  border: 1px solid #111111;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.state-btn {
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 14px;
+  border: none;
+  background: #ffffff;
+  cursor: pointer;
+  color: #111111;
+  transition: background 150ms;
+  border-right: 1px solid #111111;
+}
+.state-btn:last-child { border-right: none; }
+.state-btn.active { background: #111111; color: #ffffff; }
+.state-btn:hover:not(.active) { background: #F5F5F5; }
+
+.chart-area {
+  flex: 1;
+  padding: 20px 24px 16px;
+  display: flex;
+  flex-direction: column;
+}
+.chart-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: #111111;
+  margin-bottom: 4px;
+}
+.chart-subtitle {
+  font-size: 11px;
+  font-weight: 400;
+  color: #111111;
+  margin-bottom: 16px;
+}
+.chart-subtitle .annotation {
+  display: inline-block;
+  background: #111111;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* SVG chart */
+#curve-chart {
+  width: 100%;
+  flex: 1;
+  cursor: crosshair;
+  min-height: 300px;
+}
+
+/* ── Time window panel (granularity slider) ── */
+.time-window {
+  margin-top: 14px;
+  padding: 14px 0 10px;
+  border-top: 1px solid #111111;
+}
+.tw-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.tw-presets { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.tw-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #111111;
+  margin-right: 4px;
+}
+.tw-preset-btn {
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border: 1px solid #111111;
+  border-radius: 4px;
+  background: #ffffff;
+  cursor: pointer;
+  color: #111111;
+  transition: background 150ms;
+}
+.tw-preset-btn:hover { background: #F5F5F5; }
+.tw-preset-btn.active { background: #111111; color: #ffffff; }
+.tw-info { display: flex; align-items: center; gap: 10px; }
+.tw-mode-pill {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1px solid #111111;
+  border-radius: 3px;
+  background: #ffffff;
+  color: #111111;
+}
+.tw-mode-pill.monthly { background: #111111; color: #ffffff; }
+.tw-range-readout {
+  font-size: 11px;
+  font-weight: 500;
+  color: #111111;
+}
+
+/* Dual-range slider (two range inputs overlaid on a track) */
+.tw-slider-wrap {
+  position: relative;
+  height: 26px;
+  margin: 0 8px;
+}
+.tw-track {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #F5F5F5;
+  border: 1px solid #111111;
+  border-radius: 2px;
+}
+.tw-track-fill {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: #111111;
+}
+.tw-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 26px;
+  margin: 0;
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+.tw-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #111111;
+  cursor: grab;
+  margin-top: 0;
+}
+.tw-slider::-webkit-slider-thumb:active { cursor: grabbing; }
+.tw-slider::-moz-range-thumb {
+  pointer-events: auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #111111;
+  cursor: grab;
+}
+.tw-slider::-webkit-slider-runnable-track { background: transparent; }
+.tw-slider::-moz-range-track { background: transparent; }
+.tw-slider-end::-webkit-slider-thumb { background: #111111; }
+.tw-slider-end::-moz-range-thumb { background: #111111; }
+
+.tw-axis-labels {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0 8px;
+  font-size: 9px;
+  font-weight: 500;
+  color: #111111;
+  opacity: 0.55;
+  padding: 0 6px;
+}
+.tw-helper {
+  font-size: 10px;
+  color: #111111;
+  opacity: 0.65;
+  line-height: 1.5;
+  margin-top: 2px;
+}
+.tw-helper.read-only {
+  opacity: 1;
+  background: #F5F5F5;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* Legend */
+.chart-legend {
+  display: flex;
+  gap: 20px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 400;
+}
+.legend-line {
+  width: 20px;
+  height: 2px;
+  flex-shrink: 0;
+}
+.legend-dashed {
+  width: 20px;
+  height: 2px;
+  flex-shrink: 0;
+  background: repeating-linear-gradient(90deg, #111 0, #111 5px, transparent 5px, transparent 9px);
+}
+
+/* Tooltip */
+.chart-tooltip {
+  position: fixed;
+  background: #111111;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  pointer-events: none;
+  display: none;
+  z-index: 999;
+  line-height: 1.5;
+}
+.chart-tooltip .tt-year { font-weight: 700; font-size: 12px; }
+
+/* Wireframe annotation overlays */
+.annotation-callout {
+  position: relative;
+  display: inline-block;
+}
+.callout-badge {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #111111;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 18px;
+  margin-left: 4px;
+  vertical-align: middle;
+  cursor: help;
+  position: relative;
+}
+
+/* Notes panel at bottom */
+</style>
+</head>
+<body>
+<div class="wf-badge">Wireframe — Low fidelity · Scenario Modelling v0.1</div>
+<p class="wf-note">This wireframe replaces the current Scenario Planning panel with an interactive energy cost curve editor. Users drag existing data points to reshape the forecast over the project lifespan, and zoom into any time window for monthly detail. The chart updates in real time and the impact summary reflects the change.</p>
+
+<div class="page">
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="page-header-text">
+      <h1 id="project-title">Install energy-efficient machinery</h1>
+      <p>Your current and future market-reflective energy prices are used in the calculations to enhance the accuracy of your result.</p>
+      <textarea class="project-notes" placeholder="Add notes, assumptions or supplier context for this project — visible to anyone collaborating on it.">Baseline assumes 2026 mid-case market price. Non-commodity costs reviewed Q1 2026 with Krista. Replace this text with project-specific context.</textarea>
+    </div>
+    <button class="download-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+        <path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="#111111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Download
+    </button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active">Summary</div>
+    <div class="tab">Meters</div>
+    <div class="tab">Costs</div>
+    <div class="tab">Consumption &amp; Savings</div>
+    <div class="tab">Energy Export</div>
+  </div>
+
+  <!-- Summary row -->
+  <div class="summary-row">
+    <div class="summary-pill">
+      <span class="label">Lifespan</span>
+      <span class="value">10 Years</span>
+    </div>
+    <div class="summary-pill">
+      <span class="label">Total Costs</span>
+      <span class="value">£207.0k</span>
+    </div>
+  </div>
+
+  <!-- Main layout -->
+  <div class="main-layout">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+
+      <!-- SCENARIO MODELLING — replaces old panel -->
+      <div class="scenario-panel">
+        <div class="scenario-panel-header">
+          Scenario Modelling
+          <span class="new-tag">New</span>
+        </div>
+        <div class="scenario-panel-body">
+
+          <!-- Start date -->
+          <div>
+            <div class="field-label">Start date</div>
+            <input type="date" class="scenario-date" value="2025-06-04">
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Named scenario preset -->
+          <div>
+            <div class="field-label">Scenario preset</div>
+            <select class="scenario-select" onchange="applyPreset(this.value)">
+              <option value="custom">Custom (edit below)</option>
+              <option value="mid">Mid — stable market</option>
+              <option value="high">High — price inflation</option>
+              <option value="low">Low — market decline</option>
+            </select>
+
+            <!-- Custom preset save area -->
+            <div id="custom-presets-wrap" style="margin-top:10px;">
+              <div id="saved-preset-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div>
+              <button class="save-preset-btn" id="save-preset-btn" onclick="toggleSavePresetForm()">
+                + Save current as preset
+              </button>
+              <div id="save-preset-form" style="display:none; margin-top:8px;">
+                <input type="text" id="preset-name-input" placeholder="e.g. Worst case 2030" maxlength="40" class="preset-name-input">
+                <div style="display:flex; gap:6px; margin-top:6px;">
+                  <button class="preset-form-btn preset-form-save" onclick="saveCurrentPreset()">Save</button>
+                  <button class="preset-form-btn preset-form-cancel" onclick="toggleSavePresetForm()">Cancel</button>
+                </div>
+              </div>
+              <div style="font-size:9px; color:#111111; opacity:0.55; margin-top:8px; line-height:1.4;">
+                Future: link saved presets to procurement risk profile to drive cross-scenario comparison.
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Active layers: Total delivered rate group -->
+          <div>
+            <div class="field-label" style="margin-bottom:10px;">Total delivered rate</div>
+
+            <div class="layer-row" id="layer-total">
+              <div class="layer-color-dot" style="background:#111111;"></div>
+              <div class="layer-label">Energy cost (total)<small>p/kWh delivered rate · always shown</small></div>
+              <div class="toggle on" style="opacity:0.4; cursor:not-allowed;" title="Always shown"></div>
+            </div>
+
+            <div class="layer-row" style="margin-top:10px; padding-left:14px;" id="layer-commodity">
+              <div class="layer-color-dot" style="background:#111111; opacity:0.55;"></div>
+              <div class="layer-label">Commodity component<small>Wholesale energy price</small></div>
+              <div class="toggle" id="toggle-commodity" onclick="toggleLayer('commodity')"></div>
+            </div>
+
+            <div class="layer-row" style="margin-top:10px; padding-left:14px;" id="layer-noncommodity">
+              <div class="layer-color-dot" style="border:1.5px dashed #111111; background:transparent;"></div>
+              <div class="layer-label">Non-commodity component<small>Network, policy, levies, margin</small></div>
+              <div class="toggle" id="toggle-noncommodity" onclick="toggleLayer('noncommodity')"></div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Active layers: System & market group -->
+          <div>
+            <div class="field-label" style="margin-bottom:10px;">System &amp; market assumptions</div>
+
+            <div class="layer-row" id="layer-degradation">
+              <div class="layer-color-dot" style="border:1.5px dashed #111111; background:transparent;"></div>
+              <div class="layer-label">System degradation<small>Declining kWh output over time</small></div>
+              <div class="toggle" id="toggle-degradation" onclick="toggleLayer('degradation')"></div>
+            </div>
+
+            <div class="layer-row" style="margin-top:10px;" id="layer-grid">
+              <div class="layer-color-dot" style="border:1.5px dashed #63C73B; background:transparent;"></div>
+              <div class="layer-label">Grid decarbonisation<small>Falling carbon intensity of imported power</small></div>
+              <div class="toggle" id="toggle-grid" onclick="toggleLayer('grid')"></div>
+            </div>
+
+            <div class="layer-row" style="margin-top:10px;" id="layer-demand">
+              <div class="layer-color-dot" style="border:1.5px dashed #C04A74; background:transparent;"></div>
+              <div class="layer-label">Demand growth<small>Operational expansion or contraction</small></div>
+              <div class="toggle" id="toggle-demand" onclick="toggleLayer('demand')"></div>
+            </div>
+
+            <div class="layer-row" style="margin-top:10px;" id="layer-export">
+              <div class="layer-color-dot" style="background:#3185DA;"></div>
+              <div class="layer-label">Export agreement<small>p/kWh received for exported energy · drag to edit</small></div>
+              <div class="toggle" id="toggle-export" onclick="toggleLayer('export')"></div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div style="font-size:11px; color:#111111; line-height:1.6; background:#F5F5F5; padding:8px 10px; border-radius:4px;">
+            <strong>Drag any point</strong> on the chart to adjust the forecast.<br>
+            <strong>Shift-click</strong> two or more points to lift them together by the same amount.
+          </div>
+
+          <button class="reset-btn" onclick="resetCurve()">Reset to baseline</button>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+
+      <!-- Chart tabs -->
+      <div class="chart-tabs">
+        <div class="chart-tab">Cash Flow</div>
+        <div class="chart-tab">Energy Costs</div>
+        <div class="chart-tab active">Scenarios <span style="font-size:9px;font-weight:700;background:#111111;color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px;">New</span></div>
+      </div>
+
+      <!-- Impact summary strip -->
+      <div class="impact-strip">
+        <div class="impact-cell">
+          <div class="impact-label">Est. Net Savings</div>
+          <div class="impact-value" id="val-savings">£90,022</div>
+          <div class="impact-delta delta-neutral" id="delta-savings">Baseline</div>
+        </div>
+        <div class="impact-cell">
+          <div class="impact-label">Payback Term</div>
+          <div class="impact-value" id="val-payback">77 <span style="font-size:14px;font-weight:400;">months</span></div>
+          <div class="impact-delta delta-neutral" id="delta-payback">Baseline</div>
+        </div>
+        <div class="impact-cell">
+          <div class="impact-label">Carbon Savings</div>
+          <div class="impact-value" id="val-carbon">293.4 <span style="font-size:14px;font-weight:400;">tCO₂e</span></div>
+          <div class="impact-delta delta-neutral" id="delta-carbon">Enable grid layer to model decarb impact</div>
+        </div>
+      </div>
+
+      <!-- Chart area -->
+      <div class="chart-area">
+
+        <div class="chart-title" id="chart-title">Energy cost forecast — project lifespan
+        </div>
+        <div class="chart-subtitle" id="chart-subtitle">
+          Drag points to reshape the forecast. Solid line = your scenario. Dashed = baseline. Toggle layers in the panel to add detail.
+          <span class="annotation">Drag to edit</span>
+        </div>
+
+        <svg id="curve-chart" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet"></svg>
+
+        <!-- ── Time window panel (replaces old Evaluation Period buttons) ── -->
+        <div class="time-window">
+          <div class="tw-row">
+            <div class="tw-presets">
+              <span class="tw-label">Time window</span>
+              <button class="tw-preset-btn" onclick="setWindowMonths(0, 12)">1 yr</button>
+              <button class="tw-preset-btn" onclick="setWindowMonths(0, 36)">3 yr</button>
+              <button class="tw-preset-btn" onclick="setWindowMonths(0, 60)">5 yr</button>
+              <button class="tw-preset-btn active" onclick="setWindowMonths(0, 120)">Full (10 yr)</button>
+            </div>
+            <div class="tw-info">
+              <span class="tw-mode-pill" id="tw-mode-pill">Annual view</span>
+              <span class="tw-range-readout" id="tw-range-readout">Jun 2025 → Jun 2035</span>
+            </div>
+          </div>
+
+          <div class="tw-slider-wrap">
+            <div class="tw-track" id="tw-track">
+              <div class="tw-track-fill" id="tw-track-fill"></div>
+            </div>
+            <input type="range" id="tw-start" min="0" max="120" value="0" step="1" class="tw-slider tw-slider-start">
+            <input type="range" id="tw-end" min="0" max="120" value="120" step="1" class="tw-slider tw-slider-end">
+          </div>
+
+          <div class="tw-axis-labels">
+            <span>Jun 2025</span>
+            <span>Yr 2</span>
+            <span>Yr 4</span>
+            <span>Yr 6</span>
+            <span>Yr 8</span>
+            <span>Jun 2035</span>
+          </div>
+
+          <div class="tw-helper" id="tw-helper">
+            Drag the handles to focus on any period — view auto-switches to monthly when zoomed under 3 years.
+          </div>
+        </div>
+
+        <div class="chart-legend" id="chart-legend">
+          <div class="legend-item"><div class="legend-line" style="background:#111111; height:2.5px;"></div>Energy cost (total)</div>
+          <div class="legend-item legend-extra" data-layer="commodity" style="display:none;"><div class="legend-line" style="background:#111111; height:2.5px; opacity:0.55;"></div>Commodity</div>
+          <div class="legend-item legend-extra" data-layer="noncommodity" style="display:none;"><div class="legend-dashed" style="opacity:0.5;"></div>Non-commodity</div>
+          <div class="legend-item legend-extra" data-layer="degradation" style="display:none;"><div class="legend-dashed" style="opacity:0.5;"></div>Degradation</div>
+          <div class="legend-item legend-extra" data-layer="grid" style="display:none;"><div class="legend-dashed" style="border-bottom-color:#63C73B; opacity:0.7;"></div>Grid decarb</div>
+          <div class="legend-item legend-extra" data-layer="demand" style="display:none;"><div class="legend-dashed" style="border-bottom-color:#C04A74; opacity:0.7;"></div>Demand growth</div>
+          <div class="legend-item legend-extra" data-layer="export" style="display:none;"><div class="legend-line" style="background:#3185DA; height:2px;"></div>Export agreement</div>
+          <div class="legend-item"><div class="legend-dashed"></div>Baseline</div>
+          <div class="legend-item"><div class="legend-line" style="background:#DC2626; width:2px; height:14px;"></div>Contract end</div>
+        </div>
+      </div>
+
+      <!-- Wireframe notes -->
+    </div>
+  </div>
+
+  <!-- Page footer -->
+  <div class="page-footer">
+    <button class="footer-btn footer-back">← Back</button>
+    <button class="footer-btn footer-finish">Finish</button>
+  </div>
+
+</div>
+
+<!-- Wireframe notes — outside the UI -->
+
+
+<div class="chart-tooltip" id="tooltip">
+  <div class="tt-year" id="tt-year"></div>
+  <div id="tt-value"></div>
+</div>
+
+<script>
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const svg = document.getElementById('curve-chart');
+const tooltip = document.getElementById('tooltip');
+
+// Chart dimensions
+const PAD = { top: 20, right: 20, bottom: 40, left: 52 };
+const VW = 800, VH = 300;
+const CW = VW - PAD.left - PAD.right;
+const CH = VH - PAD.top - PAD.bottom;
+const YEARS = 10;
+const CONTRACT_END_YEAR = 4; // fixed contract ends at year 4
+
+// ── Time window state (months from project start) ──
+let windowStartMonth = 0;
+let windowEndMonth = 120; // 10 years
+const MONTHLY_THRESHOLD_MONTHS = 36; // ≤ 3 yr window → monthly view
+function isMonthlyView() { return (windowEndMonth - windowStartMonth) <= MONTHLY_THRESHOLD_MONTHS; }
+
+// Project start date (read from input on init / when changed)
+function getStartDate() {
+  const input = document.querySelector('.scenario-date');
+  if (!input || !input.value) return new Date(2025, 5, 4); // June 2025 fallback
+  const [y, m, d] = input.value.split('-').map(Number);
+  return new Date(y, m - 1, d || 1);
+}
+function monthOffsetToDate(m) {
+  const s = getStartDate();
+  return new Date(s.getFullYear(), s.getMonth() + m, 1);
+}
+function fmtMonthShort(d) {
+  const m = d.toLocaleDateString('en-GB', { month: 'short' });
+  return m + " '" + String(d.getFullYear()).slice(-2);
+}
+function fmtMonthYear(d) {
+  return d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+}
+
+// Baseline energy cost data (p/kWh) — flat-ish with small rise
+function baseline(yr) {
+  if (yr <= CONTRACT_END_YEAR) return 22 + yr * 0.3; // fixed contract
+  return 23.2 + (yr - CONTRACT_END_YEAR) * 0.8 + Math.sin(yr * 0.4) * 0.5;
+}
+
+// User-editable points (only post-contract)
+let userPoints = [];
+for (let y = 0; y <= YEARS; y++) {
+  userPoints.push({ year: y, value: baseline(y), locked: y <= CONTRACT_END_YEAR });
+}
+
+// Export-agreement points: editable post-contract, baseline ~5 p/kWh export rate
+let exportPoints = [];
+for (let y = 0; y <= YEARS; y++) {
+  const v = y <= CONTRACT_END_YEAR ? 12 : 13 + (y - CONTRACT_END_YEAR) * 0.3;
+  exportPoints.push({ year: y, value: v, locked: y <= CONTRACT_END_YEAR });
+}
+
+// Per-layer toggle state — true means "show this layer on the chart"
+const layerState = {
+  commodity: false,
+  noncommodity: false,
+  degradation: false,
+  grid: false,
+  demand: false,
+  export: false
+};
+
+// Coordinate helpers — xPos accepts a fractional year and maps to current visible window
+function xPos(year) {
+  const monthCoord = year * 12;
+  const span = Math.max(1, windowEndMonth - windowStartMonth);
+  return PAD.left + ((monthCoord - windowStartMonth) / span) * CW;
+}
+function yPos(val) {
+  const minV = 10, maxV = 50;
+  return PAD.top + CH - ((val - minV) / (maxV - minV)) * CH;
+}
+function yToVal(y) {
+  const minV = 10, maxV = 50;
+  return maxV - ((y - PAD.top) / CH) * (maxV - minV);
+}
+
+let dragging = null;
+let draggingExport = null;
+let svgRect = null;
+
+// Multi-point selection state — shift-click to add/remove from selection,
+// then dragging any selected point moves all selected points by the same delta.
+const selectedIndices = new Set();
+let dragStartValues = new Map(); // index -> value at mousedown
+
+// ── Monthly view helpers ──
+// Linear interpolation between annual userPoints to get a value at any fractional year.
+function interpolateAnnualValue(yrFloat) {
+  if (yrFloat <= 0) return userPoints[0].value;
+  if (yrFloat >= YEARS) return userPoints[YEARS].value;
+  const lo = Math.floor(yrFloat);
+  const hi = Math.min(YEARS, lo + 1);
+  const t = yrFloat - lo;
+  return userPoints[lo].value + (userPoints[hi].value - userPoints[lo].value) * t;
+}
+// Seasonal modifier: cosine peaks in winter (Jan), dips in summer (July). ±1.5p amplitude.
+function seasonality(monthOffset) {
+  const startD = getStartDate();
+  const calMonth = (((startD.getMonth() + monthOffset) % 12) + 12) % 12; // 0=Jan
+  return Math.cos((calMonth / 12) * 2 * Math.PI) * 1.5;
+}
+// Build a monthly series within the visible window, with a per-month value function.
+// Caller passes a function (monthOffset) → annual value; we layer seasonality on top.
+function generateMonthlySeries(getAnnual) {
+  const out = [];
+  for (let m = windowStartMonth; m <= windowEndMonth; m++) {
+    out.push({ year: m / 12, value: getAnnual(m) + seasonality(m) });
+  }
+  return out;
+}
+
+function buildChart() {
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  svgRect = svg.getBoundingClientRect();
+
+  // Grid lines + Y axis labels
+  [10, 20, 30, 40, 50].forEach(v => {
+    const y = yPos(v);
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', PAD.left); line.setAttribute('x2', VW - PAD.right);
+    line.setAttribute('y1', y); line.setAttribute('y2', y);
+    line.setAttribute('stroke', '#111'); line.setAttribute('stroke-width', '0.5');
+    line.setAttribute('stroke-opacity', '0.07');
+    svg.appendChild(line);
+
+    const lbl = document.createElementNS(SVG_NS, 'text');
+    lbl.setAttribute('x', PAD.left - 6); lbl.setAttribute('y', y + 4);
+    lbl.setAttribute('text-anchor', 'end');
+    lbl.setAttribute('font-size', '9'); lbl.setAttribute('font-family', 'Poppins, sans-serif');
+    lbl.setAttribute('fill', '#111');
+    lbl.textContent = v + 'p';
+    svg.appendChild(lbl);
+  });
+
+  // X axis labels — adapt to window size and view mode
+  if (isMonthlyView()) {
+    const winSpan = windowEndMonth - windowStartMonth;
+    const step = winSpan <= 12 ? 2 : 3; // every 2 months for ≤1yr, every 3 months otherwise
+    for (let m = windowStartMonth; m <= windowEndMonth; m += step) {
+      const x = xPos(m / 12);
+      if (x < PAD.left - 1 || x > VW - PAD.right + 1) continue;
+      const d = monthOffsetToDate(m);
+      const lbl = document.createElementNS(SVG_NS, 'text');
+      lbl.setAttribute('x', x); lbl.setAttribute('y', VH - PAD.bottom + 14);
+      lbl.setAttribute('text-anchor', 'middle');
+      lbl.setAttribute('font-size', '9'); lbl.setAttribute('font-family', 'Poppins, sans-serif');
+      lbl.setAttribute('fill', '#111');
+      lbl.textContent = fmtMonthShort(d);
+      svg.appendChild(lbl);
+    }
+  } else {
+    const winSpanYrs = (windowEndMonth - windowStartMonth) / 12;
+    const yearStep = winSpanYrs <= 5 ? 1 : 2;
+    for (let y = 0; y <= YEARS; y += yearStep) {
+      const monthCoord = y * 12;
+      if (monthCoord < windowStartMonth - 0.5 || monthCoord > windowEndMonth + 0.5) continue;
+      const x = xPos(y);
+      const lbl = document.createElementNS(SVG_NS, 'text');
+      lbl.setAttribute('x', x); lbl.setAttribute('y', VH - PAD.bottom + 14);
+      lbl.setAttribute('text-anchor', 'middle');
+      lbl.setAttribute('font-size', '9'); lbl.setAttribute('font-family', 'Poppins, sans-serif');
+      lbl.setAttribute('fill', '#111');
+      lbl.textContent = 'Yr ' + y;
+      svg.appendChild(lbl);
+    }
+  }
+
+  // Clip path so lines don't extend past the chart area when zoomed in
+  const defs = document.createElementNS(SVG_NS, 'defs');
+  const clip = document.createElementNS(SVG_NS, 'clipPath');
+  clip.setAttribute('id', 'chart-clip');
+  const clipRect = document.createElementNS(SVG_NS, 'rect');
+  clipRect.setAttribute('x', PAD.left);
+  clipRect.setAttribute('y', PAD.top - 2);
+  clipRect.setAttribute('width', CW);
+  clipRect.setAttribute('height', CH + 4);
+  clip.appendChild(clipRect);
+  defs.appendChild(clip);
+  svg.appendChild(defs);
+
+  // Baseline line (dashed) — rendered with seasonality in monthly view
+  const baselineSeries = isMonthlyView()
+    ? generateMonthlySeries(m => baseline(m / 12))
+    : userPoints.map(p => ({ year: p.year, value: baseline(p.year) }));
+  const baselinePts = baselineSeries.map(p => `${xPos(p.year)},${yPos(p.value)}`).join(' ');
+  const bLine = document.createElementNS(SVG_NS, 'polyline');
+  bLine.setAttribute('points', baselinePts);
+  bLine.setAttribute('fill', 'none');
+  bLine.setAttribute('stroke', '#111');
+  bLine.setAttribute('stroke-width', '1.5');
+  bLine.setAttribute('stroke-dasharray', '5 4');
+  bLine.setAttribute('stroke-opacity', '0.25');
+  bLine.setAttribute('clip-path', 'url(#chart-clip)');
+  svg.appendChild(bLine);
+
+  // Contract end vertical line — only render if within the visible window
+  const contractInWindow = (CONTRACT_END_YEAR * 12) >= windowStartMonth && (CONTRACT_END_YEAR * 12) <= windowEndMonth;
+  const cx = xPos(CONTRACT_END_YEAR);
+  if (contractInWindow) {
+    const cLine = document.createElementNS(SVG_NS, 'line');
+    cLine.setAttribute('x1', cx); cLine.setAttribute('x2', cx);
+    cLine.setAttribute('y1', PAD.top); cLine.setAttribute('y2', VH - PAD.bottom);
+    cLine.setAttribute('stroke', '#DC2626');
+    cLine.setAttribute('stroke-width', '1.5');
+    cLine.setAttribute('stroke-dasharray', '4 3');
+    svg.appendChild(cLine);
+
+    const cLbl = document.createElementNS(SVG_NS, 'text');
+    cLbl.setAttribute('x', cx + 4); cLbl.setAttribute('y', PAD.top + 12);
+    cLbl.setAttribute('font-size', '8'); cLbl.setAttribute('font-family', 'Poppins, sans-serif');
+    cLbl.setAttribute('fill', '#DC2626'); cLbl.setAttribute('font-weight', '600');
+    cLbl.textContent = 'Contract end';
+    svg.appendChild(cLbl);
+  }
+
+  // Locked region shade — only the portion within the window
+  const lockedEnd = Math.min(cx, VW - PAD.right);
+  if (lockedEnd > PAD.left && (CONTRACT_END_YEAR * 12) > windowStartMonth) {
+    const shade = document.createElementNS(SVG_NS, 'rect');
+    shade.setAttribute('x', PAD.left);
+    shade.setAttribute('y', PAD.top);
+    shade.setAttribute('width', Math.max(0, lockedEnd - PAD.left));
+    shade.setAttribute('height', CH);
+    shade.setAttribute('fill', '#F5F5F5');
+    shade.setAttribute('opacity', '0.6');
+    svg.insertBefore(shade, defs.nextSibling);
+
+    if (contractInWindow) {
+      const lockLbl = document.createElementNS(SVG_NS, 'text');
+      lockLbl.setAttribute('x', PAD.left + (lockedEnd - PAD.left) / 2); lockLbl.setAttribute('y', VH - PAD.bottom - 8);
+      lockLbl.setAttribute('text-anchor', 'middle');
+      lockLbl.setAttribute('font-size', '8'); lockLbl.setAttribute('font-family', 'Poppins, sans-serif');
+      lockLbl.setAttribute('fill', '#111'); lockLbl.setAttribute('opacity', '0.4');
+      lockLbl.textContent = 'Fixed contract (read-only)';
+      svg.appendChild(lockLbl);
+    }
+  }
+
+  // ── Main user scenario line ──
+  // In monthly view, generate interpolated monthly points with seasonality (read-only).
+  // In annual view, use the editable yearly userPoints directly.
+  const userSeries = isMonthlyView()
+    ? generateMonthlySeries(m => interpolateAnnualValue(m / 12))
+    : userPoints.map(p => ({ year: p.year, value: p.value }));
+  const pts = userSeries.map(p => `${xPos(p.year)},${yPos(p.value)}`).join(' ');
+  const uLine = document.createElementNS(SVG_NS, 'polyline');
+  uLine.setAttribute('points', pts);
+  uLine.setAttribute('fill', 'none');
+  uLine.setAttribute('stroke', '#111111');
+  uLine.setAttribute('stroke-width', '2.5');
+  uLine.setAttribute('clip-path', 'url(#chart-clip)');
+  svg.appendChild(uLine);
+
+  // ── Annual-only rendering: layers + draggable points ──
+  // In monthly view we render an interpolated read-only line; layers and direct editing return in annual.
+  if (!isMonthlyView()) {
+
+  // Each layer is independently togglable — read state from layerState
+  const labelYr = Math.min(YEARS - 2, 8); // safe annotation x position for 10yr span
+
+  // Commodity component (~65% of total)
+  if (layerState.commodity) {
+    const comPts = userPoints.map(p => `${xPos(p.year)},${yPos(p.value * 0.65)}`).join(' ');
+    const comLine = document.createElementNS(SVG_NS, 'polyline');
+    comLine.setAttribute('points', comPts);
+    comLine.setAttribute('fill', 'none');
+    comLine.setAttribute('stroke', '#111111');
+    comLine.setAttribute('stroke-width', '1.5');
+    comLine.setAttribute('stroke-opacity', '0.55');
+    svg.appendChild(comLine);
+
+    const comLbl = document.createElementNS(SVG_NS, 'text');
+    comLbl.setAttribute('x', xPos(labelYr)); comLbl.setAttribute('y', yPos(userPoints[labelYr].value * 0.65) - 5);
+    comLbl.setAttribute('font-size', '8'); comLbl.setAttribute('font-family', 'Poppins, sans-serif');
+    comLbl.setAttribute('fill', '#111111'); comLbl.setAttribute('opacity', '0.55');
+    comLbl.setAttribute('text-anchor', 'end');
+    comLbl.textContent = 'Commodity';
+    svg.appendChild(comLbl);
+  }
+
+  // Non-commodity component (~35% of total + small floor)
+  if (layerState.noncommodity) {
+    const ncPts = userPoints.map(p => `${xPos(p.year)},${yPos(p.value * 0.35 + 4)}`).join(' ');
+    const ncLine = document.createElementNS(SVG_NS, 'polyline');
+    ncLine.setAttribute('points', ncPts);
+    ncLine.setAttribute('fill', 'none');
+    ncLine.setAttribute('stroke', '#111111');
+    ncLine.setAttribute('stroke-width', '1.5');
+    ncLine.setAttribute('stroke-opacity', '0.45');
+    ncLine.setAttribute('stroke-dasharray', '4 3');
+    svg.appendChild(ncLine);
+
+    const ncLbl = document.createElementNS(SVG_NS, 'text');
+    ncLbl.setAttribute('x', xPos(labelYr)); ncLbl.setAttribute('y', yPos(userPoints[labelYr].value * 0.35 + 4) - 5);
+    ncLbl.setAttribute('font-size', '8'); ncLbl.setAttribute('font-family', 'Poppins, sans-serif');
+    ncLbl.setAttribute('fill', '#111111'); ncLbl.setAttribute('opacity', '0.5');
+    ncLbl.setAttribute('text-anchor', 'end');
+    ncLbl.textContent = 'Non-commodity';
+    svg.appendChild(ncLbl);
+  }
+
+  // System degradation: declining curve (~10% drop over 10yr)
+  if (layerState.degradation) {
+    const degPts = userPoints.map(p => {
+      const degradeFactor = 1 - (p.year / YEARS) * 0.10;
+      return `${xPos(p.year)},${yPos(p.value * degradeFactor)}`;
+    }).join(' ');
+    const degLine = document.createElementNS(SVG_NS, 'polyline');
+    degLine.setAttribute('points', degPts);
+    degLine.setAttribute('fill', 'none');
+    degLine.setAttribute('stroke', '#111111');
+    degLine.setAttribute('stroke-width', '1.5');
+    degLine.setAttribute('stroke-dasharray', '3 3');
+    degLine.setAttribute('stroke-opacity', '0.4');
+    svg.appendChild(degLine);
+
+    const degLbl = document.createElementNS(SVG_NS, 'text');
+    degLbl.setAttribute('x', xPos(labelYr));
+    degLbl.setAttribute('y', yPos(userPoints[labelYr].value * (1 - (labelYr/YEARS)*0.10)) + 12);
+    degLbl.setAttribute('font-size', '8'); degLbl.setAttribute('font-family', 'Poppins, sans-serif');
+    degLbl.setAttribute('fill', '#111111'); degLbl.setAttribute('opacity', '0.5');
+    degLbl.setAttribute('text-anchor', 'end');
+    degLbl.textContent = 'Degradation';
+    svg.appendChild(degLbl);
+  }
+
+  // Grid decarbonisation: visualised as a downward-sloping carbon-intensity index (separate scale)
+  if (layerState.grid) {
+    // Show as a curve sitting in the lower portion of the chart, scaled into chart space
+    // Grid carbon intensity drops from ~210 g/kWh to ~80 g/kWh over 10 years (illustrative)
+    const gridStart = 28, gridEnd = 14; // arbitrary chart-space y values within current scale
+    const gridPts = userPoints.map(p => {
+      const v = gridStart - (p.year / YEARS) * (gridStart - gridEnd);
+      return `${xPos(p.year)},${yPos(v)}`;
+    }).join(' ');
+    const gridLine = document.createElementNS(SVG_NS, 'polyline');
+    gridLine.setAttribute('points', gridPts);
+    gridLine.setAttribute('fill', 'none');
+    gridLine.setAttribute('stroke', '#63C73B');
+    gridLine.setAttribute('stroke-width', '1.5');
+    gridLine.setAttribute('stroke-dasharray', '3 3');
+    gridLine.setAttribute('stroke-opacity', '0.7');
+    svg.appendChild(gridLine);
+
+    const gridLbl = document.createElementNS(SVG_NS, 'text');
+    const gridLblY = gridStart - (labelYr / YEARS) * (gridStart - gridEnd);
+    gridLbl.setAttribute('x', xPos(labelYr)); gridLbl.setAttribute('y', yPos(gridLblY) - 5);
+    gridLbl.setAttribute('font-size', '8'); gridLbl.setAttribute('font-family', 'Poppins, sans-serif');
+    gridLbl.setAttribute('fill', '#63C73B'); gridLbl.setAttribute('opacity', '0.85');
+    gridLbl.setAttribute('text-anchor', 'end');
+    gridLbl.textContent = 'Grid carbon intensity';
+    svg.appendChild(gridLbl);
+  }
+
+  // Demand growth: rising curve in pink/highlight, shown above energy cost line
+  if (layerState.demand) {
+    const demPts = userPoints.map(p => {
+      const growthFactor = 1 + (p.year / YEARS) * 0.20; // ~20% growth over 10yr
+      return `${xPos(p.year)},${yPos(p.value * growthFactor)}`;
+    }).join(' ');
+    const demLine = document.createElementNS(SVG_NS, 'polyline');
+    demLine.setAttribute('points', demPts);
+    demLine.setAttribute('fill', 'none');
+    demLine.setAttribute('stroke', '#C04A74');
+    demLine.setAttribute('stroke-width', '1.5');
+    demLine.setAttribute('stroke-dasharray', '3 3');
+    demLine.setAttribute('stroke-opacity', '0.7');
+    svg.appendChild(demLine);
+
+    const demLbl = document.createElementNS(SVG_NS, 'text');
+    demLbl.setAttribute('x', xPos(labelYr));
+    demLbl.setAttribute('y', yPos(userPoints[labelYr].value * (1 + (labelYr/YEARS)*0.20)) - 5);
+    demLbl.setAttribute('font-size', '8'); demLbl.setAttribute('font-family', 'Poppins, sans-serif');
+    demLbl.setAttribute('fill', '#C04A74'); demLbl.setAttribute('opacity', '0.85');
+    demLbl.setAttribute('text-anchor', 'end');
+    demLbl.textContent = 'Demand growth';
+    svg.appendChild(demLbl);
+  }
+
+  // Export agreement: solid line, similar styling to energy cost (per Otto's feedback)
+  // Represents £ received per kWh exported. Affects net savings + payback, but NOT carbon savings.
+  if (layerState.export) {
+    const expPts = exportPoints.map(p => `${xPos(p.year)},${yPos(p.value)}`).join(' ');
+    const expLine = document.createElementNS(SVG_NS, 'polyline');
+    expLine.setAttribute('points', expPts);
+    expLine.setAttribute('fill', 'none');
+    expLine.setAttribute('stroke', '#3185DA');
+    expLine.setAttribute('stroke-width', '2');
+    svg.appendChild(expLine);
+
+    // Draggable export points (post-contract only, like energy cost)
+    exportPoints.forEach((p, i) => {
+      if (p.locked) return;
+      const c = document.createElementNS(SVG_NS, 'circle');
+      c.setAttribute('cx', xPos(p.year));
+      c.setAttribute('cy', yPos(p.value));
+      c.setAttribute('r', '4');
+      c.setAttribute('fill', '#3185DA');
+      c.setAttribute('stroke', '#ffffff');
+      c.setAttribute('stroke-width', '2');
+      c.setAttribute('cursor', 'grab');
+      c.dataset.expIdx = i;
+      c.addEventListener('mousedown', (e) => {
+        draggingExport = i;
+        c.setAttribute('cursor', 'grabbing');
+        e.preventDefault();
+      });
+      svg.appendChild(c);
+    });
+
+    const expLbl = document.createElementNS(SVG_NS, 'text');
+    expLbl.setAttribute('x', xPos(labelYr)); expLbl.setAttribute('y', yPos(exportPoints[labelYr].value) - 6);
+    expLbl.setAttribute('font-size', '8'); expLbl.setAttribute('font-family', 'Poppins, sans-serif');
+    expLbl.setAttribute('fill', '#3185DA'); expLbl.setAttribute('opacity', '0.85');
+    expLbl.setAttribute('text-anchor', 'end');
+    expLbl.textContent = 'Export agreement (p/kWh)';
+    svg.appendChild(expLbl);
+  }
+
+  // Draggable points (post-contract only)
+  userPoints.forEach((p, i) => {
+    if (p.locked) return;
+    const isSelected = selectedIndices.has(i);
+
+    // Selection ring (drawn first so it sits behind the dot)
+    if (isSelected) {
+      const ring = document.createElementNS(SVG_NS, 'circle');
+      ring.setAttribute('cx', xPos(p.year));
+      ring.setAttribute('cy', yPos(p.value));
+      ring.setAttribute('r', '9');
+      ring.setAttribute('fill', 'none');
+      ring.setAttribute('stroke', '#111111');
+      ring.setAttribute('stroke-width', '1.5');
+      ring.setAttribute('stroke-dasharray', '2 2');
+      svg.appendChild(ring);
+    }
+
+    const circle = document.createElementNS(SVG_NS, 'circle');
+    circle.setAttribute('cx', xPos(p.year));
+    circle.setAttribute('cy', yPos(p.value));
+    circle.setAttribute('r', '5');
+    circle.setAttribute('fill', '#111111');
+    circle.setAttribute('stroke', '#ffffff');
+    circle.setAttribute('stroke-width', '2');
+    circle.setAttribute('cursor', 'grab');
+    circle.dataset.idx = i;
+
+    circle.addEventListener('mouseenter', (e) => {
+      circle.setAttribute('r', '7');
+      tooltip.style.display = 'block';
+      document.getElementById('tt-year').textContent = 'Year ' + p.year;
+      const sel = selectedIndices.size;
+      document.getElementById('tt-value').textContent = p.value.toFixed(1) + 'p / kWh' +
+        (sel > 1 && selectedIndices.has(i) ? ' · ' + sel + ' points selected' : '');
+    });
+    circle.addEventListener('mouseleave', () => {
+      if (dragging !== i) circle.setAttribute('r', '5');
+      tooltip.style.display = 'none';
+    });
+    circle.addEventListener('mousemove', (e) => {
+      tooltip.style.left = (e.clientX + 14) + 'px';
+      tooltip.style.top  = (e.clientY - 10) + 'px';
+    });
+    circle.addEventListener('mousedown', (e) => {
+      // Shift-click toggles selection — does NOT start a drag
+      if (e.shiftKey) {
+        if (selectedIndices.has(i)) selectedIndices.delete(i);
+        else selectedIndices.add(i);
+        e.preventDefault();
+        e.stopPropagation();
+        buildChart();
+        return;
+      }
+      // If clicked point isn't in current selection, clear and select just this one
+      if (!selectedIndices.has(i)) {
+        selectedIndices.clear();
+      }
+      // Snapshot start values for all selected points (or just the one being dragged)
+      dragStartValues.clear();
+      if (selectedIndices.size > 0) {
+        selectedIndices.forEach(idx => dragStartValues.set(idx, userPoints[idx].value));
+      }
+      dragStartValues.set(i, userPoints[i].value);
+      dragging = i;
+      circle.setAttribute('cursor', 'grabbing');
+      e.preventDefault();
+    });
+    svg.appendChild(circle);
+  });
+
+  } // end if (!isMonthlyView()) — annual-only block
+
+  // Monthly view: show a small "View only" badge inside the chart so the read-only state is obvious
+  if (isMonthlyView()) {
+    const badgeBg = document.createElementNS(SVG_NS, 'rect');
+    badgeBg.setAttribute('x', PAD.left + 6);
+    badgeBg.setAttribute('y', PAD.top + 4);
+    badgeBg.setAttribute('width', 138);
+    badgeBg.setAttribute('height', 18);
+    badgeBg.setAttribute('rx', '3');
+    badgeBg.setAttribute('fill', '#111111');
+    svg.appendChild(badgeBg);
+
+    const badgeTxt = document.createElementNS(SVG_NS, 'text');
+    badgeTxt.setAttribute('x', PAD.left + 14);
+    badgeTxt.setAttribute('y', PAD.top + 17);
+    badgeTxt.setAttribute('font-size', '9');
+    badgeTxt.setAttribute('font-family', 'Poppins, sans-serif');
+    badgeTxt.setAttribute('font-weight', '600');
+    badgeTxt.setAttribute('fill', '#ffffff');
+    badgeTxt.textContent = 'Monthly view · read-only';
+    svg.appendChild(badgeTxt);
+  }
+
+  // Axis baseline
+  const axis = document.createElementNS(SVG_NS, 'line');
+  axis.setAttribute('x1', PAD.left); axis.setAttribute('x2', VW - PAD.right);
+  axis.setAttribute('y1', VH - PAD.bottom); axis.setAttribute('y2', VH - PAD.bottom);
+  axis.setAttribute('stroke', '#111'); axis.setAttribute('stroke-width', '1');
+  svg.appendChild(axis);
+}
+
+// Mouse move / up on SVG
+svg.addEventListener('mousemove', (e) => {
+  if (dragging === null && draggingExport === null) return;
+  const rect = svg.getBoundingClientRect();
+  const scaleY = VH / rect.height;
+  const svgY = (e.clientY - rect.top) * scaleY;
+  let val = yToVal(svgY);
+  val = Math.max(10, Math.min(50, val));
+
+  if (dragging !== null) {
+    // If multiple points are selected and the dragged point is one of them,
+    // apply the same delta to all selected points.
+    if (selectedIndices.size > 1 && selectedIndices.has(dragging)) {
+      const startVal = dragStartValues.get(dragging);
+      const delta = val - startVal;
+      selectedIndices.forEach(idx => {
+        if (userPoints[idx].locked) return;
+        const newVal = (dragStartValues.get(idx) || userPoints[idx].value) + delta;
+        userPoints[idx].value = parseFloat(Math.max(10, Math.min(50, newVal)).toFixed(1));
+      });
+    } else {
+      userPoints[dragging].value = parseFloat(val.toFixed(1));
+    }
+    buildChart();
+    updateImpact();
+    tooltip.style.display = 'block';
+    document.getElementById('tt-year').textContent = 'Year ' + userPoints[dragging].year;
+    const selCount = selectedIndices.size;
+    document.getElementById('tt-value').textContent = val.toFixed(1) + 'p / kWh' +
+      (selCount > 1 && selectedIndices.has(dragging) ? ' · ' + selCount + ' points moved' : '');
+  } else if (draggingExport !== null) {
+    exportPoints[draggingExport].value = parseFloat(val.toFixed(1));
+    buildChart();
+    updateImpact();
+    tooltip.style.display = 'block';
+    document.getElementById('tt-year').textContent = 'Year ' + exportPoints[draggingExport].year;
+    document.getElementById('tt-value').textContent = 'Export: ' + val.toFixed(1) + 'p / kWh';
+  }
+  tooltip.style.left = (e.clientX + 14) + 'px';
+  tooltip.style.top  = (e.clientY - 10) + 'px';
+});
+
+svg.addEventListener('mouseup', () => {
+  dragging = null;
+  draggingExport = null;
+  dragStartValues.clear();
+  tooltip.style.display = 'none';
+});
+svg.addEventListener('mouseleave', () => {
+  dragging = null;
+  draggingExport = null;
+  dragStartValues.clear();
+});
+
+// Click on the chart background (not on a point) clears the selection
+svg.addEventListener('click', (e) => {
+  if (e.target.tagName === 'circle') return; // ignore clicks on points
+  if (selectedIndices.size > 0) {
+    selectedIndices.clear();
+    buildChart();
+  }
+});
+
+function updateImpact() {
+  // Baseline financial figures
+  const BASE_SAVINGS = 90022;
+  const BASE_PAYBACK_M = 77;
+  const BASE_CARBON_T = 293.4;
+
+  // 1. Energy cost delta — main driver of net savings
+  const postContract = userPoints.filter(p => !p.locked);
+  const avgUser = postContract.reduce((s, p) => s + p.value, 0) / postContract.length;
+  const avgBase = postContract.reduce((s, p) => s + baseline(p.year), 0) / postContract.length;
+  const energyDelta = avgUser - avgBase; // higher rate = more savings (project displaces grid kWh)
+  let savingsAdjustment = Math.round(energyDelta * 1200);
+
+  // 2. Export agreement — only counts if layer is active
+  let exportRevenue = 0;
+  if (layerState.export) {
+    const expPost = exportPoints.filter(p => !p.locked);
+    const avgExport = expPost.reduce((s, p) => s + p.value, 0) / expPost.length;
+    // Assume ~30,000 kWh exported per year on average → revenue per year × project lifespan
+    exportRevenue = Math.round(avgExport * 300 * (YEARS - CONTRACT_END_YEAR));
+  }
+
+  // 3. Demand growth — reduces net savings (more consumption to offset)
+  let demandPenalty = 0;
+  if (layerState.demand) {
+    demandPenalty = Math.round(BASE_SAVINGS * 0.08); // ~8% drag from 20% demand growth over 10yr
+  }
+
+  const newSavings = BASE_SAVINGS + savingsAdjustment + exportRevenue - demandPenalty;
+  const savingsEl = document.getElementById('val-savings');
+  const deltaSavings = document.getElementById('delta-savings');
+  savingsEl.textContent = '£' + newSavings.toLocaleString();
+
+  const totalDelta = newSavings - BASE_SAVINGS;
+  if (totalDelta === 0) {
+    deltaSavings.textContent = 'Baseline';
+    deltaSavings.className = 'impact-delta delta-neutral';
+  } else {
+    const sign = totalDelta > 0 ? '+' : '−';
+    deltaSavings.textContent = sign + '£' + Math.abs(totalDelta).toLocaleString() + ' vs baseline';
+    deltaSavings.className = 'impact-delta ' + (totalDelta > 0 ? 'delta-neutral' : 'delta-up');
+  }
+
+  // 4. Payback — derived from net savings (higher savings = faster payback)
+  // Linear approximation: payback scales inversely with savings vs baseline
+  const savingsRatio = newSavings / BASE_SAVINGS;
+  const newPayback = Math.max(1, Math.round(BASE_PAYBACK_M / savingsRatio));
+  const paybackEl = document.getElementById('val-payback');
+  const deltaPayback = document.getElementById('delta-payback');
+  paybackEl.innerHTML = newPayback + ' <span style="font-size:13px;font-weight:400;">months</span>';
+  const paybackChange = newPayback - BASE_PAYBACK_M;
+  if (paybackChange === 0) {
+    deltaPayback.textContent = 'Baseline';
+    deltaPayback.className = 'impact-delta delta-neutral';
+  } else {
+    const psign = paybackChange > 0 ? '+' : '−';
+    deltaPayback.textContent = psign + Math.abs(paybackChange) + ' months vs baseline';
+    deltaPayback.className = 'impact-delta ' + (paybackChange > 0 ? 'delta-up' : 'delta-neutral');
+  }
+
+  // 5. Carbon savings — affected by grid decarb (down) and demand growth (down)
+  let carbonMultiplier = 1;
+  const carbonNotes = [];
+  if (layerState.grid) {
+    carbonMultiplier *= 0.84; // ~16% reduction in displaced carbon as grid cleans up
+    carbonNotes.push('grid decarb');
+  }
+  if (layerState.demand) {
+    carbonMultiplier *= 0.90; // demand growth shrinks the proportion of consumption offset
+    carbonNotes.push('demand growth');
+  }
+  const newCarbon = BASE_CARBON_T * carbonMultiplier;
+  const carbonEl = document.getElementById('val-carbon');
+  const deltaCarbon = document.getElementById('delta-carbon');
+  carbonEl.innerHTML = newCarbon.toFixed(1) + ' <span style="font-size:14px;font-weight:400;">tCO₂e</span>';
+  if (carbonNotes.length === 0) {
+    deltaCarbon.textContent = 'Enable grid layer to model decarb impact';
+    deltaCarbon.className = 'impact-delta delta-neutral';
+  } else {
+    const carbonDelta = newCarbon - BASE_CARBON_T;
+    const csign = carbonDelta > 0 ? '+' : '−';
+    deltaCarbon.textContent = csign + Math.abs(carbonDelta).toFixed(1) + ' tCO₂e from ' + carbonNotes.join(' & ');
+    deltaCarbon.className = 'impact-delta ' + (carbonDelta > 0 ? 'delta-neutral' : 'delta-up');
+  }
+}
+
+function resetCurve() {
+  userPoints.forEach(p => { p.value = baseline(p.year); });
+  exportPoints.forEach((p, i) => {
+    p.value = i <= CONTRACT_END_YEAR ? 12 : 13 + (i - CONTRACT_END_YEAR) * 0.3;
+  });
+  selectedIndices.clear();
+  buildChart();
+  updateImpact();
+  document.querySelector('.scenario-select').value = 'custom';
+}
+
+function applyPreset(val) {
+  // Check if it's a saved custom preset (id format: "saved:<id>")
+  if (typeof val === 'string' && val.startsWith('saved:')) {
+    const id = val.slice(6);
+    const presets = loadSavedPresets();
+    const p = presets.find(x => x.id === id);
+    if (p) {
+      userPoints.forEach((pt, i) => {
+        if (pt.locked) return;
+        if (p.values[i] !== undefined) pt.value = p.values[i];
+      });
+      buildChart();
+      updateImpact();
+    }
+    return;
+  }
+  userPoints.forEach(p => {
+    if (p.locked) return;
+    const b = baseline(p.year);
+    if (val === 'high') p.value = parseFloat((b * 1.18 + (p.year - CONTRACT_END_YEAR) * 0.4).toFixed(1));
+    else if (val === 'low') p.value = parseFloat((b * 0.85 - (p.year - CONTRACT_END_YEAR) * 0.1).toFixed(1));
+    else if (val === 'mid') p.value = parseFloat(b.toFixed(1));
+    else return;
+    p.value = Math.max(10, Math.min(50, p.value));
+  });
+  buildChart();
+  updateImpact();
+}
+
+// ── Custom presets (localStorage-backed for wireframe demo) ──
+const PRESETS_KEY = 'truedi.scenarios.presets';
+
+function loadSavedPresets() {
+  try {
+    return JSON.parse(localStorage.getItem(PRESETS_KEY) || '[]');
+  } catch (e) {
+    return [];
+  }
+}
+function writeSavedPresets(list) {
+  try { localStorage.setItem(PRESETS_KEY, JSON.stringify(list)); } catch (e) {}
+}
+
+function toggleSavePresetForm() {
+  const form = document.getElementById('save-preset-form');
+  const btn = document.getElementById('save-preset-btn');
+  const open = form.style.display === 'block';
+  form.style.display = open ? 'none' : 'block';
+  btn.style.display = open ? 'block' : 'none';
+  if (!open) {
+    setTimeout(() => document.getElementById('preset-name-input').focus(), 0);
+  }
+}
+
+function saveCurrentPreset() {
+  const input = document.getElementById('preset-name-input');
+  const name = (input.value || '').trim();
+  if (!name) { input.focus(); return; }
+  const list = loadSavedPresets();
+  const id = 'p' + Date.now().toString(36);
+  list.push({
+    id,
+    name,
+    values: userPoints.map(p => p.value)
+  });
+  writeSavedPresets(list);
+  input.value = '';
+  toggleSavePresetForm();
+  renderSavedPresetChips();
+}
+
+function deleteSavedPreset(id) {
+  const list = loadSavedPresets().filter(p => p.id !== id);
+  writeSavedPresets(list);
+  renderSavedPresetChips();
+}
+
+function renderSavedPresetChips() {
+  const wrap = document.getElementById('saved-preset-chips');
+  if (!wrap) return;
+  const list = loadSavedPresets();
+  wrap.innerHTML = '';
+  list.forEach(p => {
+    const chip = document.createElement('span');
+    chip.className = 'saved-preset-chip';
+    chip.title = 'Apply preset';
+    chip.onclick = (e) => {
+      if (e.target.classList.contains('chip-delete')) return;
+      applyPreset('saved:' + p.id);
+    };
+
+    const label = document.createElement('span');
+    label.textContent = p.name;
+    chip.appendChild(label);
+
+    const del = document.createElement('button');
+    del.className = 'chip-delete';
+    del.title = 'Delete preset';
+    del.textContent = '×';
+    del.onclick = (e) => {
+      e.stopPropagation();
+      deleteSavedPreset(p.id);
+    };
+    chip.appendChild(del);
+    wrap.appendChild(chip);
+  });
+}
+
+// Per-layer toggle handler — wired up to the toggle pills on each layer row
+function toggleLayer(layerKey) {
+  layerState[layerKey] = !layerState[layerKey];
+  // Update toggle pill visual
+  const toggle = document.getElementById('toggle-' + layerKey);
+  const row = document.getElementById('layer-' + layerKey);
+  if (toggle) toggle.classList.toggle('on', layerState[layerKey]);
+  if (row) row.style.opacity = layerState[layerKey] ? '1' : '0.5';
+  // Show/hide corresponding legend chip
+  const legendChip = document.querySelector('.legend-extra[data-layer="' + layerKey + '"]');
+  if (legendChip) legendChip.style.display = layerState[layerKey] ? 'flex' : 'none';
+  buildChart();
+  updateImpact();
+}
+
+function setEval(btn) {
+  document.querySelectorAll('.eval-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── Time-window slider wiring ──
+function setWindowMonths(start, end) {
+  windowStartMonth = Math.max(0, Math.min(120, start));
+  windowEndMonth   = Math.max(0, Math.min(120, end));
+  if (windowEndMonth - windowStartMonth < 6) {
+    // enforce a minimum window of 6 months so handles can't cross / collapse
+    if (start === windowStartMonth) windowEndMonth = windowStartMonth + 6;
+    else windowStartMonth = windowEndMonth - 6;
+  }
+  document.getElementById('tw-start').value = windowStartMonth;
+  document.getElementById('tw-end').value = windowEndMonth;
+  updateWindowUI();
+  buildChart();
+}
+
+function updateWindowUI() {
+  // Update preset button active state
+  const presets = [
+    { btn: 0, start: 0, end: 12 },
+    { btn: 1, start: 0, end: 36 },
+    { btn: 2, start: 0, end: 60 },
+    { btn: 3, start: 0, end: 120 }
+  ];
+  const presetButtons = document.querySelectorAll('.tw-preset-btn');
+  presetButtons.forEach(b => b.classList.remove('active'));
+  presets.forEach(p => {
+    if (p.start === windowStartMonth && p.end === windowEndMonth) {
+      presetButtons[p.btn]?.classList.add('active');
+    }
+  });
+
+  // Update the filled segment of the track
+  const fill = document.getElementById('tw-track-fill');
+  if (fill) {
+    fill.style.left = (windowStartMonth / 120 * 100) + '%';
+    fill.style.width = ((windowEndMonth - windowStartMonth) / 120 * 100) + '%';
+  }
+
+  // Update mode pill
+  const pill = document.getElementById('tw-mode-pill');
+  if (pill) {
+    if (isMonthlyView()) {
+      pill.textContent = 'Monthly view';
+      pill.classList.add('monthly');
+    } else {
+      pill.textContent = 'Annual view';
+      pill.classList.remove('monthly');
+    }
+  }
+
+  // Update range readout (calendar dates)
+  const readout = document.getElementById('tw-range-readout');
+  if (readout) {
+    const startD = monthOffsetToDate(windowStartMonth);
+    const endD = monthOffsetToDate(windowEndMonth);
+    readout.textContent = fmtMonthYear(startD) + ' → ' + fmtMonthYear(endD);
+  }
+
+  // Update helper text
+  const helper = document.getElementById('tw-helper');
+  if (helper) {
+    if (isMonthlyView()) {
+      helper.textContent = 'Monthly view: showing month-by-month detail with seasonality. Layers and editing return when window expands beyond 3 years.';
+      helper.classList.add('read-only');
+    } else {
+      helper.textContent = 'Drag the handles to focus on any period — view auto-switches to monthly when zoomed under 3 years.';
+      helper.classList.remove('read-only');
+    }
+  }
+}
+
+// Wire up the dual-handle slider — guard against handles crossing
+(function initSlider() {
+  const start = document.getElementById('tw-start');
+  const end = document.getElementById('tw-end');
+  if (!start || !end) return;
+  start.addEventListener('input', () => {
+    let s = parseInt(start.value, 10);
+    let e = parseInt(end.value, 10);
+    if (s > e - 6) s = e - 6;
+    start.value = s;
+    setWindowMonths(s, e);
+  });
+  end.addEventListener('input', () => {
+    let s = parseInt(start.value, 10);
+    let e = parseInt(end.value, 10);
+    if (e < s + 6) e = s + 6;
+    end.value = e;
+    setWindowMonths(s, e);
+  });
+})();
+
+// Init
+buildChart();
+renderSavedPresetChips();
+updateWindowUI();
+// Initial dim state for inactive layer rows
+['commodity', 'noncommodity', 'degradation', 'grid', 'demand', 'export'].forEach(k => {
+  const row = document.getElementById('layer-' + k);
+  if (row) row.style.opacity = '0.5';
+});
+window.addEventListener('resize', buildChart);
+</script>
+<!-- Back to map button -->
+<style>
+.back-to-map-wrapper {
+  display: flex; justify-content: center;
+  padding: 32px 24px 24px 24px;
+  margin-top: 16px;
+}
+.back-to-map {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 18px; background: #FFFFFF; color: #111111;
+  border: 1px solid #111111; border-radius: 4px;
+  font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;
+  text-decoration: none; cursor: pointer;
+  transition: background 0.15s;
+}
+.back-to-map:hover { background: #F0F0F0; }
+</style>
+<div class="back-to-map-wrapper">
+  <a href="../sustainability-platform-map.html" class="back-to-map" onclick="if(window.opener){window.close();return false;}">← Back to map</a>
+</div>
+
+</body>
+</html>

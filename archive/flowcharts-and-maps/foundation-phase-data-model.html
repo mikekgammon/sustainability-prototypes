@@ -1,0 +1,451 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foundation Phase — Data Model Overview</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #111111;
+    --white: #FFFFFF;
+    --hover: #F5F5F5;
+    --gas-purple: #3F2A95;
+    --success: #63C73B;
+    --warning: #FF9800;
+    --alert: #DC2626;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+    background: var(--white);
+    color: var(--black);
+    padding: 48px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .page-header { margin-bottom: 48px; }
+
+  .page-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+
+  .page-header p {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  .overline {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  /* === FLOW BAR === */
+  .flow-bar {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 48px;
+  }
+
+  .flow-step {
+    flex: 1;
+    border: 1.5px solid var(--black);
+    padding: 20px 16px;
+    text-align: center;
+    position: relative;
+  }
+
+  .flow-step:first-child { border-radius: 8px 0 0 8px; }
+  .flow-step:last-child { border-radius: 0 8px 8px 0; }
+  .flow-step:not(:first-child) { border-left: none; }
+
+  .flow-step.active { background: var(--black); color: var(--white); }
+
+  .flow-step-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .flow-step-desc {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .flow-arrow {
+    position: absolute;
+    right: -13px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .flow-step.active .flow-arrow { color: var(--white); }
+
+  /* === MODEL CARDS === */
+  .model-section { margin-bottom: 48px; }
+
+  .model-card {
+    border: 1.5px solid var(--black);
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+
+  .model-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .model-card h2 {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .source-tag {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 6px 16px;
+    border-radius: 6px;
+    background: var(--black);
+    color: var(--white);
+  }
+
+  .model-card .summary {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .model-card .summary strong { font-weight: 600; }
+
+  /* === INFO GROUPS === */
+  .info-group {
+    margin-bottom: 20px;
+  }
+
+  .info-group-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+  }
+
+  .info-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .pill {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1.5px solid var(--black);
+  }
+
+  .pill-filled { background: var(--black); color: var(--white); }
+
+  /* === KEY POINT CALLOUT === */
+  .callout {
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-top: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  .callout strong { font-weight: 600; }
+
+  .callout-purple {
+    border: 1.5px solid var(--gas-purple);
+  }
+
+  .callout-warning {
+    background: rgba(255,152,0,0.1);
+    border: 1.5px solid var(--warning);
+  }
+
+  /* === CONNECTIONS === */
+  .connections {
+    border: 1.5px solid var(--black);
+    border-radius: 8px;
+    padding: 32px;
+  }
+
+  .connections h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .connections > p {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .conn-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .conn-item {
+    border: 1.5px solid var(--black);
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  .conn-item h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .conn-item p {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <p class="overline">TrueDI — Sustainability Roadmap</p>
+  <h1>Foundation Phase Data Model</h1>
+  <p>A high-level overview of the information the platform needs to capture across the four Foundation Phase requirements — what it is, why it matters, and how the pieces connect.</p>
+</div>
+
+<!-- Flow overview -->
+<div class="flow-bar">
+  <div class="flow-step active">
+    <p class="flow-step-title">Project Data</p>
+    <p class="flow-step-desc">What we're modelling</p>
+    <span class="flow-arrow">→</span>
+  </div>
+  <div class="flow-step">
+    <p class="flow-step-title">Fuel Library</p>
+    <p class="flow-step-desc">How we calculate carbon</p>
+    <span class="flow-arrow">→</span>
+  </div>
+  <div class="flow-step">
+    <p class="flow-step-title">Upload Template</p>
+    <p class="flow-step-desc">How data gets in</p>
+    <span class="flow-arrow">→</span>
+  </div>
+  <div class="flow-step">
+    <p class="flow-step-title">Audit Trail</p>
+    <p class="flow-step-desc">Who changed what</p>
+  </div>
+</div>
+
+<!-- 1. PROJECT DATA -->
+<div class="model-section">
+  <div class="model-card">
+    <div class="model-card-header">
+      <h2>Project Data</h2>
+      <span class="source-tag">Scope 3 Foundation</span>
+    </div>
+
+    <p class="summary">Today the platform models projects almost exclusively in kWh — it works for electricity and gas, but falls apart for anything outside Scope 2. The Scope 3 Foundation expands this so a project can represent <strong>any type of intervention</strong> (fuel switching, supply chain changes, waste reduction) measured in <strong>any unit</strong> (litres, tonnes, kilometres, not just kWh).</p>
+
+    <div class="info-group">
+      <p class="info-group-title">What we need to know about each project</p>
+      <div class="info-pills">
+        <span class="pill pill-filled">Type of project</span>
+        <span class="pill pill-filled">GHG Scope (1, 2, or 3)</span>
+        <span class="pill pill-filled">What's being measured</span>
+        <span class="pill pill-filled">Unit of measurement</span>
+        <span class="pill pill-filled">Baseline consumption</span>
+        <span class="pill pill-filled">Projected consumption</span>
+        <span class="pill pill-filled">Emission factor</span>
+        <span class="pill">Cost before &amp; after</span>
+        <span class="pill">What drives the value</span>
+      </div>
+    </div>
+
+    <div class="info-group">
+      <p class="info-group-title">Project types the platform will support</p>
+      <div class="info-pills">
+        <span class="pill">Energy efficiency</span>
+        <span class="pill">Fuel switching</span>
+        <span class="pill">Supply chain</span>
+        <span class="pill">Process change</span>
+        <span class="pill">Other</span>
+      </div>
+    </div>
+
+    <div class="info-group">
+      <p class="info-group-title">Units of measurement (beyond kWh)</p>
+      <div class="info-pills">
+        <span class="pill">kWh</span>
+        <span class="pill">Litres</span>
+        <span class="pill">Tonnes</span>
+        <span class="pill">Kilometres</span>
+        <span class="pill">m³</span>
+        <span class="pill">kg</span>
+        <span class="pill">Custom</span>
+      </div>
+    </div>
+
+    <div class="callout callout-purple">
+      <strong>Key design principle:</strong> Some projects cost more but reduce carbon significantly. The platform must treat these "carbon-led" projects as equally valid — no negative visual treatment for projects with a higher cost than baseline. The value driver (financial, carbon, or both) determines how a project is judged.
+    </div>
+  </div>
+
+  <!-- 2. FUEL LIBRARY -->
+  <div class="model-card">
+    <div class="model-card-header">
+      <h2>Fuel Library</h2>
+      <span class="source-tag">Alternative Fuel Modelling</span>
+    </div>
+
+    <p class="summary">A central registry of fuel types that the platform knows about — diesel, LPG, biomass, HVO, and so on. Each fuel carries an emission factor (how much CO₂ per unit) and an energy content value (how much energy per unit), which lets the platform calculate carbon impact and compare fuels on a like-for-like basis when modelling switches.</p>
+
+    <div class="info-group">
+      <p class="info-group-title">What we need to know about each fuel</p>
+      <div class="info-pills">
+        <span class="pill pill-filled">Fuel name &amp; category</span>
+        <span class="pill pill-filled">Default unit (litres, tonnes, etc.)</span>
+        <span class="pill pill-filled">Emission factor (kgCO₂e per unit)</span>
+        <span class="pill pill-filled">Energy content (kWh per unit)</span>
+        <span class="pill pill-filled">Factor source &amp; year</span>
+        <span class="pill">Default GHG scope</span>
+        <span class="pill">Applicable compliance schemes</span>
+      </div>
+    </div>
+
+    <div class="info-group">
+      <p class="info-group-title">Fuel categories</p>
+      <div class="info-pills">
+        <span class="pill">Fossil liquid (diesel, petrol, kerosene)</span>
+        <span class="pill">Fossil gas (natural gas, LPG)</span>
+        <span class="pill">Biofuel (HVO, biodiesel, biogas)</span>
+        <span class="pill">Solid (coal, biomass)</span>
+        <span class="pill">Other</span>
+      </div>
+    </div>
+
+    <div class="callout callout-purple">
+      <strong>Extensible by design:</strong> Emission factors come pre-loaded from DEFRA, but admins can add custom fuel types and override factors where needed. The factor year is tracked so the platform can flag when data becomes stale.
+    </div>
+  </div>
+
+  <!-- 3. UPLOAD TEMPLATE -->
+  <div class="model-card">
+    <div class="model-card-header">
+      <h2>Upload Template</h2>
+      <span class="source-tag">Project Upload Template</span>
+    </div>
+
+    <p class="summary">A standardised spreadsheet template that lets consultants create projects in bulk instead of one at a time. The columns mirror the project and fuel data above — what the project is, what it measures, how much it saves. Some fields auto-populate (like carbon savings and emission factors) so users don't need to look them up manually.</p>
+
+    <div class="info-group">
+      <p class="info-group-title">Required information (must be filled in)</p>
+      <div class="info-pills">
+        <span class="pill pill-filled">Project name</span>
+        <span class="pill pill-filled">Project type</span>
+        <span class="pill pill-filled">Technology / measure</span>
+        <span class="pill pill-filled">GHG Scope</span>
+        <span class="pill pill-filled">Baseline consumption</span>
+        <span class="pill pill-filled">Unit</span>
+        <span class="pill pill-filled">Projected consumption</span>
+        <span class="pill pill-filled">Annual saving</span>
+      </div>
+    </div>
+
+    <div class="info-group">
+      <p class="info-group-title">Optional / auto-calculated</p>
+      <div class="info-pills">
+        <span class="pill">Capital cost</span>
+        <span class="pill">Payback period</span>
+        <span class="pill">Carbon saving (auto)</span>
+        <span class="pill">Fuel type</span>
+        <span class="pill">Site / location</span>
+        <span class="pill">Notes</span>
+      </div>
+    </div>
+
+    <div class="callout callout-warning">
+      <strong>Sequencing note:</strong> The template's columns are derived from the project data model. If the Scope 3 Foundation changes what a project looks like, the template will need updating too. The project model should be agreed first.
+    </div>
+  </div>
+
+  <!-- 4. AUDIT TRAIL -->
+  <div class="model-card">
+    <div class="model-card-header">
+      <h2>Audit Trail</h2>
+      <span class="source-tag">Universal Admin Access</span>
+    </div>
+
+    <p class="summary">Every action taken by a True consultant is logged — who did it, which client account they were working in, what they changed, and when. This is essential for accountability in a multi-tenant environment where one consultant may work across dozens of client accounts.</p>
+
+    <div class="info-group">
+      <p class="info-group-title">What gets recorded</p>
+      <div class="info-pills">
+        <span class="pill pill-filled">Who (named consultant + role)</span>
+        <span class="pill pill-filled">Where (client account)</span>
+        <span class="pill pill-filled">What (action taken)</span>
+        <span class="pill pill-filled">When (timestamp)</span>
+        <span class="pill">How many records affected</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- How they connect -->
+<div class="connections">
+  <h2>How They Connect</h2>
+  <p>The four data areas aren't independent — they share information and depend on each other in specific ways.</p>
+
+  <div class="conn-grid">
+    <div class="conn-item">
+      <h3>Project → Fuel Library</h3>
+      <p>When a project involves fuel, the platform looks up the emission factor and default unit from the fuel library automatically. The fuel's GHG scope also pre-fills on the project.</p>
+    </div>
+    <div class="conn-item">
+      <h3>Project → Upload Template</h3>
+      <p>The template columns are a direct reflection of the project data model. Over half the template fields map straight to project fields — change one, change the other.</p>
+    </div>
+    <div class="conn-item">
+      <h3>Fuel Library → Upload Template</h3>
+      <p>When a user specifies a fuel type in the template, the platform auto-fills the unit and emission factor from the library — reducing manual input and error.</p>
+    </div>
+    <div class="conn-item">
+      <h3>Audit Trail → Everything</h3>
+      <p>Every create, update, or bulk upload across projects, fuels, and templates is logged. The audit trail sits underneath all three, recording every change.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

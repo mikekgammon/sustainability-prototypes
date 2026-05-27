@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sustainability Platform Architecture</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body { font-family: 'Poppins', system-ui, sans-serif; background: #FFFFFF; color: #111111; min-height: 100vh; overflow-x: auto; }
+
+  /* ── Header ── */
+  header {
+    padding: 24px 48px;
+    position: sticky; top: 0; background: #FFFFFF; z-index: 100;
+  }
+  .header-title {
+    font-size: 20px; font-weight: 700; color: #111111; letter-spacing: -0.02em;
+  }
+  .header-meta {
+    font-size: 11px; font-weight: 400; color: #111111; margin-top: 3px; letter-spacing: 0.01em;
+  }
+
+  /* ── Canvas ── */
+  .canvas { padding: 48px 48px 56px; min-width: 1360px; position: relative; }
+
+  /* ── SVG overlay ── */
+  #flow-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; overflow: visible; }
+  .fc-main { fill: none; stroke: #111111; stroke-width: 1; opacity: 0.4; marker-end: url(#arr); }
+  .fc-side { fill: none; stroke: #111111; stroke-width: 1; opacity: 0.25; marker-end: url(#arr-dim); }
+  .fc-lbl-bg { fill: #FFFFFF; stroke: #111111; stroke-width: 0.5; }
+  .fc-lbl { font-family: 'Poppins', sans-serif; font-size: 9px; font-weight: 600; fill: #111111; text-anchor: middle; dominant-baseline: middle; letter-spacing: 0.02em; }
+
+  /* ── Main flow layout ── */
+  .flow-row { display: flex; gap: 0; align-items: flex-start; position: relative; z-index: 2; }
+
+  /* ── Page column ── */
+  .page-col { display: flex; flex-direction: column; align-items: stretch; flex: 1; min-width: 148px; max-width: 192px; }
+  .page-col-wide { max-width: 205px; }
+
+  /* ── Page node ── */
+  .page-node { border: 1px solid #111111; border-radius: 8px; overflow: hidden; }
+
+  /* ── Page header ── */
+  .page-header {
+    padding: 10px 12px 9px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px;
+    color: #FFFFFF; background: #111111;
+    line-height: 1;
+  }
+  .ph-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.35); flex-shrink: 0; }
+
+  /* ── Feature list ── */
+  .features-list { display: flex; flex-direction: column; }
+  .feature-tag {
+    padding: 8px 10px;
+    font-size: 12px; font-weight: 400; line-height: 1.4; color: #111111;
+    border-bottom: 1px solid #111111;
+    display: flex; align-items: flex-start; gap: 8px;
+    cursor: pointer; transition: background 150ms ease-out;
+  }
+  .feature-tag:last-child { border-bottom: none; }
+  .feature-tag:hover { background: #F5F5F5 !important; }
+
+  .t-imp { background: #F4F2FC; }
+  .t-new { background: #EFF6FD; }
+  .t-com { background: #FCEEF4; }
+  .t-hld { opacity: 0.4; }
+  .t-cc  { background: #ECF5F4; }
+
+  .feat-text { font-size: 12px; color: #111111; flex: 1; line-height: 1.4; }
+  .feat-badge {
+    font-size: 8px; font-weight: 700;
+    padding: 2px 6px; border-radius: 3px;
+    flex-shrink: 0; margin-top: 2px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    line-height: 1.4;
+  }
+  .b-imp { background: #3F2A95; color: #FFFFFF; }
+  .b-new { background: #3185DA; color: #FFFFFF; }
+  .b-api { background: #FF9800; color: #FFFFFF; }
+  .b-hld { background: #111111; color: #FFFFFF; }
+  .b-com { background: #C04A74; color: #FFFFFF; }
+  .b-cc  { background: #2C7A77; color: #FFFFFF; }
+
+  /* ── Arrow between page nodes ── */
+  .arrow-col { display: flex; align-items: flex-start; padding-top: 18px; width: 24px; flex-shrink: 0; }
+  .arrow-shaft { width: 16px; height: 1px; background: #111111; opacity: 0.2; position: relative; flex-shrink: 0; }
+  .arrow-shaft::after {
+    content: ''; position: absolute; right: -1px; top: -3px;
+    border-left: 5px solid #111111; border-top: 3.5px solid transparent; border-bottom: 3.5px solid transparent;
+  }
+
+  /* ── API nodes beneath Projects ── */
+  .api-group {
+    margin-top: 8px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .api-section-label {
+    font-size: 9px; font-weight: 600; letter-spacing: 0.09em;
+    text-transform: uppercase; color: #111111;
+    margin-bottom: 6px; display: block;
+  }
+  .api-node {
+    border: 1px solid #FF9800; border-radius: 6px;
+    padding: 7px 10px; background: #FFFDF8;
+    cursor: pointer; transition: background 150ms ease-out;
+  }
+  .api-node:hover { background: #FFF6E8; }
+  .api-node-name { font-size: 11px; font-weight: 600; color: #111111; }
+  .api-node-sub  { font-size: 10px; font-weight: 400; color: #111111; margin-top: 1px; }
+
+  /* ── Right side stack ── */
+  .arrow-col-wide { width: 56px; flex-shrink: 0; display: flex; align-items: flex-start; padding-top: 18px; }
+  .arrow-shaft-wide { width: 48px; height: 1px; background: #111111; opacity: 0.2; position: relative; flex-shrink: 0; }
+  .arrow-shaft-wide::after {
+    content: ''; position: absolute; right: -1px; top: -3px;
+    border-left: 5px solid #111111; border-top: 3.5px solid transparent; border-bottom: 3.5px solid transparent;
+  }
+  .side-stack { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .side-row { flex-direction: row !important; flex-wrap: wrap; }
+  .side-row .feature-tag { flex: 1; min-width: 90px; border-bottom: none; border-right: 1px solid #111111; }
+  .side-row .feature-tag:last-child { border-right: none; }
+
+  /* ── Legend (below diagram) ── */
+  .legend-bar {
+    margin-top: 40px; padding-top: 24px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .legend-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: #111111; margin-right: 8px;
+  }
+  .legend-items { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+  .legend-row { width: 100%; }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 400; color: #111111; }
+  .lpip { width: 28px; height: 14px; border-radius: 3px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .lpip span { font-size: 7px; font-weight: 700; letter-spacing: 0.05em; color: #FFFFFF; text-transform: uppercase; }
+  .lp-new { background: #3185DA; }
+  .lp-imp { background: #3F2A95; }
+  .lp-com { background: #C04A74; }
+  .lp-hld { background: #111111; opacity: 0.4; }
+  .lp-api { background: #FF9800; }
+  .lp-cc  { background: #2C7A77; }
+
+  /* ── Tooltip (click to open, X to close) ── */
+  .tooltip {
+    display: none; position: fixed;
+    background: #111111; border-radius: 6px;
+    padding: 14px 16px 12px 16px; font-family: 'Poppins', sans-serif;
+    color: #FFFFFF; max-width: 300px;
+    z-index: 999;
+    line-height: 1.5; box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  }
+  .tooltip.visible { display: block; }
+  .tt-close {
+    position: absolute; top: 6px; right: 6px;
+    width: 22px; height: 22px;
+    background: transparent; border: none;
+    color: #FFFFFF; font-size: 14px; line-height: 1;
+    cursor: pointer; opacity: 0.6;
+    border-radius: 3px;
+  }
+  .tt-close:hover { opacity: 1; background: rgba(255,255,255,0.1); }
+  .tt-t { font-size: 13px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.01em; padding-right: 22px; }
+  .tt-p { font-size: 10px; font-weight: 500; color: #FFFFFF; margin-bottom: 8px; letter-spacing: 0.02em; text-transform: uppercase; }
+  .tt-d { font-size: 11px; font-weight: 400; color: #FFFFFF; line-height: 1.6; }
+  .tt-link {
+    display: none;
+    margin-top: 12px; padding: 8px 12px;
+    background: #FFFFFF; color: #111111;
+    border: none; border-radius: 4px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px; font-weight: 600;
+    text-decoration: none; cursor: pointer;
+    text-align: center;
+    transition: background 0.15s;
+  }
+  .tt-link.visible { display: inline-block; }
+  .tt-link:hover { background: #EEEEEE; }
+  .feature-tag, .api-node { cursor: pointer; }
+
+  /* Filter interaction */
+  .legend-item { cursor: pointer; user-select: none; }
+  .legend-item:hover .lpip { opacity: 0.75; }
+  .legend-item.active .lpip { outline: 2px solid #111111; outline-offset: 2px; }
+  .legend-item.active .legend-item-label { font-weight: 600; }
+
+  /* When a filter is active, hide non-matching rows completely */
+  .canvas.filtered .feature-tag { display: none; }
+  .canvas.filtered .api-node    { display: none; }
+  .canvas.filtered .feature-tag.match { display: flex; }
+  .canvas.filtered .api-node.match    { display: block; }
+  .canvas.filtered .feature-tag.match.last-visible { border-bottom: none; }
+
+  /* Phase pip — numbered */
+  .ppip {
+    width: 22px; height: 22px; border-radius: 4px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #FFFFFF; background: #111111;
+    cursor: pointer; user-select: none; transition: opacity 150ms;
+  }
+  .ppip:hover { opacity: 0.75; }
+  .phase-item { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 400; color: #111111; cursor: pointer; user-select: none; }
+  .phase-item.active .ppip { outline: 2px solid #111111; outline-offset: 2px; }
+  .phase-item.active .phase-item-label { font-weight: 600; }
+  .pp1 { background: #111111; }
+  .pp2 { background: #3F2A95; }
+  .pp3 { background: #3185DA; }
+  .pp4 { background: #888888; }
+  .pp-hold { background: #111111; opacity: 0.4; }
+  .pp-backlog { background: #CCCCCC; }
+  /* Flow-out labels under Strategies */
+  .flow-out-labels { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+  .flow-out-label {
+    font-size: 9px; font-weight: 500; color: #111111;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    display: flex; align-items: center; gap: 6px; line-height: 1.4;
+  }
+  .flow-out-label::before {
+    content: ''; width: 10px; height: 1px;
+    background: #111111; opacity: 0.3; flex-shrink: 0;
+  }
+
+  .legend-reset {
+    margin-left: 16px;
+    font-size: 11px; font-weight: 500; color: #111111;
+    background: none; border: 1px solid #111111;
+    border-radius: 4px; padding: 3px 10px;
+    cursor: pointer; opacity: 0;
+    transition: opacity 150ms ease-out;
+    pointer-events: none;
+  }
+  .legend-reset.visible { opacity: 1; pointer-events: auto; }
+  .legend-reset:hover { background: #F5F5F5; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-title">Sustainability Platform Map</div>
+  <div class="header-meta">April 2026 &middot; v1.2 &middot; Updated with Otto&rsquo;s Asana priorities &middot; Hover any feature for context &middot; Click key to filter</div>
+</header>
+
+<div class="canvas" id="canvas">
+
+  <svg id="flow-svg" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0,8 3,0 6" fill="#111111" opacity="0.45"/>
+      </marker>
+      <marker id="arr-dim" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0,8 3,0 6" fill="#111111" opacity="0.25"/>
+      </marker>
+    </defs>
+  </svg>
+
+  <div class="flow-row">
+
+    <!-- ADMIN -->
+    <div class="page-col">
+      <div class="page-node" id="page-admin">
+        <div class="page-header"><div class="ph-dot"></div>Admin</div>
+        <div class="features-list">
+          <div data-phase-filter="p1" data-type="new" class="feature-tag t-new" data-title="Universal Admin Access" data-phase="Phase 1 · High priority" data-tip="Global admin login across all customer environments. Enables cross-entity strategy creation, bulk duplication, and user transfer. Critical for group customers — franchises and associations where each entity is a separate company."><span class="feat-text">Universal Admin Access</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p2" data-type="new" class="feature-tag t-new" data-title="Project Upload Template" data-phase="Phase 2 · In progress" data-tip="Bulk project upload via pre-formatted Excel template. Download, fill in, upload, validate, confirm. Genuinely faster than manual entry for the sustainability team."><span class="feat-text">Project Upload Template</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p4" data-type="imp" class="feature-tag t-imp" data-title="Risk Management Survey" data-phase="Phase 4 · Low — demoted by Otto" data-tip="Sustainability-specific risk survey template. Captures customer drivers, budget constraints, and priorities upfront to inform comparison weighting downstream. Otto marked Low — sits behind the foundational modelling work."><span class="feat-text">Risk Management Survey</span><span class="feat-badge b-imp">imp</span></div>
+          <div data-phase-filter="p4" data-type="imp" class="feature-tag t-imp" data-title="Client Notifications" data-phase="Phase 4 · Low" data-tip="Extend automatic notifications to the sustainability module. Scheduled but Low priority. Requires defined trigger logic before design can begin."><span class="feat-text">Client Notifications</span><span class="feat-badge b-imp">imp</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-col"><div class="arrow-shaft"></div></div>
+
+    <!-- PROJECTS + API nodes beneath -->
+    <div class="page-col page-col-wide">
+      <div class="page-node" id="page-projects">
+        <div class="page-header"><div class="ph-dot"></div>Projects</div>
+        <div class="features-list">
+          <div data-phase-filter="p1" data-type="imp" class="feature-tag t-imp" data-title="Scenario Modelling (items 5–8)" data-phase="Phase 1 · High — biggest workstream" data-tip="Single flexible curve editor. Drag data points to shape 30-year forecasts. Layers: energy cost, non-commodity costs, system degradation (solar 80% after 25yrs), grid decarbonisation, business growth, named scenarios. Otto: pick the dots and move them. One tool handles everything."><span class="feat-text">Scenario Modelling</span><span class="feat-badge b-imp">imp</span></div>
+          <div data-phase-filter="p2" data-type="imp" class="feature-tag t-imp" data-title="Retrospective Modelling" data-phase="Phase 2 · Low" data-tip="Drop in actual half-hourly data post-deployment (inverter, import meter, export meter) to replace forecasts with real actuals. Shows actual vs forecast deviation. Retention play — keeps customers using True after project goes live."><span class="feat-text">Retrospective Modelling</span><span class="feat-badge b-imp">imp</span></div>
+          <div data-phase-filter="p1" data-type="new" class="feature-tag t-new" data-title="Scope 3 Project Modelling" data-phase="Phase 1 · High — game changer" data-tip="Foundational change to the data model. Projects that cost money rather than save it. Activity metrics beyond kWh: fuel volume, distance, mass, waste. Reinvestment modelling: energy savings fund Scope 3 investments over time. No one in the market doing this end-to-end."><span class="feat-text">Scope 3 Modelling</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p1" data-type="new" class="feature-tag t-new" data-title="Alternative Fuel Modelling" data-phase="Phase 1 · High" data-tip="Extend beyond electricity and gas. Required for SECR and ESOS compliance. Includes fuel switching (diesel to HVO, refrigerant gas switching from Cold Chain Federation pilot). Design as same system as Scope 3, not a separate feature."><span class="feat-text">Alternative Fuel Modelling</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p3" data-type="new" class="feature-tag t-new" data-title="EV Charger Modelling" data-phase="Phase 3 · High once unblocked" data-tip="Otto marked HIGH in Asana but still BLOCKED. API-first via Virta Global — top EV platform in Europe. Needed for ESOS Scope 1 transport reporting. Confirm Virta integration approach before starting any design work."><span class="feat-text">EV Charger <span style="font-size:9px;color:#CC7700;font-weight:600;">via API</span></span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p4" data-type="new" class="feature-tag t-new" data-title="PPA Modelling" data-phase="Phase 4 · Low — off hold" data-tip="Moved off hold. Otto has now assigned Low priority. Still critical for data centre customers and final net-zero pathway (efficiency → on-site gen → Scope 3 → PPAs → removal). Latsi has Excel model. Build for TrueCrew first."><span class="feat-text">PPA Modelling</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p4" data-type="new" class="feature-tag t-new" data-title="Profitability & Carbon Calculator" data-phase="Phase 4 · Low" data-tip="Otto assigned Low priority. Detailed scoping still required before design work begins."><span class="feat-text">Profitability Calculator</span><span class="feat-badge b-new">new</span></div>
+        </div>
+      </div>
+
+      <!-- API nodes sit directly under Projects -->
+      <div class="api-group">
+        <span class="api-section-label">External APIs</span>
+        <div data-type="api" class="api-node" id="api-virta" data-title="Virta Global" data-phase="API · Phase 3" data-tip="Top EV charger platform in Europe. API-first integration for EV Charger Modelling. Already operates across European markets — important for the European rollout strategy."><div class="api-node-name">Virta Global</div><div class="api-node-sub">EV charger modelling</div></div>
+        <div data-type="api" class="api-node" id="api-emfactors" data-title="Emission factors list" data-phase="API · Annual update" data-tip="DEFRA/DESNZ emission conversion factors, updated annually. Paul and Otto discussed automating the annual update rather than manually maintaining it."><div class="api-node-name">Emission factors list</div><div class="api-node-sub">Annual DEFRA/DESNZ update</div></div>
+        <div data-type="api" class="api-node" id="api-inverter" data-title="Inverter data" data-phase="API · Phase 2" data-tip="Half-hourly solar generation data from inverters. Used in Retrospective Modelling to replace forecast kWh figures with real actuals post-deployment."><div class="api-node-name">Inverter data</div><div class="api-node-sub">Half-hourly generation</div></div>
+      </div>
+    </div>
+
+    <div class="arrow-col"><div class="arrow-shaft"></div></div>
+
+    <!-- COMPARISONS -->
+    <div class="page-col">
+      <div class="page-node" id="page-comps">
+        <div class="page-header"><div class="ph-dot"></div>Comparisons</div>
+        <div class="features-list">
+          <div data-phase-filter="p3" data-type="new" class="feature-tag t-new" data-title="Scope 3 Comparison Framework" data-phase="Phase 3 · Medium — brainstorm required first" data-tip="Otto demoted to Medium. Current comparison assumes positive ROI. Scope 3 breaks that assumption. New metrics: cost per tonne CO2, CapEx intensity, carbon reduction magnitude, strategic alignment score. BRAINSTORM REQUIRED — Otto hasn't solved this yet. Don't wireframe without a session first."><span class="feat-text">Scope 3 Comparison</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p3" data-type="new" class="feature-tag t-new" data-title="Weighted Prioritisation" data-phase="Phase 3 · Medium" data-tip="Grouped with Scope 3 Comparison. Capture customer drivers upfront: carbon vs cost vs compliance, annual sustainability budget. Weight comparisons accordingly. Like the procurement risk profile but for sustainability."><span class="feat-text">Weighted Prioritisation</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p4" data-type="imp" class="feature-tag t-imp" data-title="Options Appraisal Framework" data-phase="Phase 4 · Low" data-tip="Otto demoted to Low. Master list of all technologies. Rule-out system (site constraints, budget, energy profile, compliance, site type). Scoring criteria. Currently done manually. Otto's team developing the scoring logic."><span class="feat-text">Options Appraisal</span><span class="feat-badge b-imp">imp</span></div>
+          <div data-phase-filter="p4" data-type="imp" class="feature-tag t-imp" data-title="Strategy Comparisons" data-phase="Phase 4 · Backlog" data-tip="Compare entire strategies against each other — not just individual projects. Which strategy gives best ROI vs best carbon savings vs fastest to target? Depends on Scope 3 comparison framework first."><span class="feat-text">Strategy Comparisons</span><span class="feat-badge b-imp">imp</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-col"><div class="arrow-shaft"></div></div>
+
+    <!-- STRATEGIES -->
+    <div class="page-col">
+      <div class="page-node" id="page-strats">
+        <div class="page-header"><div class="ph-dot"></div>Strategies</div>
+        <div class="features-list">
+          <div data-phase-filter="p2" data-type="imp" class="feature-tag t-imp" data-title="Strategy V2" data-phase="Phase 2 · High — moved up by Otto" data-tip="Major rework — currently the weakest page. One red bar per year, no drill-down. Use Schemes as the design blueprint. Must have: month-by-month stacked graphs, time frame zoom, strategy titles (currently missing), savings and returns display. KEY: live M&T progress tracking — red line (today), dashed (forecast), solid (actual). Retention play."><span class="feat-text">Strategy V2</span><span class="feat-badge b-imp">imp</span></div>
+          <div data-phase-filter="p3" data-type="imp" class="feature-tag t-imp" data-title="Phase Filtering in Strategies" data-phase="Phase 3 · Medium — new from Julian" data-tip="NEW in Asana (Julian). Categorise and filter by phases within a strategy — users need to dynamically explore how each phase affects net cash commitment, carbon reduction and cash flow. Supports staged investment decisions. Sits naturally within Strategy V2 scope."><span class="feat-text">Phase Filtering</span><span class="feat-badge b-imp">imp</span></div>
+          <div data-phase-filter="p4" data-type="new" class="feature-tag t-new" data-title="Automated Strategy Modelling (AI)" data-phase="Phase 4 · Low" data-tip="AI-powered strategy recommendations. Run thousands of scenarios, surface top 3 options based on customer goals. Future phase — depends on the modelling engine being mature."><span class="feat-text">Automated Modelling (AI)</span><span class="feat-badge b-new">new</span></div>
+        </div>
+      </div>
+
+      <!-- M&T API node under Strategies -->
+      <div class="api-group">
+        <span class="api-section-label">External APIs</span>
+        <div data-type="api" class="api-node" id="api-mt" data-title="M&T / AMR platform" data-phase="API · Phase 2" data-tip="Live monitoring and targeting data. Feeds actual consumption and generation data into Strategy V2 live progress tracking — the red line showing actual vs forecast. Encourages customers to invest in sub-metering and AMR services that True offers."><div class="api-node-name">M&amp;T / AMR platform</div><div class="api-node-sub">Live actual data</div></div>
+      </div>
+
+      <!-- Flows out to right column -->
+      <div class="flow-out-labels">
+        <div class="flow-out-label">Compliance data → Schemes</div>
+        <div class="flow-out-label">Strategy progress → Targets</div>
+        <div class="flow-out-label">Carbon data → Emissions</div>
+        <div class="flow-out-label">Live M&amp;T + actuals → Dashboard</div>
+      </div>
+    </div>
+
+    <div class="arrow-col-wide"><div class="arrow-shaft-wide"></div></div>
+
+    <!-- RIGHT SIDE STACK -->
+    <div class="side-stack">
+
+      <div class="page-node" id="page-schemes">
+        <div class="page-header"><div class="ph-dot"></div>Schemes</div>
+        <div class="features-list side-row">
+          <div data-phase-filter="p2" data-type="com" class="feature-tag t-com" data-title="SECR" data-phase="Phase 2 · In progress — Sohil (Low priority)" data-tip="Otto demoted schemes overall to Low but SECR remains In Progress with Sohil. Still pattern-setter — get SECR right and CCA, ESOS, RE100 follow with minimal additional design. Requires alternative fuel modelling for full coverage."><span class="feat-text">SECR</span><span class="feat-badge b-com">pattern</span></div>
+          <div data-phase-filter="p4" data-type="com" class="feature-tag t-com" data-title="CCA" data-phase="Phase 4 · Low" data-tip="Otto demoted to Low. Follows the SECR template directly."><span class="feat-text">CCA</span></div>
+          <div data-phase-filter="p3" data-type="com" class="feature-tag t-com" data-title="ESOS" data-phase="Phase 3 · Medium — blocked" data-tip="Otto set as Medium. Includes Scope 1 transport — blocked until EV modelling and alternative fuel modelling are in place."><span class="feat-text">ESOS</span></div>
+          <div data-phase-filter="p4" data-type="com" class="feature-tag t-com" data-title="RE100" data-phase="Phase 4 · Low" data-tip="Otto demoted to Low. Follows the SECR template. Rochelle researching SRS (~2027) and ISO 50001."><span class="feat-text">RE100</span></div>
+          <div data-phase-filter="p4" data-type="com" class="feature-tag t-com" data-title="Future Schemes" data-phase="Phase 4 · Low" data-tip="Placeholder for SRS, ISO 50001, and future regulatory schemes. Rochelle leading landscape assessment."><span class="feat-text">Future</span></div>
+        </div>
+      </div>
+
+      <div class="page-node" id="page-targets">
+        <div class="page-header"><div class="ph-dot"></div>Targets</div>
+        <div class="features-list">
+          <div data-phase-filter="p3" data-type="imp" class="feature-tag t-imp" data-title="Targets V2" data-phase="Phase 3 · Medium" data-tip="Otto set to Medium. Currently carbon-only and linear. New design: financial (£ saved), energy (kWh), and carbon (tCO2e) targets together. Nonlinear pathways with checkpoints. Multi-scope on one view. Drag-point interaction reused from scenario modelling. Currently limited to one strategy per target."><span class="feat-text">Targets V2 — multi-type, nonlinear, multi-scope</span><span class="feat-badge b-imp">imp</span></div>
+        </div>
+      </div>
+
+      <div class="page-node" id="page-emissions">
+        <div class="page-header"><div class="ph-dot"></div>Emissions</div>
+        <div class="features-list side-row">
+          <div data-phase-filter="p1" data-type="imp" class="feature-tag t-imp" data-title="Scope 2 Carbon Forecasting" data-phase="Phase 1 · High — promoted by Otto" data-tip="Otto promoted from Phase 2 to High priority. Hourly matching and declining grid carbon intensity year-on-year. Wait for Otto to rewrite Rochelle's notes before starting wireframes."><span class="feat-text">Scope 2 Forecasting</span><span class="feat-badge b-imp">imp</span></div>
+          <div data-phase-filter="p1" data-type="new" class="feature-tag t-new" data-title="Scope 3 Platform-level" data-phase="Phase 1 · High — major promotion" data-tip="Otto promoted from Phase 4 backlog to HIGH priority. Platform-wide Scope 3 integration. Emission source list updated annually. Pairs with the foundational Scope 3 Project Modelling work to give True end-to-end Scope 3 coverage."><span class="feat-text">Scope 3 Platform</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p3" data-type="new" class="feature-tag t-new" data-title="Carbon Costs (ETS/CBAM)" data-phase="Phase 3 · Medium — promoted" data-tip="Otto promoted from backlog to Medium. ETS and CBAM carbon cost modelling. Detail still to be scoped before design begins."><span class="feat-text">Carbon Costs</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p4" data-type="new" class="feature-tag t-new" data-title="Water Sustainability" data-phase="Phase 4 · Low" data-tip="Basic visibility only for now. True delivers water as a service but the platform can't represent it at all."><span class="feat-text">Water</span><span class="feat-badge b-new">new</span></div>
+        </div>
+      </div>
+
+      <div class="page-node" id="page-dashboard">
+        <div class="page-header"><div class="ph-dot"></div>Dashboard</div>
+        <div class="features-list side-row">
+          <div data-phase-filter="p3" data-type="new" class="feature-tag t-new" data-title="Customer Sustainability Dashboard V1" data-phase="Phase 3 · Medium — demoted" data-tip="Otto demoted from Phase 2 to Medium. Start from Otto's PowerPoint mockups. Scope 3 sunburst (in progress), progress tiles, on/off track indicators, cost/savings tracking, active project summary. Must tell the story in 10 seconds. Design for group customers — multi-entity view needed."><span class="feat-text">Dashboard V1</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p4" data-type="new" class="feature-tag t-new" data-title="Portfolio Site Mapping" data-phase="Phase 4 · Low" data-tip="Otto demoted to Low. Otto built a working HTML prototype in ~1 hour using Mapbox. DNO boundaries, grid constraints, sleeving, phase filtering, heat maps. Power BI has a map layer for production."><span class="feat-text">Site Mapping</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="hold" data-type="imp" class="feature-tag t-hld" data-title="Portfolio Report V2" data-phase="On hold — waiting on energy team" data-tip="Waiting for the energy team's Portfolio V2 to land first. Check with Sanio on progress before starting."><span class="feat-text">Portfolio Report V2</span><span class="feat-badge b-hld">hold</span></div>
+          <div data-phase-filter="p3" data-type="new" class="feature-tag t-new" data-title="Consumption Export V2" data-phase="Phase 3 · Medium — off hold" data-tip="Otto moved off hold and assigned Medium priority. Still dependent on the Portfolio V2 design. Requirements TBD."><span class="feat-text">Consumption Export V2</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p4" data-type="imp" class="feature-tag t-imp" data-title="Portfolio & Project Management" data-phase="Phase 4 · Low" data-tip="Better filtering, multi-entity views. Group customers need group-level visibility. Connects to Universal Admin Access."><span class="feat-text">Portfolio Management</span><span class="feat-badge b-imp">imp</span></div>
+        </div>
+      </div>
+
+      <div class="page-node" id="page-crosscutting">
+        <div class="page-header"><div class="ph-dot"></div>Cross-cutting / KTLO</div>
+        <div class="features-list side-row">
+          <div data-phase-filter="p2" data-type="cc" class="feature-tag t-cc" data-title="Notes &amp; Assumptions Field" data-phase="Phase 2 · High — surfaced by Otto" data-tip="Free-text notes/assumptions field on every modelling object: project, strategy, comparison, scheme. Otto raised this in scenario modelling feedback (Apr 2026): users need to document assumptions inline so collaborators understand the reasoning behind the numbers. Existing Asana ticket under Platform-KTLO — under-loved, deserves promotion."><span class="feat-text">Notes &amp; Assumptions</span><span class="feat-badge b-cc">cc</span></div>
+          <div data-phase-filter="p3" data-type="cc" class="feature-tag t-cc" data-title="Strategy Project Capacity" data-phase="Phase 3 · Medium" data-tip="Otto-owned KTLO ticket: increase the maximum number of projects a single strategy can hold. Cuts across all strategy work — every multi-site customer hits this ceiling."><span class="feat-text">Strategy Capacity</span><span class="feat-badge b-cc">cc</span></div>
+          <div data-phase-filter="p3" data-type="cc" class="feature-tag t-cc" data-title="Object Titles on All Pages" data-phase="Phase 3 · Low" data-tip="Project, strategy and comparison titles aren't surfaced consistently across the Net Zero section. Otto raised in scenario modelling feedback — when working across pages the user often loses track of what they're looking at. Same fix as Notes — touches every modelling object."><span class="feat-text">Title Consistency</span><span class="feat-badge b-cc">cc</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Legend below diagram -->
+  <div class="legend-bar">
+
+    <!-- Phase filters -->
+    <div class="legend-items legend-row">
+      <div class="phase-item" data-phase-filter="p1"><div class="ppip pp1">1</div><span class="phase-item-label">Phase 1</span></div>
+      <div class="phase-item" data-phase-filter="p2"><div class="ppip pp2">2</div><span class="phase-item-label">Phase 2</span></div>
+      <div class="phase-item" data-phase-filter="p3"><div class="ppip pp3">3</div><span class="phase-item-label">Phase 3</span></div>
+      <div class="phase-item" data-phase-filter="p4"><div class="ppip pp4">4</div><span class="phase-item-label">Phase 4</span></div>
+      <div class="phase-item" data-phase-filter="hold"><div class="ppip pp-hold">–</div><span class="phase-item-label">On hold</span></div>
+      <button class="legend-reset" id="legend-reset-phase" style="margin-left:auto;">↺ Reset</button>
+    </div>
+
+    <!-- Type filters -->
+    <div class="legend-items legend-row">
+      <div class="legend-item" data-filter="new"><div class="lpip lp-new"><span>new</span></div><span class="legend-item-label">New</span></div>
+      <div class="legend-item" data-filter="imp"><div class="lpip lp-imp"><span>imp</span></div><span class="legend-item-label">Improvement</span></div>
+      <div class="legend-item" data-filter="com"><div class="lpip lp-com"><span>com</span></div><span class="legend-item-label">Compliance</span></div>
+      <div class="legend-item" data-filter="cc"><div class="lpip lp-cc"><span>cc</span></div><span class="legend-item-label">Cross-cutting</span></div>
+      <div class="legend-item" data-filter="api"><div class="lpip lp-api" style="border:1px solid #FF9800;background:#FFFDF8;"><span style="color:#CC7700;">api</span></div><span class="legend-item-label">API</span></div>
+      <button class="legend-reset" id="legend-reset-type" style="margin-left:auto;">↺ Reset</button>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="tooltip" id="tooltip">
+  <button class="tt-close" id="tt-close" aria-label="Close">×</button>
+  <div class="tt-t" id="tt-t"></div>
+  <div class="tt-p" id="tt-p"></div>
+  <div class="tt-d" id="tt-d"></div>
+  <a class="tt-link" id="tt-link" target="_blank" rel="noopener">View prototype →</a>
+</div>
+
+<script>
+  // ── Tooltip: click to open, X to close, click another tile auto-switches ──
+  // Maps tile data-title → relative path to its prototype file.
+  // Tiles not in this map don't get a "View prototype" link.
+  const PROTOTYPE_LINKS = {
+    'Universal Admin Access':         './universal-admin/universal-admin-access.html',
+    'Project Upload Template':        './flowcharts-and-maps/project-upload-template.html',
+    'Scenario Modelling (items 5–8)': './project-scenario-modelling/project-scenarios.html',
+    'Scope 3 Project Modelling':      './flowcharts-and-maps/scope-3-project-modelling.html',
+    'Alternative Fuel Modelling':     './alternative-fuels/alternative-fuel-modelling.html',
+    'Weighted Prioritisation':        './weighted-strategy/weighted-strategy-prioritisation.html',
+    'Strategy Comparisons':           './strategy-v2/strategy-v2-compare.html',
+    'Strategy V2':                    './strategy-v2/strategy-v2-prototype.html',
+    'Targets V2':                     './targets/targets-option-1.html',
+    'SECR':                           './SECR/SECR-compliance-scheme.html'
+  };
+
+  const tip = document.getElementById('tooltip');
+  const tipClose = document.getElementById('tt-close');
+  const tipLink = document.getElementById('tt-link');
+
+  function closeTip() {
+    tip.classList.remove('visible');
+  }
+
+  function openTip(el) {
+    document.getElementById('tt-t').textContent = el.dataset.title || '';
+    document.getElementById('tt-p').textContent = el.dataset.phase || '';
+    document.getElementById('tt-d').textContent = el.dataset.tip   || '';
+
+    // Show prototype link if we have a mapping
+    const protoPath = PROTOTYPE_LINKS[el.dataset.title];
+    if (protoPath) {
+      tipLink.href = protoPath;
+      tipLink.classList.add('visible');
+    } else {
+      tipLink.classList.remove('visible');
+    }
+
+    // Make visible first so we can measure its size
+    tip.classList.add('visible');
+
+    // Pin tooltip next to the clicked tile (right side, vertically aligned)
+    const rect = el.getBoundingClientRect();
+    const tipRect = tip.getBoundingClientRect();
+    const margin = 12;
+
+    // Default: place tooltip to the right of the tile
+    let left = rect.right + margin;
+    let top = rect.top;
+
+    // If it overflows the right edge, place to the left of the tile instead
+    if (left + tipRect.width > window.innerWidth - 8) {
+      left = rect.left - tipRect.width - margin;
+    }
+    // If it overflows the left edge too, just clamp inside the viewport
+    if (left < 8) left = 8;
+
+    // Clamp vertically inside viewport
+    if (top + tipRect.height > window.innerHeight - 8) {
+      top = window.innerHeight - tipRect.height - 8;
+    }
+    if (top < 8) top = 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+  }
+
+  document.querySelectorAll('[data-tip]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openTip(el);
+    });
+  });
+
+  // Close button
+  tipClose.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeTip();
+  });
+
+  // Click outside the tooltip closes it
+  document.addEventListener('click', (e) => {
+    if (!tip.contains(e.target)) closeTip();
+  });
+
+  // Esc key closes
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeTip();
+  });
+
+  // SVG connectors
+  function drawConnectors() {
+    const svg = document.getElementById('flow-svg');
+    const canvas = document.getElementById('canvas');
+    Array.from(svg.children).forEach(c => { if (c.tagName !== 'defs') svg.removeChild(c); });
+
+    function box(id) {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      const r = el.getBoundingClientRect();
+      const cr = canvas.getBoundingClientRect();
+      return { left: r.left-cr.left, right: r.right-cr.left, top: r.top-cr.top, bottom: r.bottom-cr.top, midX: r.left-cr.left+r.width/2, midY: r.top-cr.top+r.height/2 };
+    }
+    function svgEl(tag, attrs) {
+      const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+      Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k,v));
+      svg.appendChild(el); return el;
+    }
+    function flowLabel(x, y, text) {
+      const w = text.length * 5.2 + 16;
+      svgEl('rect', { x: x-w/2, y: y-8, width: w, height: 16, rx: 3, class: 'fc-lbl-bg' });
+      svgEl('text', { x, y: y+1, class: 'fc-lbl' }).textContent = text;
+    }
+    function spineLabel(x, y, text) {
+      const w = text.length * 5.2 + 16;
+      const lx = x - w/2 - 6;
+      svgEl('rect', { x: lx-w/2, y: y-8, width: w, height: 16, rx: 3, class: 'fc-lbl-bg' });
+      svgEl('text', { x: lx, y: y+1, class: 'fc-lbl' }).textContent = text;
+    }
+
+    // Main flow arcs over page headers
+    const ARC = 32;
+    [
+      { from: 'page-admin',    to: 'page-projects', lbl: 'access' },
+      { from: 'page-projects', to: 'page-comps',    lbl: 'project data' },
+      { from: 'page-comps',    to: 'page-strats',   lbl: 'ranked options' },
+    ].forEach(({ from, to, lbl }) => {
+      const a = box(from), b = box(to); if (!a || !b) return;
+      const arcY = Math.min(a.top, b.top) - ARC;
+      svgEl('path', { d: `M ${a.right} ${a.top+12} L ${a.right} ${arcY} L ${b.left} ${arcY} L ${b.left} ${b.top+12}`, class: 'fc-main' });
+      flowLabel((a.right+b.left)/2, arcY, lbl);
+    });
+
+    // Connectors from Strategies to right column — T-junction into vertical rail
+    const strats = box('page-strats'), schemes = box('page-schemes'), targets = box('page-targets'), emissions = box('page-emissions'), dashboard = box('page-dashboard');
+    if (strats && schemes && dashboard) {
+      const railX = strats.right + 20;
+      const railTop = schemes.midY;
+      const railBottom = dashboard.midY;
+
+      // Horizontal from Strategies right edge down to rail entry at schemes.midY
+      svgEl('path', {
+        d: `M ${strats.right} ${strats.midY} L ${railX} ${strats.midY} L ${railX} ${railTop}`,
+        fill: 'none', stroke: '#111111', 'stroke-width': '1', opacity: '0.3'
+      });
+
+      // Vertical rail from schemes.midY to dashboard.midY
+      svgEl('line', { x1: railX, y1: railTop, x2: railX, y2: railBottom, stroke: '#111111', 'stroke-width': '1', opacity: '0.2' });
+
+      // Branch from rail to each box
+      [schemes, targets, emissions, dashboard].filter(Boolean).forEach(el => {
+        svgEl('line', { x1: railX, y1: el.midY, x2: el.left - 1, y2: el.midY, fill: 'none', stroke: '#111111', 'stroke-width': '1', opacity: '0.3', 'marker-end': 'url(#arr-dim)' });
+        svgEl('circle', { cx: railX, cy: el.midY, r: 2, fill: '#111111', opacity: '0.35' });
+      });
+    }
+  }
+
+  window.addEventListener('load', () => setTimeout(drawConnectors, 250));
+  window.addEventListener('resize', drawConnectors);
+
+  // Filter system
+  const canvasEl = document.getElementById('canvas');
+  let activeTypeFilter  = null;
+  let activePhaseFilter = null;
+
+  function applyFilters() {
+    const tf = activeTypeFilter;
+    const pf = activePhaseFilter;
+    const anyActive = tf || pf;
+
+    canvasEl.classList.toggle('filtered', !!anyActive);
+
+    document.querySelectorAll('[data-type]').forEach(el => {
+      const typeMatch  = !tf || el.dataset.type === tf;
+      const phaseMatch = !pf || el.dataset.phaseFilter === pf;
+      el.classList.toggle('match', typeMatch && phaseMatch);
+    });
+
+
+    // Mark last visible feature-tag in each list to prevent double border
+    document.querySelectorAll('.features-list').forEach(list => {
+      const tags = list.querySelectorAll('.feature-tag');
+      let lastVisible = null;
+      tags.forEach(t => {
+        t.classList.remove('last-visible');
+        if (!anyActive || t.classList.contains('match')) lastVisible = t;
+      });
+      if (lastVisible && anyActive) lastVisible.classList.add('last-visible');
+    });
+
+    document.getElementById('legend-reset-type').classList.toggle('visible',  !!tf);
+    document.getElementById('legend-reset-phase').classList.toggle('visible', !!pf);
+  }
+
+  function clearTypeFilter() {
+    activeTypeFilter = null;
+    document.querySelectorAll('.legend-item').forEach(i => i.classList.remove('active'));
+    applyFilters();
+  }
+
+  function clearPhaseFilter() {
+    activePhaseFilter = null;
+    document.querySelectorAll('.phase-item').forEach(i => i.classList.remove('active'));
+    applyFilters();
+  }
+
+  // Type filter
+  document.querySelectorAll('.legend-item[data-filter]').forEach(item => {
+    item.addEventListener('click', () => {
+      const f = item.dataset.filter;
+      if (activeTypeFilter === f) { clearTypeFilter(); return; }
+      activeTypeFilter = f;
+      document.querySelectorAll('.legend-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      applyFilters();
+    });
+  });
+
+  // Phase filter
+  document.querySelectorAll('.phase-item[data-phase-filter]').forEach(item => {
+    item.addEventListener('click', () => {
+      const f = item.dataset.phaseFilter;
+      if (activePhaseFilter === f) { clearPhaseFilter(); return; }
+      activePhaseFilter = f;
+      document.querySelectorAll('.phase-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      applyFilters();
+    });
+  });
+
+  document.getElementById('legend-reset-type').addEventListener('click', clearTypeFilter);
+  document.getElementById('legend-reset-phase').addEventListener('click', clearPhaseFilter);
+</script>
+</body>
+</html>

@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compare scenarios — Strategy V2</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<style>
+:root {
+  --primary: #3F2A95;
+  --secondary: #111111;
+  --accent: #3185DA;
+  --highlight: #C04A74;
+  --total: #7F3A84;
+  --success: #63C73B;
+  --warning: #FF9800;
+  --alert: #DC2626;
+  --white: #ffffff;
+  --grey: #F5F5F5;
+  --font: 'Poppins', system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+body {
+  font-family: var(--font);
+  background: var(--white);
+  color: var(--secondary);
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 32px 48px 48px;
+}
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  user-select: none;
+}
+.container { max-width: 1200px; margin: 0 auto; }
+
+/* ---------- HEADER ---------- */
+.compare-header {
+  padding-bottom: 24px;
+  border-bottom: 1.5px solid var(--secondary);
+  margin-bottom: 32px;
+}
+.compare-header .header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+.btn-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  background: var(--white);
+  color: var(--secondary);
+  border: 1.5px solid var(--secondary);
+  transition: background 150ms ease-out;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.btn-download:hover { background: var(--grey); }
+.btn-download .material-symbols-outlined { font-size: 18px; }
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--secondary);
+  text-decoration: none;
+  margin-bottom: 16px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--secondary);
+}
+.back-link:hover { background: var(--grey); }
+.back-link .material-symbols-outlined { font-size: 14px; }
+.compare-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.compare-header p {
+  font-size: 14px;
+  max-width: 720px;
+}
+
+/* ---------- SCENARIO SELECTOR (filter chips) ---------- */
+.selector-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+.selector-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: 4px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: var(--secondary);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+.chip .chip-type {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.18);
+  color: var(--white);
+}
+.chip.deselected { background: #E8E8E8; color: #999999; }
+.chip.deselected .chip-type { background: rgba(0,0,0,0.06); color: #999999; }
+.chip .chip-check { font-size: 13px; }
+.chip.deselected .chip-check { display: none; }
+.chip-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: var(--white);
+  border: 1.5px dashed var(--secondary);
+  color: var(--secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.chip-add:hover { background: var(--grey); }
+.chip-add .material-symbols-outlined { font-size: 14px; }
+
+/* ---------- SECTION ---------- */
+.section {
+  margin-bottom: 48px;
+}
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1.5px solid var(--secondary);
+}
+.section-head .section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.section-head .section-num {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  background: var(--secondary);
+  color: var(--white);
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+}
+.section-head h2 {
+  font-size: 18px;
+  font-weight: 700;
+}
+.section-head .section-sub {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+/* ---------- SCORECARD TABLE ---------- */
+.scorecard {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.sc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.sc-table thead th {
+  padding: 18px 20px;
+  text-align: left;
+  border-bottom: 1.5px solid var(--secondary);
+  vertical-align: bottom;
+}
+.sc-table thead th.sc-label-col {
+  width: 200px;
+  background: var(--white);
+}
+.sc-table thead th.sc-col {
+  font-size: 14px;
+  font-weight: 600;
+}
+.sc-col-head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.sc-col-head-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sc-col-head-row .material-symbols-outlined { font-size: 16px; flex-shrink: 0; }
+.sc-col-head .sc-col-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sc-col-head .sc-col-name { font-weight: 600; font-size: 14px; }
+.sc-col-head .sc-col-meta {
+  font-size: 11px;
+  font-weight: 400;
+}
+.sc-col-head.archived .sc-col-name { font-weight: 500; }
+
+.sc-table tbody td {
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(17, 17, 17, 0.1);
+  font-variant-numeric: tabular-nums;
+}
+.sc-table tbody tr:last-child td { border-bottom: none; }
+.sc-table tbody td.sc-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  width: 200px;
+}
+.sc-table tbody td.sc-val {
+  font-size: 15px;
+  font-weight: 500;
+}
+.sc-table tbody td.sc-val.archived { opacity: 0.55; }
+
+/* Scope breakdown sub-rows — slightly indented and lighter weight */
+.sc-table tbody tr.sc-scope-row td {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  font-size: 13px;
+  background: var(--grey);
+  border-bottom: 1px solid rgba(17, 17, 17, 0.06);
+}
+.sc-table tbody tr.sc-scope-row td.sc-baseline-col { background: #1f1f1f; }
+.sc-table tbody td.sc-sub {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  padding-left: 28px;
+}
+.sc-table tbody td.sc-sub-val {
+  font-weight: 500;
+  font-size: 13px;
+}
+.sc-table tbody tr.sc-status-row td {
+  padding-top: 18px;
+  padding-bottom: 18px;
+  border-top: 1.5px solid var(--secondary);
+}
+.sc-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.sc-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.sc-status-dot.good { background: var(--success); }
+.sc-status-dot.idle { background: #CCCCCC; }
+.sc-status-dot.archived { background: #CCCCCC; }
+
+/* Baseline column — black anchor, inverse text. Primary-scenario signal. */
+.sc-baseline-col { background: var(--secondary); color: var(--white); }
+th.sc-baseline-col { padding-left: 20px; padding-right: 20px; border-bottom-color: var(--white) !important; }
+td.sc-baseline-col { padding-left: 20px; padding-right: 20px; color: var(--white); }
+th.sc-baseline-col .sc-col-meta,
+th.sc-baseline-col .sc-col-name { color: var(--white); }
+/* Override row separators inside the baseline column so they don't show as dark lines on dark */
+.sc-table tbody td.sc-baseline-col { border-bottom-color: rgba(255,255,255,0.15); }
+.sc-table tbody tr:last-child td.sc-baseline-col { border-bottom: none; }
+
+/* ---------- CHART CARD ---------- */
+.chart-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 24px 28px;
+}
+.chart-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+.chart-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.chart-subtitle {
+  font-size: 12px;
+  font-weight: 400;
+}
+.chart-tabs {
+  display: inline-flex;
+  border: 1.5px solid var(--secondary);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.chart-tabs button {
+  background: var(--white);
+  border: none;
+  border-right: 1.5px solid var(--secondary);
+  padding: 6px 14px;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--secondary);
+  transition: background 150ms ease-out;
+}
+.chart-tabs button:last-child { border-right: none; }
+.chart-tabs button:hover { background: var(--grey); }
+.chart-tabs button.active { background: var(--secondary); color: var(--white); }
+.chart-tabs button:disabled { cursor: not-allowed; opacity: 0.5; }
+
+.chart-area { position: relative; width: 100%; }
+.chart-area svg { display: block; width: 100%; height: auto; }
+
+.chart-legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.legend-swatch {
+  width: 18px;
+  height: 5px;
+  border-radius: 1px;
+}
+.legend-line { flex-shrink: 0; display: block; }
+.legend-swatch.dashed {
+  background: repeating-linear-gradient(
+    to right,
+    var(--secondary) 0 4px,
+    transparent 4px 7px
+  );
+}
+
+/* ---------- PROTO NOTE ---------- */
+.proto-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--grey);
+  border-radius: 6px;
+  font-size: 12px;
+  margin-top: 32px;
+}
+.proto-note .material-symbols-outlined { font-size: 16px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="compare-header">
+    <a href="strategy-v2-prototype.html" class="back-link" onclick="if(window.history.length>1){window.history.back();return false;}">
+      <span class="material-symbols-outlined">arrow_back</span>
+      Back to Strategy
+    </a>
+    <div class="header-row">
+      <div>
+        <h1>Compare scenarios</h1>
+        <p>Evaluate alternatives side-by-side to decide which to promote as baseline.</p>
+      </div>
+      <button class="btn-download">
+        <span class="material-symbols-outlined">download</span>
+        Download comparison
+      </button>
+    </div>
+  </header>
+
+  <!-- SCENARIO SELECTOR -->
+  <div class="selector-bar">
+    <span class="selector-label">Comparing</span>
+    <span class="chip">
+      Baseline
+      <span class="chip-type">Tracked</span>
+      <span class="material-symbols-outlined chip-check">check</span>
+    </span>
+    <span class="chip">
+      Heat Pump Acceleration
+      <span class="chip-type">Variant</span>
+      <span class="material-symbols-outlined chip-check">check</span>
+    </span>
+    <span class="chip">
+      Solar PV Roll-out
+      <span class="chip-type">Variant</span>
+      <span class="material-symbols-outlined chip-check">check</span>
+    </span>
+    <span class="chip">
+      High Energy Price
+      <span class="chip-type">What-if</span>
+      <span class="material-symbols-outlined chip-check">check</span>
+    </span>
+    <span class="chip-add">
+      <span class="material-symbols-outlined">add</span>
+      Add scenario
+    </span>
+  </div>
+
+  <!-- SCORECARD -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-title">
+        <span class="section-num">1</span>
+        <h2>Scorecard</h2>
+      </div>
+      <span class="section-sub">Key metrics across all scenarios at 10-year evaluation horizon</span>
+    </div>
+    <div class="scorecard">
+      <table class="sc-table">
+        <thead>
+          <tr>
+            <th class="sc-label-col"></th>
+            <th class="sc-col sc-baseline-col">
+              <div class="sc-col-head">
+                <div class="sc-col-head-row">
+                  <span class="sc-col-name">Baseline</span>
+                </div>
+                <span class="sc-col-meta">Tracked · current</span>
+              </div>
+            </th>
+            <th class="sc-col">
+              <div class="sc-col-head">
+                <div class="sc-col-head-row">
+                  <span class="sc-col-name">Heat Pump Acc.</span>
+                </div>
+                <span class="sc-col-meta">Variant · 2 weeks old</span>
+              </div>
+            </th>
+            <th class="sc-col">
+              <div class="sc-col-head">
+                <div class="sc-col-head-row">
+                  <span class="sc-col-name">Solar PV Roll-out</span>
+                </div>
+                <span class="sc-col-meta">Variant · 3 days old</span>
+              </div>
+            </th>
+            <th class="sc-col">
+              <div class="sc-col-head">
+                <div class="sc-col-head-row">
+                  <span class="sc-col-name">High Energy Price</span>
+                </div>
+                <span class="sc-col-meta">What-if · same projects</span>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="sc-label">Net savings</td>
+            <td class="sc-val sc-baseline-col">£989,443</td>
+            <td class="sc-val">£1,240,110</td>
+            <td class="sc-val">£845,320</td>
+            <td class="sc-val">£1,308,200</td>
+          </tr>
+          <tr>
+            <td class="sc-label">Carbon savings (total)</td>
+            <td class="sc-val sc-baseline-col">2,668 tCO₂e</td>
+            <td class="sc-val">3,412 tCO₂e</td>
+            <td class="sc-val">2,100 tCO₂e</td>
+            <td class="sc-val">2,668 tCO₂e</td>
+          </tr>
+          <tr class="sc-scope-row">
+            <td class="sc-label sc-sub">↳ Scope 1</td>
+            <td class="sc-val sc-baseline-col sc-sub-val">560 tCO₂e</td>
+            <td class="sc-val sc-sub-val">420 tCO₂e</td>
+            <td class="sc-val sc-sub-val">510 tCO₂e</td>
+            <td class="sc-val sc-sub-val">560 tCO₂e</td>
+          </tr>
+          <tr class="sc-scope-row">
+            <td class="sc-label sc-sub">↳ Scope 2</td>
+            <td class="sc-val sc-baseline-col sc-sub-val">1,820 tCO₂e</td>
+            <td class="sc-val sc-sub-val">2,650 tCO₂e</td>
+            <td class="sc-val sc-sub-val">1,400 tCO₂e</td>
+            <td class="sc-val sc-sub-val">1,820 tCO₂e</td>
+          </tr>
+          <tr class="sc-scope-row">
+            <td class="sc-label sc-sub">↳ Scope 3</td>
+            <td class="sc-val sc-baseline-col sc-sub-val">288 tCO₂e</td>
+            <td class="sc-val sc-sub-val">342 tCO₂e</td>
+            <td class="sc-val sc-sub-val">190 tCO₂e</td>
+            <td class="sc-val sc-sub-val">288 tCO₂e</td>
+          </tr>
+          <tr>
+            <td class="sc-label">Max cash commitment</td>
+            <td class="sc-val sc-baseline-col">£720,948</td>
+            <td class="sc-val">£1,120,500</td>
+            <td class="sc-val">£540,220</td>
+            <td class="sc-val">£720,948</td>
+          </tr>
+          <tr>
+            <td class="sc-label">Payback</td>
+            <td class="sc-val sc-baseline-col">7.2 yrs</td>
+            <td class="sc-val">8.4 yrs</td>
+            <td class="sc-val">5.8 yrs</td>
+            <td class="sc-val">5.4 yrs</td>
+          </tr>
+          <tr>
+            <td class="sc-label">NPV (10 yr)</td>
+            <td class="sc-val sc-baseline-col">£268,495</td>
+            <td class="sc-val">£338,610</td>
+            <td class="sc-val">£305,100</td>
+            <td class="sc-val">£412,800</td>
+          </tr>
+          <tr>
+            <td class="sc-label">% to 2032 target</td>
+            <td class="sc-val sc-baseline-col">95%</td>
+            <td class="sc-val">122%</td>
+            <td class="sc-val">84%</td>
+            <td class="sc-val">95%</td>
+          </tr>
+          <tr class="sc-status-row">
+            <td class="sc-label">Live tracking</td>
+            <td class="sc-val sc-baseline-col">
+              <span class="sc-status"><span class="sc-status-dot good"></span>On track</span>
+            </td>
+            <td class="sc-val">
+              <span class="sc-status"><span class="sc-status-dot idle"></span>Not tracked</span>
+            </td>
+            <td class="sc-val">
+              <span class="sc-status"><span class="sc-status-dot idle"></span>Not tracked</span>
+            </td>
+            <td class="sc-val">
+              <span class="sc-status"><span class="sc-status-dot idle"></span>Not tracked</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- OVERLAY CHART -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-title">
+        <span class="section-num">2</span>
+        <h2>Overlay chart</h2>
+      </div>
+      <span class="section-sub">Scenarios plotted on shared axes over the 60-month horizon</span>
+    </div>
+    <div class="chart-card">
+      <div class="chart-head">
+        <div>
+          <div class="chart-title">Remaining carbon emissions by scenario</div>
+          <div class="chart-subtitle">Lower = better. Solid black = 2032 target trajectory. Today: Apr 2026.</div>
+        </div>
+        <div class="chart-tabs">
+          <button class="active">Carbon</button>
+          <button disabled title="Coming next">Cost</button>
+          <button disabled title="Coming next">Cash flow</button>
+          <button disabled title="Coming next">Target gap</button>
+        </div>
+      </div>
+      <div class="chart-area" id="overlayChart"></div>
+      <div class="chart-legend">
+        <div class="legend-item"><svg class="legend-line" width="22" height="6" viewBox="0 0 22 6"><line x1="0" y1="3" x2="22" y2="3" stroke="#111" stroke-width="3" stroke-linecap="round"/></svg>Baseline (tracked)</div>
+        <div class="legend-item"><svg class="legend-line" width="22" height="6" viewBox="0 0 22 6"><line x1="0" y1="3" x2="22" y2="3" stroke="#111" stroke-width="2" stroke-dasharray="6 3"/></svg>Heat Pump Acceleration</div>
+        <div class="legend-item"><svg class="legend-line" width="22" height="6" viewBox="0 0 22 6"><line x1="0" y1="3" x2="22" y2="3" stroke="#111" stroke-width="2" stroke-dasharray="2 2"/></svg>Solar PV Roll-out</div>
+        <div class="legend-item"><svg class="legend-line" width="22" height="6" viewBox="0 0 22 6"><line x1="0" y1="3" x2="22" y2="3" stroke="#111" stroke-width="2" stroke-dasharray="5 2 1 2"/></svg>High Energy Price (what-if)</div>
+        <div class="legend-item"><svg class="legend-line" width="22" height="6" viewBox="0 0 22 6"><line x1="0" y1="3" x2="22" y2="3" stroke="#111" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/></svg>2032 target</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="proto-note">
+    <span class="material-symbols-outlined">info</span>
+    <span><strong>Prototype note:</strong> Cost / Cash flow / Target gap tabs and a 3-scope view (matching the main Strategy page) will be built once this layout is signed off.</span>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================
+   OVERLAY CHART — REMAINING carbon emissions by scenario
+   Lower = better. All scenarios start at baseline (~1200 tCO₂e/yr)
+   and descend toward the 2032 target (400 tCO₂e/yr).
+   ========================================================= */
+(function renderOverlay() {
+  const months = 60;
+  const todayIdx = 39;
+  const startDate = new Date(2023, 0, 1);
+
+  const baselineStart = 1200;
+  const targetEnd = 400;
+
+  // --- Scenario shapes (remaining annual emissions, descending) ---
+  const baseline = [], heatpump = [], solarpv = [], whatif = [], target = [];
+  for (let i = 0; i < months; i++) {
+    // Baseline — gradual descent, ends ~440 (slight shortfall vs target)
+    let b;
+    if (i < 6) b = baselineStart - i * 8;
+    else if (i < 24) b = baselineStart - 48 - (i - 6) * 13;
+    else b = baselineStart - 282 - (i - 24) * (478 / 36);
+    baseline.push(b);
+
+    // Heat Pump — slow start (heavy CapEx early), steep later, ends ~250 (overshoots target)
+    let h;
+    if (i < 12) h = baselineStart - i * 6;
+    else if (i < 24) h = baselineStart - 72 - (i - 12) * 18;
+    else h = baselineStart - 288 - (i - 24) * (692 / 36);
+    heatpump.push(h);
+
+    // Solar PV — fast early descent, flattens, ends ~520 (misses target)
+    let s;
+    if (i < 12) s = baselineStart - i * 25;
+    else if (i < 36) s = baselineStart - 300 - (i - 12) * 10;
+    else s = baselineStart - 540 - (i - 36) * (140 / 24);
+    solarpv.push(s);
+
+    // High Energy Price what-if — same physical reductions as baseline,
+    // but financial profile differs (only carbon graph here, so plot tracks baseline)
+    whatif.push(baseline[i]);
+
+    // 2032 target — linear descent from baseline to target
+    target.push(baselineStart - ((baselineStart - targetEnd) * i / (months - 1)));
+  }
+
+  // Actuals for baseline only (solid to today), tracking slightly better (lower) than forecast
+  const baselineActual = [];
+  for (let i = 0; i <= todayIdx; i++) {
+    baselineActual.push(baseline[i] * (1 - Math.sin(i / 4) * 0.02 - 0.03));
+  }
+
+  const W = 1100, H = 420;
+  const padL = 70, padR = 100, padT = 30, padB = 50;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+  const slot = plotW / months;
+
+  const yMax = baselineStart * 1.05;
+  const yRange = yMax;
+  const yToPx = v => padT + ((yMax - v) / yRange) * plotH;
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Poppins, sans-serif">`;
+
+  // Gridlines
+  for (let i = 0; i <= 5; i++) {
+    const v = (yMax * i) / 5;
+    const y = yToPx(v);
+    svg += `<line x1="${padL}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="#111" stroke-opacity="0.06" stroke-width="0.5" />`;
+    svg += `<text x="${padL - 8}" y="${y + 3}" font-size="10" font-weight="500" fill="#111" text-anchor="end">${v.toFixed(0)}</text>`;
+  }
+  svg += `<line x1="${padL}" x2="${W - padR}" y1="${yToPx(0)}" y2="${yToPx(0)}" stroke="#111" stroke-width="1" />`;
+
+  const pathFrom = (series) => {
+    let p = '';
+    for (let i = 0; i < series.length; i++) {
+      const cx = padL + slot * i + slot / 2;
+      const cy = yToPx(series[i]);
+      p += (i === 0 ? 'M' : 'L') + cx + ',' + cy + ' ';
+    }
+    return p;
+  };
+
+  // 2032 target trajectory — solid black, prominent reference line (descending)
+  svg += `<path d="${pathFrom(target)}" fill="none" stroke="#111" stroke-width="1.5" stroke-dasharray="3 2" stroke-linejoin="round" opacity="0.7" />`;
+
+  // Scenario lines — black, differentiated by stroke pattern + weight
+  const scenarios = [
+    { name: 'High Energy Price', series: whatif, dash: '5 2 1 2', width: 1.8, isWhatif: true },
+    { name: 'Solar PV Roll-out', series: solarpv, dash: '2 2', width: 2 },
+    { name: 'Heat Pump Acc.', series: heatpump, dash: '6 3', width: 2 },
+    { name: 'Baseline', series: baseline, dash: null, width: 3, isBaseline: true }
+  ];
+
+  scenarios.forEach(sc => {
+    const dashAttr = sc.dash ? `stroke-dasharray="${sc.dash}"` : '';
+    svg += `<path d="${pathFrom(sc.series)}" fill="none" stroke="#111" stroke-width="${sc.width}" ${dashAttr} stroke-linejoin="round" stroke-linecap="round" />`;
+  });
+
+  // Baseline actual line — thicker/darker up to today
+  svg += `<path d="${pathFrom(baselineActual)}" fill="none" stroke="#111" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" />`;
+
+  // End-of-period labels
+  const endScenarios = [
+    { label: 'Heat Pump', y: heatpump[months - 1], value: Math.round(heatpump[months - 1]), weight: 600 },
+    { label: 'Solar PV', y: solarpv[months - 1], value: Math.round(solarpv[months - 1]), weight: 600 },
+    { label: 'Baseline / High £', y: baseline[months - 1], value: Math.round(baseline[months - 1]), weight: 700 }
+  ];
+  endScenarios.forEach(e => {
+    const y = yToPx(e.y);
+    svg += `<text x="${W - padR + 8}" y="${y + 3}" font-size="11" font-weight="${e.weight}" fill="#111">${e.value}</text>`;
+  });
+  // Target endpoint label
+  const tEndY = yToPx(target[months - 1]);
+  svg += `<text x="${W - padR + 8}" y="${tEndY + 3}" font-size="10" font-weight="600" fill="#111" opacity="0.7">${targetEnd} target</text>`;
+
+  // Today marker
+  const todayX = padL + slot * todayIdx + slot / 2;
+  svg += `<line x1="${todayX}" x2="${todayX}" y1="${padT}" y2="${padT + plotH}" stroke="#111" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" />`;
+  svg += `<rect x="${todayX - 28}" y="${padT - 2}" width="56" height="18" fill="#111" rx="3" />`;
+  svg += `<text x="${todayX}" y="${padT + 11}" font-size="10" font-weight="600" fill="#fff" text-anchor="middle">TODAY</text>`;
+
+  // X labels every 6 months
+  for (let i = 0; i < months; i += 6) {
+    const cx = padL + slot * i + slot / 2;
+    const d = new Date(startDate.getFullYear(), startDate.getMonth() + i, 1);
+    const mlbl = d.toLocaleDateString('en-GB', { month: 'short' });
+    const ylbl = d.getFullYear().toString().slice(-2);
+    svg += `<text x="${cx}" y="${H - padB + 16}" font-size="10" font-weight="500" fill="#111" text-anchor="middle">${mlbl} ${ylbl}</text>`;
+  }
+
+  // Axis titles
+  svg += `<text x="${padL + plotW / 2}" y="${H - 8}" font-size="11" font-weight="500" fill="#111" text-anchor="middle">Month</text>`;
+  svg += `<text x="14" y="${padT + plotH / 2}" font-size="11" font-weight="500" fill="#111" text-anchor="middle" transform="rotate(-90 14 ${padT + plotH / 2})">tCO₂e (annual rate, remaining)</text>`;
+
+  svg += `</svg>`;
+  document.getElementById('overlayChart').innerHTML = svg;
+})();
+</script>
+<!-- Back to map button -->
+<style>
+.back-to-map-wrapper {
+  display: flex; justify-content: center;
+  padding: 32px 24px 24px 24px;
+  margin-top: 16px;
+}
+.back-to-map {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 18px; background: #FFFFFF; color: #111111;
+  border: 1px solid #111111; border-radius: 4px;
+  font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;
+  text-decoration: none; cursor: pointer;
+  transition: background 0.15s;
+}
+.back-to-map:hover { background: #F0F0F0; }
+</style>
+<div class="back-to-map-wrapper">
+  <a href="../sustainability-platform-map.html" class="back-to-map" onclick="if(window.opener){window.close();return false;}">← Back to map</a>
+</div>
+
+</body>
+</html>

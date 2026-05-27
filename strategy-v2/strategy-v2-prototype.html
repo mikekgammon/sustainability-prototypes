@@ -1,0 +1,2161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strategy V2 — Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<style>
+:root {
+  --primary: #3F2A95;
+  --secondary: #111111;
+  --accent: #3185DA;
+  --highlight: #C04A74;
+  --total: #7F3A84;
+  --success: #63C73B;
+  --warning: #FF9800;
+  --alert: #DC2626;
+  --white: #ffffff;
+  --grey: #F5F5F5;
+  --font: 'Poppins', system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+body {
+  font-family: var(--font);
+  background: var(--white);
+  color: var(--secondary);
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 32px 48px 48px;
+}
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  user-select: none;
+}
+.container { max-width: 1200px; margin: 0 auto; }
+
+/* ---------- PROTOTYPE BANNER ---------- */
+.proto-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border: 1.5px dashed var(--secondary);
+  border-radius: 6px;
+  font-size: 12px;
+  margin-bottom: 32px;
+  background: var(--grey);
+}
+.proto-banner .label {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.proto-banner .meta { display: flex; gap: 20px; }
+
+/* ---------- PAGE HEADER ---------- */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1.5px solid var(--secondary);
+  margin-bottom: 32px;
+}
+.page-header .title-block { flex: 1; min-width: 0; }
+.page-header .breadcrumb {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+.editable-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.editable-row .edit-pen {
+  font-size: 16px;
+  color: var(--secondary);
+  opacity: 0;
+  pointer-events: none;
+  margin-top: 8px;
+  transition: opacity 150ms ease-out;
+  flex-shrink: 0;
+}
+.editable-row:hover .edit-pen { opacity: 0.45; }
+.editable-row:focus-within .edit-pen { opacity: 0; }
+.editable-title {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  padding: 2px 8px;
+  margin-left: -8px;
+  outline: none;
+  transition: background 150ms ease-out, border-color 150ms ease-out;
+  cursor: text;
+}
+.editable-title:hover { background: var(--grey); }
+.editable-title:focus { background: var(--white); border-color: var(--secondary); }
+.editable-desc {
+  font-size: 14px;
+  max-width: 720px;
+  line-height: 1.5;
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  padding: 4px 8px;
+  margin-left: -8px;
+  outline: none;
+  transition: background 150ms ease-out, border-color 150ms ease-out;
+  cursor: text;
+  min-height: 24px;
+  flex: 1;
+}
+.editable-desc:hover { background: var(--grey); }
+.editable-desc:focus { background: var(--white); border-color: var(--secondary); }
+.editable-desc:empty::before {
+  content: 'Add a description or notes for this strategy…';
+  color: var(--secondary);
+  opacity: 0.45;
+  font-style: italic;
+}
+.title-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.title-meta span { display: inline-flex; align-items: center; gap: 6px; }
+.title-meta .material-symbols-outlined { font-size: 14px; }
+.live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--secondary);
+  color: var(--white);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.live-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--success);
+  animation: livePulse 2s ease-out infinite;
+}
+@keyframes livePulse {
+  0% { box-shadow: 0 0 0 0 rgba(99, 199, 59, 0.6); }
+  70% { box-shadow: 0 0 0 6px rgba(99, 199, 59, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(99, 199, 59, 0); }
+}
+
+/* ---------- SCENARIO SWITCHER ---------- */
+.scenario-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.scenario-switcher { position: relative; }
+.scenario-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 320px;
+  background: var(--white);
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: var(--font);
+  color: var(--secondary);
+  cursor: pointer;
+  transition: background 150ms ease-out;
+  text-align: left;
+}
+.scenario-trigger:hover { background: var(--grey); }
+.scenario-trigger .material-symbols-outlined { font-size: 20px; flex-shrink: 0; }
+.scenario-trigger-text { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.scenario-trigger-text .scenario-name { font-size: 14px; font-weight: 600; }
+.scenario-trigger-text .scenario-meta { font-size: 11px; font-weight: 400; }
+.scenario-trigger .chevron { margin-left: auto; }
+
+.scenario-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 360px;
+  background: var(--white);
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 8px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 100;
+}
+.dropdown-section-header {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 10px 16px 6px;
+}
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 150ms ease-out;
+}
+.dropdown-item:hover { background: var(--grey); }
+.dropdown-item.active { background: var(--grey); }
+.dropdown-item .material-symbols-outlined { font-size: 18px; flex-shrink: 0; }
+.dropdown-item .item-text { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.dropdown-item .item-name { font-size: 14px; font-weight: 500; }
+.dropdown-item .item-meta { font-size: 11px; font-weight: 400; }
+.dropdown-item.active .item-name { font-weight: 600; }
+.dropdown-item .check { margin-left: 4px; }
+.dropdown-item .check { display: none; }
+.dropdown-item.active .check { display: inline-flex; }
+.dropdown-divider {
+  height: 1px;
+  background: var(--secondary);
+  opacity: 0.15;
+  margin: 6px 0;
+}
+.dropdown-item.create .item-name { font-weight: 500; }
+
+.scenario-actions { display: flex; gap: 8px; }
+.btn {
+  padding: 10px 18px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 150ms ease-out;
+  border: 1.5px solid var(--secondary);
+}
+.btn-outline { background: var(--white); color: var(--secondary); }
+.btn-outline:hover { background: var(--grey); }
+.btn-filled { background: var(--secondary); color: var(--white); }
+.btn-filled:hover { opacity: 0.85; }
+.btn .material-symbols-outlined { font-size: 18px; }
+
+/* ---------- STATUS BANNER ---------- */
+.status-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+}
+.status-banner.success {
+  background: rgba(99, 199, 59, 0.1);
+  border-left: 4px solid var(--success);
+}
+.status-banner.success .material-symbols-outlined { color: var(--success); }
+.status-banner.warn {
+  background: rgba(255, 152, 0, 0.1);
+  border-left: 4px solid var(--warning);
+}
+.status-banner.warn .material-symbols-outlined { color: var(--warning); }
+.status-banner .material-symbols-outlined { font-size: 22px; }
+.status-banner .text { display: flex; flex-direction: column; gap: 2px; }
+.status-banner .label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.status-banner .desc { font-size: 13px; }
+.status-banner .right {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: var(--secondary);
+  border-bottom: 1px solid var(--secondary);
+  padding-bottom: 1px;
+}
+
+/* ---------- KPI CARDS ---------- */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+}
+.kpi-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 20px 24px;
+}
+.kpi-card .kpi-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.kpi-card .kpi-head .material-symbols-outlined { font-size: 22px; }
+.kpi-card .kpi-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex: 1;
+}
+
+/* ---------- INFO TOOLTIP ---------- */
+.info-tip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: help;
+  color: var(--secondary);
+  opacity: 0.55;
+  transition: opacity 150ms ease-out;
+}
+.info-tip:hover { opacity: 1; }
+.info-tip .material-symbols-outlined { font-size: 16px; }
+.info-tip .tip-content {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--secondary);
+  color: var(--white);
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  width: 240px;
+  text-align: left;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease-out;
+  z-index: 50;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.info-tip .tip-content::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--secondary);
+}
+.info-tip:hover .tip-content,
+.info-tip:focus .tip-content { opacity: 1; }
+.info-tip .tip-content strong { font-weight: 600; }
+.kpi-card .kpi-value {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.kpi-card .kpi-value .unit { font-size: 14px; font-weight: 400; margin-left: 4px; }
+.kpi-card .kpi-delta {
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+.kpi-delta .arrow.good { color: var(--success); font-weight: 700; }
+.kpi-delta .arrow.bad { color: var(--alert); font-weight: 700; }
+.kpi-delta .arrow.neutral { color: var(--secondary); font-weight: 700; }
+
+/* ---------- CONTROLS BAR ---------- */
+.controls-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.control-group .control-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.toggle {
+  display: inline-flex;
+  border: 1.5px solid var(--secondary);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.toggle button {
+  background: var(--white);
+  border: none;
+  border-right: 1.5px solid var(--secondary);
+  padding: 6px 14px;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--secondary);
+  transition: background 150ms ease-out;
+}
+.toggle button:last-child { border-right: none; }
+.toggle button:hover { background: var(--grey); }
+.toggle button.active { background: var(--secondary); color: var(--white); }
+
+/* ---------- MAIN TABS ---------- */
+.main-tabs {
+  display: flex;
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.main-tab {
+  flex: 1;
+  background: var(--white);
+  color: var(--secondary);
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 16px;
+  border: none;
+  border-right: 1.5px solid var(--secondary);
+  cursor: pointer;
+  transition: background 150ms ease-out;
+  text-align: center;
+}
+.main-tab:last-child { border-right: none; }
+.main-tab:hover { background: var(--grey); }
+.main-tab.active { background: var(--secondary); color: var(--white); }
+
+/* ---------- CHART CARD ---------- */
+.chart-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+}
+.chart-card.with-aside {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 32px;
+}
+.chart-main { min-width: 0; }
+.chart-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+.chart-head .chart-titles { flex: 1; min-width: 0; }
+.chart-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.chart-subtitle {
+  font-size: 12px;
+  font-weight: 400;
+}
+.chart-legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.legend-item.is-toggle {
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin: -4px 0;
+  transition: background 120ms ease-out;
+}
+.legend-item.is-toggle:hover { background: var(--grey); }
+.legend-item.is-toggle.is-off { opacity: 0.35; text-decoration: line-through; }
+.legend-item.is-toggle.is-off:hover { opacity: 0.6; }
+.legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+.legend-swatch.line {
+  width: 18px;
+  height: 5px;
+  border-radius: 1px;
+  background: var(--accent);
+}
+.legend-swatch.line-dashed {
+  width: 18px;
+  height: 5px;
+  border-radius: 1px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--accent) 0 4px,
+    transparent 4px 6px
+  );
+}
+.chart-summary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--secondary);
+}
+.summary-item { display: inline-flex; align-items: center; gap: 6px; }
+.summary-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.summary-dot.good { background: var(--success); }
+.summary-dot.warn { background: var(--warning); }
+.summary-dot.alert { background: var(--alert); }
+.chart-area {
+  position: relative;
+  width: 100%;
+}
+.chart-area svg { display: block; width: 100%; height: auto; }
+
+/* ---------- CHART ASIDE (side panel) ---------- */
+.chart-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 34px;
+}
+.chart-aside .aside-header {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-bottom: 10px;
+  border-bottom: 1.5px solid var(--secondary);
+}
+.aside-cell {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.aside-cell .v-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.aside-cell.good .v-icon { color: var(--success); }
+.aside-cell.warn .v-icon { color: var(--warning); }
+.aside-cell .v-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.aside-cell .v-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.aside-cell .v-value { font-size: 14px; font-weight: 600; line-height: 1.3; }
+.aside-cell .v-detail { font-size: 12px; font-weight: 400; line-height: 1.4; }
+
+/* ---------- PROJECT SECTION ---------- */
+.projects-section {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.projects-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.projects-head h2 {
+  font-size: 16px;
+  font-weight: 600;
+}
+.projects-head .right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.date-input {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+}
+
+/* ---------- SCOPE CHIPS ---------- */
+.scope-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 1.5px solid var(--secondary);
+  white-space: nowrap;
+}
+.scope-chip.s1 { background: var(--secondary); color: var(--white); }
+.scope-chip.s2 { background: var(--white); color: var(--secondary); }
+.scope-chip.s3 {
+  background: var(--white);
+  color: var(--secondary);
+  border-style: dashed;
+}
+
+/* ---------- MACRO ASSUMPTIONS ---------- */
+.assumptions-section {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.assumptions-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.assumptions-head h2 {
+  font-size: 16px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.assumptions-sub {
+  font-size: 12px;
+  margin-bottom: 20px;
+  max-width: 720px;
+}
+.assumptions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.assumption {
+  border: 1.5px solid var(--secondary);
+  border-radius: 6px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.assumption .a-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.assumption .a-value {
+  font-size: 18px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.assumption .a-value .a-unit { font-size: 12px; font-weight: 500; }
+.assumption .a-detail { font-size: 11px; }
+.assumption .a-edit {
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--secondary);
+  text-decoration: underline;
+  cursor: pointer;
+  align-self: flex-start;
+}
+.date-input span {
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 10px;
+}
+.date-input .date-val {
+  border: 1.5px solid var(--secondary);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.date-val .material-symbols-outlined { font-size: 14px; }
+
+.project-list {
+  border-top: 1.5px solid var(--secondary);
+}
+.project-list-head,
+.project-row {
+  display: grid;
+  grid-template-columns: 1fr 70px 140px 1.2fr 100px 70px 28px;
+  gap: 14px;
+  align-items: center;
+  padding: 0 4px;
+}
+.project-list-head {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--secondary);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.project-list-head .col-right { text-align: right; }
+.project-row {
+  padding-top: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--grey);
+  transition: background 150ms ease-out;
+}
+.project-row:last-child { border-bottom: none; }
+.project-row:hover { background: var(--grey); }
+
+.project-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 0;
+}
+.project-name .p-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.project-name .p-icon.leaf { color: var(--success); }
+.project-name .p-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.date-range {
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  width: fit-content;
+  transition: background 150ms ease-out;
+}
+.date-range:hover { background: var(--white); }
+.date-range .arrow { opacity: 0.5; font-size: 11px; }
+
+.proportion {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.proportion-bar {
+  height: 8px;
+  background: var(--grey);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.proportion-bar .fill {
+  height: 100%;
+  background: var(--secondary);
+  border-radius: 2px;
+}
+.proportion-bar .fill.high { background: var(--success); }
+.proportion-bar .fill.med { background: var(--warning); }
+.proportion-bar .fill.low { background: var(--secondary); }
+.proportion .caption {
+  font-size: 10px;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+.savings {
+  font-size: 13px;
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.savings .unit { font-size: 11px; font-weight: 400; margin-left: 2px; }
+
+.variance {
+  font-size: 12px;
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.variance.good { color: var(--secondary); }
+.variance.good::before { content: '▼ '; color: var(--success); font-size: 9px; }
+.variance.warn { color: var(--secondary); }
+.variance.warn::before { content: '▲ '; color: var(--warning); font-size: 9px; }
+.variance.alert::before { content: '▲ '; color: var(--alert); font-size: 9px; }
+
+.kebab {
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  color: var(--secondary);
+}
+.kebab:hover { background: var(--white); }
+.kebab .material-symbols-outlined { font-size: 18px; }
+
+/* ---------- FOOTER ---------- */
+.page-footer {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1.5px solid var(--secondary);
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+.footer-actions { display: flex; gap: 12px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <div class="title-block">
+      <div class="breadcrumb">Strategy</div>
+      <div class="editable-row">
+        <h1 class="editable-title" contenteditable="true" spellcheck="false">Net Zero by 2032 — Site Portfolio</h1>
+        <span class="edit-pen material-symbols-outlined" aria-hidden="true">edit</span>
+      </div>
+      <div class="editable-row">
+        <div class="editable-desc" contenteditable="true" spellcheck="false">Phased decarbonisation across 5 sites combining LED retrofits, BEMS upgrades, compressed-air optimisation and staff engagement. Targets 2,668 tCO₂e reduction by 2032 against 2022 baseline.</div>
+        <span class="edit-pen material-symbols-outlined" aria-hidden="true">edit</span>
+      </div>
+      <div class="title-meta">
+        <span><span class="material-symbols-outlined">date_range</span>Term: Jan 2023 → Dec 2032 (10 yrs)</span>
+        <span><span class="material-symbols-outlined">layers</span>5 projects</span>
+        <span><span class="material-symbols-outlined">person</span>Owner: Otto</span>
+      </div>
+    </div>
+    <div class="live-pill">
+      <span class="live-dot"></span>
+      <span>Live · M&amp;T data current</span>
+    </div>
+  </header>
+
+  <!-- SCENARIO SWITCHER -->
+  <div class="scenario-bar">
+    <div class="scenario-switcher">
+      <button class="scenario-trigger" id="scenarioTrigger" aria-expanded="false">
+        <span class="material-symbols-outlined" id="scenarioTriggerIcon">star</span>
+        <div class="scenario-trigger-text">
+          <span class="scenario-name" id="scenarioTriggerName">Baseline</span>
+          <span class="scenario-meta" id="scenarioTriggerMeta">Current scenario · on track</span>
+        </div>
+        <span class="material-symbols-outlined chevron">expand_more</span>
+      </button>
+      <div class="scenario-dropdown" id="scenarioDropdown" hidden>
+        <div class="dropdown-section-header">Baseline</div>
+        <div class="dropdown-item active" data-icon="star" data-meta="Current scenario · on track">
+          <span class="material-symbols-outlined">star</span>
+          <div class="item-text">
+            <span class="item-name">Baseline</span>
+            <span class="item-meta">On track · 2.1% ahead of milestone</span>
+          </div>
+          <span class="material-symbols-outlined check">check</span>
+        </div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-section-header">Alternatives</div>
+        <div class="dropdown-item" data-icon="insights" data-meta="Alternative scenario · draft">
+          <span class="material-symbols-outlined">insights</span>
+          <div class="item-text">
+            <span class="item-name">Heat Pump Acceleration</span>
+            <span class="item-meta">Draft · created 2 weeks ago</span>
+          </div>
+          <span class="material-symbols-outlined check">check</span>
+        </div>
+        <div class="dropdown-item" data-icon="insights" data-meta="Alternative scenario · draft">
+          <span class="material-symbols-outlined">insights</span>
+          <div class="item-text">
+            <span class="item-name">Solar PV Roll-out</span>
+            <span class="item-meta">Draft · created 3 days ago</span>
+          </div>
+          <span class="material-symbols-outlined check">check</span>
+        </div>
+        <div class="dropdown-item" data-icon="insights" data-meta="Alternative scenario · archived">
+          <span class="material-symbols-outlined">insights</span>
+          <div class="item-text">
+            <span class="item-name">Low-cost phased roll-out</span>
+            <span class="item-meta">Archived · Feb 2026</span>
+          </div>
+          <span class="material-symbols-outlined check">check</span>
+        </div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item create" data-create-type="variant">
+          <span class="material-symbols-outlined">call_split</span>
+          <div class="item-text">
+            <span class="item-name">New strategy variant</span>
+            <span class="item-meta">Different mix of projects · for side-by-side comparison</span>
+          </div>
+        </div>
+        <div class="dropdown-item create" data-create-type="whatif">
+          <span class="material-symbols-outlined">tune</span>
+          <div class="item-text">
+            <span class="item-name">New what-if scenario</span>
+            <span class="item-meta">Same projects · different macro assumptions (energy price, demand, etc.)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="scenario-actions">
+      <button class="btn btn-outline">
+        <span class="material-symbols-outlined">download</span>
+        Download
+      </button>
+      <a href="strategy-v2-compare.html" class="btn btn-outline" style="text-decoration: none;">
+        <span class="material-symbols-outlined">compare</span>
+        Compare scenarios
+      </a>
+    </div>
+  </div>
+
+  <!-- STATUS BANNER -->
+  <div class="status-banner success">
+    <span class="material-symbols-outlined">check_circle</span>
+    <div class="text">
+      <span class="label">On track</span>
+      <span class="desc">Carbon reductions 2.1% ahead of milestone. Energy costs within ±5% of forecast over the last 6 months. 1 intervention on watch list.</span>
+    </div>
+    <a href="#" class="right">View variance detail <span class="material-symbols-outlined" style="font-size: 14px;">arrow_forward</span></a>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-head">
+        <span class="material-symbols-outlined">payments</span>
+        <span class="kpi-label">Estimated Net Savings</span>
+        <span class="info-tip" tabindex="0">
+          <span class="material-symbols-outlined">info</span>
+          <span class="tip-content">Total energy cost savings across the strategy term, less CapEx and OpEx. <strong>Calculation:</strong> Σ (baseline cost − strategy cost) − Σ project costs, over the strategy horizon.</span>
+        </span>
+      </div>
+      <div class="kpi-value">£989,443</div>
+      <div class="kpi-delta">
+        <span class="arrow good">▼</span>
+        <span><strong>£12,400 ahead</strong> of forecast</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-head">
+        <span class="material-symbols-outlined">eco</span>
+        <span class="kpi-label">Carbon Savings</span>
+        <span class="info-tip" tabindex="0">
+          <span class="material-symbols-outlined">info</span>
+          <span class="tip-content">Cumulative carbon reductions across all projects, against your baseline. <strong>Calculation:</strong> Σ ((baseline kWh × emission factor) − (strategy kWh × emission factor)) across Scope 1, 2 and 3.</span>
+        </span>
+      </div>
+      <div class="kpi-value">2,667.775 <span class="unit">tCO₂e</span></div>
+      <div class="kpi-delta">
+        <span class="arrow neutral">▬</span>
+        <span><strong>On track</strong> · ±0.4% from forecast</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-head">
+        <span class="material-symbols-outlined">account_balance</span>
+        <span class="kpi-label">Maximum Net Cash Commitment</span>
+        <span class="info-tip" tabindex="0">
+          <span class="material-symbols-outlined">info</span>
+          <span class="tip-content">The largest amount of cash needed in any single year to deliver the strategy. <strong>Calculation:</strong> peak negative point of the running cumulative cash flow (CapEx + OpEx − savings) across the term — i.e. the deepest funding gap before payback.</span>
+        </span>
+      </div>
+      <div class="kpi-value">£720,948</div>
+      <div class="kpi-delta">
+        <span class="arrow good">▼</span>
+        <span><strong>£8,500 below</strong> projected peak</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROLS BAR -->
+  <div class="controls-bar">
+    <div class="control-group">
+      <span class="control-label">Strategy view</span>
+      <div class="toggle">
+        <button class="active">Full term (10 yrs)</button>
+        <button>Next 5 yrs</button>
+        <button>To 2050</button>
+      </div>
+      <span class="info-tip" tabindex="0">
+        <span class="material-symbols-outlined">info</span>
+        <span class="tip-content">Default shows the full strategy term. Other views zoom to a section of the strategy — they don't shorten or extend the strategy itself.</span>
+      </span>
+    </div>
+    <div class="control-group">
+      <span class="control-label">Granularity</span>
+      <div class="toggle">
+        <button>Month</button>
+        <button class="active">Quarter</button>
+        <button>Year</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN TABS -->
+  <div class="main-tabs">
+    <button class="main-tab active" data-panel="cashflow">Cash Flow &amp; Commitment</button>
+    <button class="main-tab" data-panel="energy">Energy Costs</button>
+    <button class="main-tab" data-panel="target">Target vs Strategy</button>
+  </div>
+
+  <!-- CHART PANELS -->
+
+  <!-- Cash Flow & Commitment -->
+  <div class="chart-card" data-tab-content="cashflow">
+    <div class="chart-head">
+      <div class="chart-titles">
+        <div class="chart-title">Net Cash Flow &amp; Commitment</div>
+        <div class="chart-subtitle">Forecast across the strategy term. Solid bars = actuals tracked via M&amp;T. Today: Apr 2026.</div>
+      </div>
+      <div class="control-group">
+        <span class="control-label">Cumulative line</span>
+        <div class="toggle" id="cumToggle">
+          <button class="active" data-cum="on">On</button>
+          <button data-cum="off">Off</button>
+        </div>
+      </div>
+    </div>
+    <div class="chart-area" id="chartCashFlow"></div>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-swatch" style="background: #111;"></div>CapEx</div>
+      <div class="legend-item"><div class="legend-swatch" style="background: #8C8C8C;"></div>OpEx</div>
+      <div class="legend-item"><div class="legend-swatch" style="background: #63C73B;"></div>Savings</div>
+      <div class="legend-item"><div class="legend-swatch line" style="background: #15827F;"></div>Net cash flow (cumulative, right axis)</div>
+      <div class="legend-item"><div class="legend-swatch" style="width:18px;height:14px;background:repeating-linear-gradient(45deg,#111 0 2px,transparent 2px 5px);border:1.5px solid #111;"></div>Forecast (future)</div>
+    </div>
+  </div>
+
+  <!-- Energy Costs -->
+  <div class="chart-card" data-tab-content="energy" hidden>
+    <div class="chart-head">
+      <div class="chart-titles">
+        <div class="chart-title">Energy Costs — Actual vs Forecast</div>
+        <div class="chart-subtitle">Unit rates tracked live via M&amp;T. Solid = actual, dashed = forecast. Today: Apr 2026.</div>
+      </div>
+      <div class="toggle" id="energyTypeToggle">
+        <button class="active" data-meter="power">Power</button>
+        <button data-meter="gas">Gas</button>
+      </div>
+    </div>
+    <div class="chart-area" id="chartEnergy"></div>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-swatch line" id="energyLegendActual" style="background: #C04A74;"></div>Actual</div>
+      <div class="legend-item"><div class="legend-swatch line-dashed" id="energyLegendForecast" style="background: repeating-linear-gradient(to right, #C04A74 0 4px, transparent 4px 6px);"></div>Forecast</div>
+    </div>
+    <div class="chart-summary">
+      <span class="summary-item"><span class="summary-dot good"></span>Power −2.1% vs forecast</span>
+      <span class="summary-item"><span class="summary-dot warn"></span>Gas +3.8% vs forecast</span>
+      <span class="summary-item"><span class="summary-dot good"></span>Net −£14,200 (last 6m)</span>
+    </div>
+  </div>
+
+  <!-- Target vs Strategy -->
+  <div class="chart-card" data-tab-content="target" hidden>
+    <div class="chart-head">
+      <div class="chart-titles">
+        <div class="chart-title">Target vs Strategy — Remaining Carbon Emissions</div>
+        <div class="chart-subtitle">Total emissions trajectory toward 2032 target, tracked live via M&amp;T. Y-axis decreases as the strategy delivers reductions. Today: Apr 2026.</div>
+      </div>
+      <div class="control-group">
+        <span class="control-label">View</span>
+        <div class="toggle" id="targetViewToggle">
+          <button class="active" data-target-view="combined">Combined</button>
+          <button data-target-view="scopes">By Scope (1·2·3)</button>
+        </div>
+      </div>
+      <div class="control-group" id="scopeStyleGroup" hidden>
+        <span class="control-label">Style</span>
+        <div class="toggle" id="targetScopeStyleToggle">
+          <button class="active" data-scope-style="lines">Lines</button>
+          <button data-scope-style="stacked">Stacked area</button>
+        </div>
+      </div>
+    </div>
+    <div class="chart-area" id="chartTarget"></div>
+    <div class="chart-legend" id="targetLegendCombined">
+      <div class="legend-item"><svg width="22" height="6" aria-hidden="true"><line x1="0" y1="3" x2="22" y2="3" stroke="#111" stroke-width="1.5" opacity="0.55"/></svg>Target trajectory (2032)</div>
+      <div class="legend-item"><svg width="22" height="6" aria-hidden="true"><line x1="0" y1="3" x2="22" y2="3" stroke="#111" stroke-width="2.5"/></svg>Actual emissions</div>
+      <div class="legend-item"><svg width="22" height="6" aria-hidden="true"><line x1="0" y1="3" x2="22" y2="3" stroke="#111" stroke-width="2" stroke-dasharray="5 3" opacity="0.7"/></svg>Strategy forecast</div>
+      <div class="legend-item"><div class="legend-swatch" style="background: rgba(255, 152, 0, 0.25);"></div>Shortfall vs target</div>
+    </div>
+    <div class="chart-legend" id="targetLegendScopes" hidden>
+      <div class="legend-item is-toggle" data-series="target">
+        <svg width="22" height="6" aria-hidden="true"><line x1="0" y1="3" x2="22" y2="3" stroke="#111" stroke-width="1" stroke-dasharray="2 4" opacity="0.5"/></svg>
+        Target trajectory
+      </div>
+      <div class="legend-item is-toggle" data-series="scope1">
+        <svg width="28" height="10" aria-hidden="true"><line x1="0" y1="5" x2="28" y2="5" stroke="#111" stroke-width="2.5"/></svg>
+        Scope 1 (direct)
+      </div>
+      <div class="legend-item is-toggle" data-series="scope2">
+        <svg width="28" height="10" aria-hidden="true"><line x1="0" y1="5" x2="28" y2="5" stroke="#111" stroke-width="2.5" stroke-dasharray="10 5"/><circle cx="14" cy="5" r="3.5" fill="#fff" stroke="#111" stroke-width="1.5"/></svg>
+        Scope 2 (electricity)
+      </div>
+      <div class="legend-item is-toggle" data-series="scope3">
+        <svg width="28" height="10" aria-hidden="true"><line x1="0" y1="5" x2="28" y2="5" stroke="#111" stroke-width="2.5" stroke-dasharray="2 5"/><rect x="10.75" y="1.75" width="6.5" height="6.5" fill="#fff" stroke="#111" stroke-width="1.5"/></svg>
+        Scope 3 (value chain)
+      </div>
+      <div class="legend-item" style="opacity:0.7;">
+        <svg width="22" height="6" aria-hidden="true"><line x1="0" y1="3" x2="22" y2="3" stroke="#111" stroke-width="2" opacity="0.45"/></svg>
+        Faded = forecast (future)
+      </div>
+    </div>
+    <div class="chart-legend" id="targetLegendStacked" hidden>
+      <div class="legend-item is-toggle" data-series="target">
+        <svg width="22" height="6" aria-hidden="true"><line x1="0" y1="3" x2="22" y2="3" stroke="#111" stroke-width="2" stroke-dasharray="6 4"/></svg>
+        Target trajectory
+      </div>
+      <div class="legend-item is-toggle" data-series="scope1">
+        <div class="legend-swatch" style="background: #111;"></div>Scope 1 (direct)
+      </div>
+      <div class="legend-item is-toggle" data-series="scope2">
+        <div class="legend-swatch" style="background: #666;"></div>Scope 2 (electricity)
+      </div>
+      <div class="legend-item is-toggle" data-series="scope3">
+        <div class="legend-swatch" style="background: #CCC; border: 1px solid #111;"></div>Scope 3 (value chain)
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch" style="background: repeating-linear-gradient(45deg, #111 0 2px, transparent 2px 5px); border: 1px solid #111;"></div>Hatched = forecast (future)
+      </div>
+    </div>
+    <div class="chart-summary">
+      <span class="summary-item"><span class="summary-dot good"></span>642 tCO₂e reduced YTD · 2.1% ahead of pace</span>
+      <span class="summary-item"><span class="summary-dot warn"></span>Projected 5% short of 2032 target</span>
+      <span class="summary-item"><span class="summary-dot warn"></span>1 intervention drifting</span>
+    </div>
+  </div>
+
+  <!-- MACRO ASSUMPTIONS -->
+  <div class="assumptions-section">
+    <div class="assumptions-head">
+      <h2>
+        <span class="material-symbols-outlined">tune</span>
+        Strategy assumptions
+        <span class="info-tip" tabindex="0">
+          <span class="material-symbols-outlined">info</span>
+          <span class="tip-content">Macro assumptions applied across the full strategy. Adjust to test how external factors change the financial and carbon outlook. To compare side-by-side, create a what-if scenario.</span>
+        </span>
+      </h2>
+      <button class="btn btn-outline" style="font-size: 12px; padding: 6px 12px;">
+        <span class="material-symbols-outlined" style="font-size: 16px;">edit</span>
+        Edit assumptions
+      </button>
+    </div>
+    <p class="assumptions-sub">Macro factors applied across the strategy — energy price growth, grid decarbonisation, demand growth and degradation. Mirrors the scenario modelling controls used at project level.</p>
+    <div class="assumptions-grid">
+      <div class="assumption">
+        <span class="a-label">
+          <span class="material-symbols-outlined" style="font-size: 14px;">trending_up</span>
+          Energy price growth
+        </span>
+        <span class="a-value">3.5<span class="a-unit">% / yr</span></span>
+        <span class="a-detail">Power &amp; gas, real terms</span>
+      </div>
+      <div class="assumption">
+        <span class="a-label">
+          <span class="material-symbols-outlined" style="font-size: 14px;">bolt</span>
+          Grid decarbonisation
+        </span>
+        <span class="a-value">−4.2<span class="a-unit">% / yr</span></span>
+        <span class="a-detail">UK grid carbon intensity, BEIS</span>
+      </div>
+      <div class="assumption">
+        <span class="a-label">
+          <span class="material-symbols-outlined" style="font-size: 14px;">factory</span>
+          Demand growth
+        </span>
+        <span class="a-value">+1.8<span class="a-unit">% / yr</span></span>
+        <span class="a-detail">Site-level production growth</span>
+      </div>
+      <div class="assumption">
+        <span class="a-label">
+          <span class="material-symbols-outlined" style="font-size: 14px;">trending_down</span>
+          Asset degradation
+        </span>
+        <span class="a-value">0.8<span class="a-unit">% / yr</span></span>
+        <span class="a-detail">Performance loss, post-install</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECTS SECTION -->
+  <div class="projects-section">
+    <div class="projects-head">
+      <h2>Projects in this strategy
+        <span class="info-tip" tabindex="0">
+          <span class="material-symbols-outlined">info</span>
+          <span class="tip-content"><strong>Icons:</strong> leaf = scheme-driven (e.g. ESOS) · info = standard project. <strong>Variance</strong> shows how each project's measured kWh savings compare to forecast: ▼ ahead, ▲ behind, calculated monthly via M&amp;T.</span>
+        </span>
+      </h2>
+      <div class="right">
+        <div class="date-input">
+          <span>Strategy start date</span>
+          <span class="date-val">01/01/2023 <span class="material-symbols-outlined">calendar_today</span></span>
+        </div>
+        <button class="btn btn-outline">
+          <span class="material-symbols-outlined">add</span>
+          Add project
+        </button>
+      </div>
+    </div>
+    <div class="project-list">
+      <div class="project-list-head">
+        <span>Project</span>
+        <span>Scope</span>
+        <span>Active period</span>
+        <span>Contribution to savings</span>
+        <span class="col-right">Savings</span>
+        <span class="col-right">Variance</span>
+        <span></span>
+      </div>
+
+      <div class="project-row">
+        <div class="project-name">
+          <span class="material-symbols-outlined p-icon">info</span>
+          <span class="p-title">VO Site 2</span>
+        </div>
+        <span class="scope-chip s2">Scope 2</span>
+        <span class="date-range">Jan 23 <span class="arrow">→</span> Dec 42</span>
+        <div class="proportion">
+          <div class="proportion-bar"><div class="fill high" style="width: 53%;"></div></div>
+          <span class="caption">53% of strategy savings</span>
+        </div>
+        <span class="savings">686,880<span class="unit">kWh</span></span>
+        <span class="variance good">1.2%</span>
+        <span class="kebab"><span class="material-symbols-outlined">more_vert</span></span>
+      </div>
+
+      <div class="project-row">
+        <div class="project-name">
+          <span class="material-symbols-outlined p-icon leaf">eco</span>
+          <span class="p-title">[ESOS] Staff Energy Awareness Training</span>
+        </div>
+        <span class="scope-chip s3">Scope 3</span>
+        <span class="date-range">Jun 23 <span class="arrow">→</span> May 26</span>
+        <div class="proportion">
+          <div class="proportion-bar"><div class="fill low" style="width: 2%;"></div></div>
+          <span class="caption">2% of strategy savings</span>
+        </div>
+        <span class="savings">29,988<span class="unit">kWh</span></span>
+        <span class="variance good">0.4%</span>
+        <span class="kebab"><span class="material-symbols-outlined">more_vert</span></span>
+      </div>
+
+      <div class="project-row">
+        <div class="project-name">
+          <span class="material-symbols-outlined p-icon leaf">eco</span>
+          <span class="p-title">[ESOS] Replace light fittings with LED units</span>
+        </div>
+        <span class="scope-chip s2">Scope 2</span>
+        <span class="date-range">Oct 23 <span class="arrow">→</span> Sep 33</span>
+        <div class="proportion">
+          <div class="proportion-bar"><div class="fill high" style="width: 38%;"></div></div>
+          <span class="caption">38% of strategy savings</span>
+        </div>
+        <span class="savings">499,920<span class="unit">kWh</span></span>
+        <span class="variance warn">7.2%</span>
+        <span class="kebab"><span class="material-symbols-outlined">more_vert</span></span>
+      </div>
+
+      <div class="project-row">
+        <div class="project-name">
+          <span class="material-symbols-outlined p-icon leaf">eco</span>
+          <span class="p-title">[ESOS] Building Energy Management System</span>
+        </div>
+        <span class="scope-chip s2">Scope 2</span>
+        <span class="date-range">Aug 24 <span class="arrow">→</span> Jul 34</span>
+        <div class="proportion">
+          <div class="proportion-bar"><div class="fill high" style="width: 51%;"></div></div>
+          <span class="caption">51% of strategy savings</span>
+        </div>
+        <span class="savings">668,281<span class="unit">kWh</span></span>
+        <span class="variance good">0.8%</span>
+        <span class="kebab"><span class="material-symbols-outlined">more_vert</span></span>
+      </div>
+
+      <div class="project-row">
+        <div class="project-name">
+          <span class="material-symbols-outlined p-icon">info</span>
+          <span class="p-title">Compressed Air System Optimisation</span>
+        </div>
+        <span class="scope-chip s1">Scope 1</span>
+        <span class="date-range">Mar 25 <span class="arrow">→</span> Feb 32</span>
+        <div class="proportion">
+          <div class="proportion-bar"><div class="fill med" style="width: 18%;"></div></div>
+          <span class="caption">18% of strategy savings</span>
+        </div>
+        <span class="savings">238,440<span class="unit">kWh</span></span>
+        <span class="variance good">1.9%</span>
+        <span class="kebab"><span class="material-symbols-outlined">more_vert</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISCOUNT RATE WARNING -->
+  <div class="status-banner warn">
+    <span class="material-symbols-outlined">warning</span>
+    <div class="text">
+      <span class="label">Discount rate not set</span>
+      <span class="desc">Financial figures in this analysis can incorporate your company's discount rate, which hasn't been set. To update the rate, contact your account manager.</span>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <div>Strategy V2 · Prototype v1 · April 2026</div>
+    <div class="footer-actions">
+      <button class="btn btn-outline">Back</button>
+      <button class="btn btn-filled">Save &amp; finish</button>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+/* =========================================================
+   CASH FLOW — bars with shared £/period axis (left), cumulative
+   line on its own £ cumulative axis (right). Solid past = actuals,
+   hatched future = forecast. Toggle hides cumulative line entirely.
+   ========================================================= */
+let cashFlowShowCum = true;
+
+function renderCashFlow() {
+  const months = 60;
+  const todayIdx = 39; // April 2026 (Jan 2023 + 39 months)
+  const startDate = new Date(2023, 0, 1);
+
+  // Generate forecast data per month: CapEx, OpEx, Savings
+  const data = [];
+  for (let i = 0; i < months; i++) {
+    let capex = 0;
+    if (i === 1) capex = 18000;
+    if (i === 2) capex = 22000;
+    if (i === 9) capex = 65000;
+    if (i === 10) capex = 58000;
+    if (i === 11) capex = 32000;
+    if (i === 18) capex = 28000;
+    if (i === 19) capex = 24000;
+    if (i === 30) capex = 14000;
+    if (i === 31) capex = 12000;
+
+    const opex = 4500 + Math.sin(i / 6) * 600;
+    const savingsRamp = Math.min(1, i / 28);
+    const savings = (3500 + Math.sin(i / 4) * 800) * savingsRamp + i * 60;
+
+    data.push({ capex, opex, savings });
+  }
+
+  // Cumulative net cash flow
+  const cumForecast = [];
+  let running = 0;
+  for (let i = 0; i < months; i++) {
+    running += data[i].savings - data[i].capex - data[i].opex;
+    cumForecast.push(running);
+  }
+
+  // Chart dimensions
+  const W = 1100;
+  const H = 380;
+  const padL = 70;
+  const padR = cashFlowShowCum ? 90 : 30;
+  const padT = 20;
+  const padB = 50;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+  const slot = plotW / months;
+  const barW = Math.max(6, slot * 0.55);
+
+  // LEFT axis — bars only (£ per period)
+  const maxBarUp = Math.max(...data.map(d => d.savings));
+  const maxBarDown = Math.max(...data.map(d => d.capex + d.opex));
+  const yMaxL = maxBarUp * 1.15;
+  const yMinL = -maxBarDown * 1.15;
+  const yRangeL = yMaxL - yMinL;
+  const zeroY = padT + (yMaxL / yRangeL) * plotH;
+  const yToPxL = v => padT + ((yMaxL - v) / yRangeL) * plotH;
+
+  // RIGHT axis — cumulative only (£ cumulative)
+  const maxCum = Math.max(...cumForecast, 0);
+  const minCum = Math.min(...cumForecast, 0);
+  const yMaxR = maxCum * 1.1;
+  const yMinR = minCum * 1.15;
+  const yRangeR = yMaxR - yMinR;
+  // Align right axis zero with left axis zero so the line crosses bars at zero correctly
+  const yToPxR = v => padT + ((yMaxR - v) / yRangeR) * plotH;
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Poppins, sans-serif">`;
+
+  // Hatched pattern for future bars (forecast)
+  svg += `<defs>
+    <pattern id="capexHatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+      <rect width="6" height="6" fill="#111" opacity="0.12" />
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#111" stroke-width="2" />
+    </pattern>
+    <pattern id="opexHatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+      <rect width="6" height="6" fill="#8C8C8C" opacity="0.18" />
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8C8C8C" stroke-width="2" />
+    </pattern>
+    <pattern id="savHatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+      <rect width="6" height="6" fill="#63C73B" opacity="0.18" />
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#63C73B" stroke-width="2" />
+    </pattern>
+  </defs>`;
+
+  // Left axis gridlines (bars scale)
+  const leftSteps = [yMaxL * 0.75, yMaxL * 0.5, yMaxL * 0.25, 0, yMinL * 0.5];
+  for (const v of leftSteps) {
+    const y = yToPxL(v);
+    svg += `<line x1="${padL}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="#111" stroke-opacity="0.06" stroke-width="0.5" />`;
+    const lbl = v >= 0 ? `£${(v/1000).toFixed(0)}k` : `−£${Math.abs(v/1000).toFixed(0)}k`;
+    svg += `<text x="${padL - 8}" y="${y + 3}" font-size="10" font-weight="500" fill="#111" text-anchor="end">${lbl}</text>`;
+  }
+  // Zero baseline
+  svg += `<line x1="${padL}" x2="${W - padR}" y1="${zeroY}" y2="${zeroY}" stroke="#111" stroke-width="1" />`;
+
+  // Right axis gridlines (cumulative scale) — only when shown
+  if (cashFlowShowCum) {
+    const rightSteps = [yMaxR, yMaxR * 0.5, 0, yMinR * 0.5, yMinR];
+    for (const v of rightSteps) {
+      const y = yToPxR(v);
+      const lbl = v >= 0 ? `£${(v/1000).toFixed(0)}k` : `−£${Math.abs(v/1000).toFixed(0)}k`;
+      svg += `<text x="${W - padR + 8}" y="${y + 3}" font-size="10" font-weight="500" fill="#15827F" text-anchor="start">${lbl}</text>`;
+    }
+    svg += `<text x="${W - padR + 8}" y="${padT - 6}" font-size="9" font-weight="600" fill="#15827F" text-anchor="start">CUMULATIVE</text>`;
+  }
+  svg += `<text x="${padL - 8}" y="${padT - 6}" font-size="9" font-weight="600" fill="#111" text-anchor="end">PER PERIOD</text>`;
+
+  // Bars — past solid, future hatched
+  for (let i = 0; i < months; i++) {
+    const cx = padL + slot * i + slot / 2;
+    const x = cx - barW / 2;
+    const isPast = i <= todayIdx;
+
+    const sH = ((data[i].savings) / yRangeL) * plotH;
+    if (sH > 0.5) {
+      const fill = isPast ? '#63C73B' : 'url(#savHatch)';
+      svg += `<rect x="${x}" y="${zeroY - sH}" width="${barW}" height="${sH}" fill="${fill}" rx="2" />`;
+    }
+    const oH = (data[i].opex / yRangeL) * plotH;
+    const ofill = isPast ? '#8C8C8C' : 'url(#opexHatch)';
+    svg += `<rect x="${x}" y="${zeroY}" width="${barW}" height="${oH}" fill="${ofill}" />`;
+    const cH = (data[i].capex / yRangeL) * plotH;
+    if (cH > 0.5) {
+      const cfill = isPast ? '#111' : 'url(#capexHatch)';
+      svg += `<rect x="${x}" y="${zeroY + oH}" width="${barW}" height="${cH}" fill="${cfill}" />`;
+    }
+  }
+
+  // Cumulative line (right axis) — split solid past / dashed future
+  if (cashFlowShowCum) {
+    let pastPath = '', futurePath = '';
+    for (let i = 0; i <= todayIdx; i++) {
+      const cx = padL + slot * i + slot / 2;
+      const cy = yToPxR(cumForecast[i]);
+      pastPath += (i === 0 ? 'M' : 'L') + cx + ',' + cy + ' ';
+    }
+    for (let i = todayIdx; i < months; i++) {
+      const cx = padL + slot * i + slot / 2;
+      const cy = yToPxR(cumForecast[i]);
+      futurePath += (i === todayIdx ? 'M' : 'L') + cx + ',' + cy + ' ';
+    }
+    svg += `<path d="${pastPath}" fill="none" stroke="#15827F" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />`;
+    svg += `<path d="${futurePath}" fill="none" stroke="#15827F" stroke-width="2.5" stroke-dasharray="5 3" stroke-linejoin="round" stroke-linecap="round" opacity="0.75" />`;
+    // End-point label
+    const endX = padL + slot * (months - 1) + slot / 2;
+    const endY = yToPxR(cumForecast[months - 1]);
+    svg += `<circle cx="${endX}" cy="${endY}" r="3.5" fill="#15827F" />`;
+  }
+
+  // Today marker
+  const todayX = padL + slot * todayIdx + slot / 2;
+  svg += `<line x1="${todayX}" x2="${todayX}" y1="${padT}" y2="${padT + plotH}" stroke="#111" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" />`;
+  svg += `<rect x="${todayX - 28}" y="${padT - 2}" width="56" height="18" fill="#111" rx="3" />`;
+  svg += `<text x="${todayX}" y="${padT + 11}" font-size="10" font-weight="600" fill="#fff" text-anchor="middle">TODAY</text>`;
+
+  // X-axis labels
+  for (let i = 0; i < months; i += 6) {
+    const cx = padL + slot * i + slot / 2;
+    const d = new Date(startDate.getFullYear(), startDate.getMonth() + i, 1);
+    const mlbl = d.toLocaleDateString('en-GB', { month: 'short' });
+    const ylbl = d.getFullYear().toString().slice(-2);
+    svg += `<text x="${cx}" y="${H - padB + 16}" font-size="10" font-weight="500" fill="#111" text-anchor="middle">${mlbl} ${ylbl}</text>`;
+  }
+  svg += `<text x="${padL + plotW / 2}" y="${H - 8}" font-size="11" font-weight="500" fill="#111" text-anchor="middle">Month</text>`;
+
+  svg += `</svg>`;
+  document.getElementById('chartCashFlow').innerHTML = svg;
+}
+
+renderCashFlow();
+
+/* =========================================================
+   SHARED — line chart helper used by Energy Costs tab
+   ========================================================= */
+function renderLineChart({ title, actual, forecast, color, todayIdx, months, startDate, yLabel, yMaxOverride }) {
+  const W = 1100, H = 300;
+  const padL = 60, padR = 30, padT = 36, padB = 44;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+  const slot = plotW / months;
+
+  const dataMax = Math.max(...forecast, ...actual);
+  const yMax = yMaxOverride || dataMax * 1.15;
+  const yMin = 0;
+  const yRange = yMax - yMin;
+  const yToPx = v => padT + ((yMax - v) / yRange) * plotH;
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Poppins, sans-serif">`;
+
+  // Chart title (top-left)
+  svg += `<text x="${padL}" y="20" font-size="13" font-weight="600" fill="#111">${title}</text>`;
+
+  // Gridlines
+  const steps = 4;
+  for (let i = 0; i <= steps; i++) {
+    const v = (yMax * i) / steps;
+    const y = yToPx(v);
+    svg += `<line x1="${padL}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="#111" stroke-opacity="0.06" stroke-width="0.5" />`;
+    svg += `<text x="${padL - 8}" y="${y + 3}" font-size="10" font-weight="500" fill="#111" text-anchor="end">${v.toFixed(v < 10 ? 1 : 0)}</text>`;
+  }
+  svg += `<line x1="${padL}" x2="${W - padR}" y1="${yToPx(0)}" y2="${yToPx(0)}" stroke="#111" stroke-width="1" />`;
+
+  // Forecast (dashed, full range, muted)
+  let fPath = '';
+  for (let i = 0; i < months; i++) {
+    const cx = padL + slot * i + slot / 2;
+    fPath += (i === 0 ? 'M' : 'L') + cx + ',' + yToPx(forecast[i]) + ' ';
+  }
+  svg += `<path d="${fPath}" fill="none" stroke="${color}" stroke-width="2" stroke-dasharray="4 3" stroke-linejoin="round" opacity="0.55" />`;
+
+  // Actual (solid, up to today)
+  let aPath = '';
+  for (let i = 0; i <= todayIdx; i++) {
+    const cx = padL + slot * i + slot / 2;
+    aPath += (i === 0 ? 'M' : 'L') + cx + ',' + yToPx(actual[i]) + ' ';
+  }
+  svg += `<path d="${aPath}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round" />`;
+
+  // Today vertical marker
+  const todayX = padL + slot * todayIdx + slot / 2;
+  svg += `<line x1="${todayX}" x2="${todayX}" y1="${padT}" y2="${padT + plotH}" stroke="#111" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" />`;
+
+  // X labels every 6 months
+  for (let i = 0; i < months; i += 6) {
+    const cx = padL + slot * i + slot / 2;
+    const d = new Date(startDate.getFullYear(), startDate.getMonth() + i, 1);
+    const mlbl = d.toLocaleDateString('en-GB', { month: 'short' });
+    const ylbl = d.getFullYear().toString().slice(-2);
+    svg += `<text x="${cx}" y="${H - padB + 16}" font-size="10" font-weight="500" fill="#111" text-anchor="middle">${mlbl} ${ylbl}</text>`;
+  }
+
+  // Y label
+  svg += `<text x="14" y="${padT + plotH / 2}" font-size="11" font-weight="500" fill="#111" text-anchor="middle" transform="rotate(-90 14 ${padT + plotH / 2})">${yLabel}</text>`;
+
+  svg += `</svg>`;
+  return svg;
+}
+
+/* =========================================================
+   ENERGY COSTS — Power OR Gas (meter toggle), actual vs forecast
+   ========================================================= */
+const energyData = (function() {
+  const months = 60;
+  const todayIdx = 39;
+
+  const powerForecast = [], powerActual = [];
+  for (let i = 0; i < months; i++) {
+    let p;
+    if (i < 8) p = 24;
+    else if (i < 12) p = 14;
+    else if (i < 22) p = 9 + Math.sin(i / 4) * 1;
+    else if (i < 28) p = 27;
+    else if (i < 48) p = 27 - (i - 28) * 0.45;
+    else p = 17.5 + Math.sin(i / 6) * 0.4;
+    powerForecast.push(p);
+    if (i <= todayIdx) {
+      powerActual.push(p * (1 + Math.sin(i / 5) * 0.025 - 0.02));
+    }
+  }
+
+  const gasForecast = [], gasActual = [];
+  for (let i = 0; i < months; i++) {
+    let g;
+    if (i < 18) g = 3 + Math.sin(i / 6) * 0.25;
+    else if (i < 30) g = 3.9 + Math.sin(i / 4) * 0.35;
+    else g = 4.2 + Math.sin(i / 5) * 0.3;
+    gasForecast.push(g);
+    if (i <= todayIdx) {
+      gasActual.push(g * (1 + Math.sin(i / 4) * 0.025 + 0.04));
+    }
+  }
+
+  return {
+    power: { forecast: powerForecast, actual: powerActual, color: '#C04A74', title: 'Power Cost p/kWh', yMax: null },
+    gas:   { forecast: gasForecast,   actual: gasActual,   color: '#3F2A95', title: 'Gas Cost p/kWh',   yMax: 6 }
+  };
+})();
+
+function renderEnergy(meter) {
+  const d = energyData[meter];
+  document.getElementById('chartEnergy').innerHTML = renderLineChart({
+    title: d.title,
+    actual: d.actual,
+    forecast: d.forecast,
+    color: d.color,
+    todayIdx: 39,
+    months: 60,
+    startDate: new Date(2023, 0, 1),
+    yLabel: 'p/kWh',
+    yMaxOverride: d.yMax
+  });
+  // sync legend swatches to match line colour
+  const legendActual = document.getElementById('energyLegendActual');
+  const legendForecast = document.getElementById('energyLegendForecast');
+  if (legendActual) legendActual.style.background = d.color;
+  if (legendForecast) legendForecast.style.background = `repeating-linear-gradient(to right, ${d.color} 0 4px, transparent 4px 6px)`;
+}
+
+renderEnergy('power');
+
+document.querySelectorAll('#energyTypeToggle button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#energyTypeToggle button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderEnergy(btn.dataset.meter);
+  });
+});
+
+/* =========================================================
+   TARGET VS STRATEGY — REMAINING carbon emissions, scale goes DOWN
+   over time (Otto's feedback). Two views: Combined (all-scope) and
+   By Scope (Scope 1, 2, 3 each tracked separately).
+   Baseline emissions = ~1200 tCO₂e/yr; 2032 target = 400 tCO₂e/yr (66% cut)
+   ========================================================= */
+let targetView = 'combined';
+let targetScopeStyle = 'lines';
+let targetSeriesVisibility = { target: true, scope1: true, scope2: true, scope3: true };
+
+function renderTarget() {
+  const months = 60;
+  const todayIdx = 39;
+  const startDate = new Date(2023, 0, 1);
+
+  const baselineAnnual = 1200;     // tCO₂e/yr at start (no action)
+  const targetAnnual = 400;        // tCO₂e/yr at end (2032 target)
+
+  // Linear target trajectory: 1200 down to 400 over 60 months
+  const targetVal = [];
+  for (let i = 0; i < months; i++) {
+    targetVal.push(baselineAnnual - ((baselineAnnual - targetAnnual) * i / (months - 1)));
+  }
+
+  // Combined strategy forecast — slightly higher than target (small shortfall by end)
+  const strategy = [];
+  for (let i = 0; i < months; i++) {
+    let s;
+    if (i < 6) s = baselineAnnual - i * 8;
+    else if (i < 24) s = baselineAnnual - 48 - (i - 6) * 13;
+    else s = baselineAnnual - 282 - (i - 24) * (478 / 36);
+    strategy.push(s);
+  }
+
+  // Scope-level forecasts (sum approximately to combined)
+  // Scope 1 (gas, direct) — moderate reductions, ends ~120
+  // Scope 2 (electricity) — biggest cuts via LED/BEMS/grid decarb, ends ~180
+  // Scope 3 (value chain) — smallest reductions, ends ~100
+  const scope1Base = 350, scope2Base = 600, scope3Base = 250;
+  const scope1End = 120, scope2End = 180, scope3End = 100;
+  const scope1 = [], scope2 = [], scope3 = [];
+  for (let i = 0; i < months; i++) {
+    const t = i / (months - 1);
+    // Scope 2 reduces fastest early (LED retrofits, BEMS), Scope 1 steady, Scope 3 slow
+    scope2.push(scope2Base - (scope2Base - scope2End) * Math.min(1, t * 1.2 - 0.05 * Math.sin(t * 6)));
+    scope1.push(scope1Base - (scope1Base - scope1End) * (t * 0.95));
+    scope3.push(scope3Base - (scope3Base - scope3End) * (t * 0.85));
+  }
+
+  // Scope-level targets (proportional reduction)
+  const scope1Target = [], scope2Target = [], scope3Target = [];
+  for (let i = 0; i < months; i++) {
+    const t = i / (months - 1);
+    scope1Target.push(scope1Base - (scope1Base - scope1End) * t);
+    scope2Target.push(scope2Base - (scope2Base - scope2End) * t);
+    scope3Target.push(scope3Base - (scope3Base - scope3End) * t);
+  }
+
+  // Actuals — slightly ahead (lower) than forecast for combined
+  const actual = [];
+  for (let i = 0; i <= todayIdx; i++) {
+    const drift = 1 - Math.sin(i / 4) * 0.015 - 0.025;
+    actual.push(strategy[i] * drift);
+  }
+  const scope1Actual = [], scope2Actual = [], scope3Actual = [];
+  for (let i = 0; i <= todayIdx; i++) {
+    scope1Actual.push(scope1[i] * (1 - Math.sin(i / 5) * 0.02 - 0.02));
+    scope2Actual.push(scope2[i] * (1 - Math.sin(i / 4) * 0.015 - 0.03));
+    scope3Actual.push(scope3[i] * (1 - Math.sin(i / 6) * 0.01 - 0.015));
+  }
+
+  const W = 1100, H = 380;
+  const padL = 70, padR = 90, padT = 30, padB = 50;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+  const slot = plotW / months;
+
+  const yMax = baselineAnnual * 1.05;
+  const yMin = 0;
+  const yRange = yMax - yMin;
+  const yToPx = v => padT + ((yMax - v) / yRange) * plotH;
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Poppins, sans-serif">`;
+
+  // Gridlines
+  for (let i = 0; i <= 5; i++) {
+    const v = (yMax * i) / 5;
+    const y = yToPx(v);
+    svg += `<line x1="${padL}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="#111" stroke-opacity="0.06" stroke-width="0.5" />`;
+    svg += `<text x="${padL - 8}" y="${y + 3}" font-size="10" font-weight="500" fill="#111" text-anchor="end">${v.toFixed(0)}</text>`;
+  }
+  svg += `<line x1="${padL}" x2="${W - padR}" y1="${yToPx(0)}" y2="${yToPx(0)}" stroke="#111" stroke-width="1" />`;
+
+  const pathFrom = (series) => {
+    let p = '';
+    for (let i = 0; i < series.length; i++) {
+      const cx = padL + slot * i + slot / 2;
+      const cy = yToPx(series[i]);
+      p += (i === 0 ? 'M' : 'L') + cx + ',' + cy + ' ';
+    }
+    return p;
+  };
+
+  if (targetView === 'combined') {
+    // Shortfall shading (where strategy emissions > target — i.e. above the target line)
+    let gapStart = null;
+    for (let i = 0; i < months; i++) {
+      if (strategy[i] > targetVal[i] + 5) { gapStart = i; break; }
+    }
+    if (gapStart !== null) {
+      let gap = 'M';
+      for (let i = gapStart; i < months; i++) {
+        const cx = padL + slot * i + slot / 2;
+        gap += (i === gapStart ? '' : 'L') + cx + ',' + yToPx(strategy[i]) + ' ';
+      }
+      for (let i = months - 1; i >= gapStart; i--) {
+        const cx = padL + slot * i + slot / 2;
+        gap += 'L' + cx + ',' + yToPx(targetVal[i]) + ' ';
+      }
+      gap += 'Z';
+      svg += `<path d="${gap}" fill="#FF9800" opacity="0.18" />`;
+    }
+
+    // Target trajectory (lightweight black reference — sits behind the data)
+    svg += `<path d="${pathFrom(targetVal)}" fill="none" stroke="#111" stroke-width="1.5" stroke-linejoin="round" opacity="0.55" />`;
+
+    // Strategy forecast (dashed black, future portion)
+    svg += `<path d="${pathFrom(strategy)}" fill="none" stroke="#111" stroke-width="2" stroke-dasharray="5 3" stroke-linejoin="round" opacity="0.7" />`;
+
+    // Actual (solid black, up to today — the prominent data line)
+    svg += `<path d="${pathFrom(actual)}" fill="none" stroke="#111" stroke-width="2.5" stroke-linejoin="round" />`;
+
+    // Actual end-dot
+    const lastAX = padL + slot * todayIdx + slot / 2;
+    const lastAY = yToPx(actual[todayIdx]);
+    svg += `<circle cx="${lastAX}" cy="${lastAY}" r="4" fill="#111" />`;
+
+    // End-of-period labels — with anti-collision (min 14px apart)
+    const combinedLabels = [
+      { y: yToPx(targetVal[months - 1]), text: `${targetVal[months - 1].toFixed(0)} target`, opacity: 0.6 },
+      { y: yToPx(strategy[months - 1]), text: `${strategy[months - 1].toFixed(0)} strategy`, opacity: 1 }
+    ];
+    combinedLabels.sort((a, b) => a.y - b.y);
+    if (combinedLabels[1].y - combinedLabels[0].y < 14) {
+      combinedLabels[1].y = combinedLabels[0].y + 14;
+    }
+    combinedLabels.forEach(l => {
+      svg += `<text x="${W - padR + 6}" y="${l.y + 3}" font-size="11" font-weight="600" fill="#111" opacity="${l.opacity}">${l.text}</text>`;
+    });
+  } else if (targetScopeStyle === 'lines') {
+    // SCOPE VIEW — LINES — three black lines, stronger patterns + shape markers
+    const allScopes = [
+      { key: 'scope1', name: 'Scope 1', dash: '',       marker: null,     forecast: scope1, actual: scope1Actual, endVal: scope1[months - 1] },
+      { key: 'scope2', name: 'Scope 2', dash: '10 5',   marker: 'circle', forecast: scope2, actual: scope2Actual, endVal: scope2[months - 1] },
+      { key: 'scope3', name: 'Scope 3', dash: '2 5',    marker: 'square', forecast: scope3, actual: scope3Actual, endVal: scope3[months - 1] }
+    ];
+    const scopes = allScopes.filter(s => targetSeriesVisibility[s.key]);
+
+    // Combined target trajectory — keep visible as a thin black reference
+    if (targetSeriesVisibility.target) {
+      svg += `<path d="${pathFrom(targetVal)}" fill="none" stroke="#111" stroke-width="1" stroke-dasharray="2 4" stroke-linejoin="round" opacity="0.35" />`;
+    }
+
+    // Marker drawing helper
+    const drawMarker = (cx, cy, shape, faded) => {
+      const op = faded ? 0.45 : 1;
+      if (shape === 'circle') {
+        return `<circle cx="${cx}" cy="${cy}" r="3.5" fill="#fff" stroke="#111" stroke-width="1.5" opacity="${op}" />`;
+      } else if (shape === 'square') {
+        return `<rect x="${cx - 3.25}" y="${cy - 3.25}" width="6.5" height="6.5" fill="#fff" stroke="#111" stroke-width="1.5" opacity="${op}" />`;
+      }
+      return '';
+    };
+
+    scopes.forEach(sc => {
+      const dashAttr = sc.dash ? `stroke-dasharray="${sc.dash}"` : '';
+      // Forecast (future) — same pattern, faded
+      svg += `<path d="${pathFrom(sc.forecast)}" fill="none" stroke="#111" stroke-width="2" ${dashAttr} stroke-linejoin="round" opacity="0.45" />`;
+      // Actual (past) — same pattern, full opacity
+      svg += `<path d="${pathFrom(sc.actual)}" fill="none" stroke="#111" stroke-width="2.5" ${dashAttr} stroke-linejoin="round" />`;
+
+      // Shape markers along the line — every 8 months for legibility
+      if (sc.marker) {
+        for (let i = 4; i < months; i += 8) {
+          const cx = padL + slot * i + slot / 2;
+          const isPast = i <= todayIdx;
+          const series = isPast ? sc.actual : sc.forecast;
+          const val = series[Math.min(i, series.length - 1)];
+          const cy = yToPx(val);
+          svg += drawMarker(cx, cy, sc.marker, !isPast);
+        }
+      }
+
+      // Today end-dot (filled circle marking "where we are now")
+      const lastX = padL + slot * todayIdx + slot / 2;
+      const lastY = yToPx(sc.actual[todayIdx]);
+      svg += `<circle cx="${lastX}" cy="${lastY}" r="3.5" fill="#111" />`;
+    });
+
+    // End-of-period labels — placed with anti-collision (min 14px apart vertically)
+    const labels = scopes.map(sc => ({ name: sc.name, val: sc.endVal, y: yToPx(sc.endVal) }));
+    labels.sort((a, b) => a.y - b.y);
+    const minGap = 14;
+    for (let i = 1; i < labels.length; i++) {
+      if (labels[i].y - labels[i - 1].y < minGap) {
+        labels[i].y = labels[i - 1].y + minGap;
+      }
+    }
+    labels.forEach(l => {
+      svg += `<text x="${W - padR + 6}" y="${l.y + 3}" font-size="11" font-weight="600" fill="#111">${l.val.toFixed(0)} ${l.name}</text>`;
+    });
+  } else {
+    // SCOPE VIEW — STACKED AREA — greyscale bands stacked, total = sum of visible
+    const scopeDefs = [
+      { key: 'scope1', name: 'Scope 1', forecast: scope1, actual: scope1Actual, fill: '#111111', hatch: 's1Hatch', labelColor: '#fff' },
+      { key: 'scope2', name: 'Scope 2', forecast: scope2, actual: scope2Actual, fill: '#666666', hatch: 's2Hatch', labelColor: '#fff' },
+      { key: 'scope3', name: 'Scope 3', forecast: scope3, actual: scope3Actual, fill: '#CCCCCC', hatch: 's3Hatch', labelColor: '#111' }
+    ];
+    const visible = scopeDefs.filter(s => targetSeriesVisibility[s.key]);
+
+    // Define hatched patterns for forecast portions of each band
+    svg += `<defs>
+      <pattern id="s1Hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+        <rect width="6" height="6" fill="#111" opacity="0.18" />
+        <line x1="0" y1="0" x2="0" y2="6" stroke="#111" stroke-width="2" />
+      </pattern>
+      <pattern id="s2Hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+        <rect width="6" height="6" fill="#666" opacity="0.18" />
+        <line x1="0" y1="0" x2="0" y2="6" stroke="#666" stroke-width="2" />
+      </pattern>
+      <pattern id="s3Hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+        <rect width="6" height="6" fill="#CCC" opacity="0.4" />
+        <line x1="0" y1="0" x2="0" y2="6" stroke="#999" stroke-width="2" />
+      </pattern>
+    </defs>`;
+
+    // Helper: build closed area path between lower and upper arrays
+    const areaPath = (lower, upper, fromIdx, toIdx) => {
+      let p = '';
+      for (let i = fromIdx; i <= toIdx; i++) {
+        const cx = padL + slot * i + slot / 2;
+        p += (i === fromIdx ? 'M' : 'L') + cx + ',' + yToPx(upper[i]) + ' ';
+      }
+      for (let i = toIdx; i >= fromIdx; i--) {
+        const cx = padL + slot * i + slot / 2;
+        p += 'L' + cx + ',' + yToPx(lower[i]) + ' ';
+      }
+      p += 'Z';
+      return p;
+    };
+
+    if (visible.length > 0) {
+      // Build cumulative upper edges, in order of visible scopes
+      let runningForecast = new Array(months).fill(0);
+      let runningActual = new Array(months).fill(0);
+      const bands = [];
+      visible.forEach(sc => {
+        const lowerForecast = runningForecast.slice();
+        const lowerActual = runningActual.slice();
+        const upperForecast = runningForecast.map((v, i) => v + sc.forecast[i]);
+        const upperActual = runningActual.map((v, i) => v + sc.actual[i]);
+        bands.push({ ...sc, lowerForecast, upperForecast, lowerActual, upperActual });
+        runningForecast = upperForecast;
+        runningActual = upperActual;
+      });
+
+      // PAST (actual) — solid greyscale fills, drawn in order (bottom first; later ones paint on top, but bands don't overlap so order is purely cosmetic)
+      bands.forEach(b => {
+        svg += `<path d="${areaPath(b.lowerActual, b.upperActual, 0, todayIdx)}" fill="${b.fill}" stroke="none" />`;
+      });
+      // FUTURE (forecast) — hatched fills
+      bands.forEach(b => {
+        svg += `<path d="${areaPath(b.lowerForecast, b.upperForecast, todayIdx, months - 1)}" fill="url(#${b.hatch})" stroke="none" />`;
+      });
+
+      // Boundary lines between bands for crispness (only between visible bands)
+      const boundaryStroke = (vals, fromIdx, toIdx, isPast) => {
+        let p = '';
+        for (let i = fromIdx; i <= toIdx; i++) {
+          const cx = padL + slot * i + slot / 2;
+          p += (i === fromIdx ? 'M' : 'L') + cx + ',' + yToPx(vals[i]) + ' ';
+        }
+        const opacity = isPast ? 0.35 : 0.25;
+        svg += `<path d="${p}" fill="none" stroke="#111" stroke-width="0.75" opacity="${opacity}" />`;
+      };
+      // Inner band edges (between bands) — skip the topmost as that's the stack top
+      for (let i = 0; i < bands.length - 1; i++) {
+        boundaryStroke(bands[i].upperActual, 0, todayIdx, true);
+        boundaryStroke(bands[i].upperForecast, todayIdx, months - 1, false);
+      }
+
+      // Inline scope labels at midpoint of each band (around month 14, before TODAY)
+      const labelIdx = 14;
+      const labelX = padL + slot * labelIdx + slot / 2;
+      bands.forEach(b => {
+        const mid = (b.lowerActual[labelIdx] + b.upperActual[labelIdx]) / 2;
+        const bandHeightPx = yToPx(b.lowerActual[labelIdx]) - yToPx(b.upperActual[labelIdx]);
+        // Only render label if band has space (≥ 14px) so labels don't squish
+        if (bandHeightPx >= 14) {
+          svg += `<text x="${labelX}" y="${yToPx(mid) + 3}" font-size="10" font-weight="600" fill="${b.labelColor}" text-anchor="middle">${b.name}</text>`;
+        }
+      });
+
+      // End-of-period total label (top of stack)
+      const topBand = bands[bands.length - 1];
+      const totalEnd = topBand.upperForecast[months - 1];
+      const totalEndY = yToPx(totalEnd);
+      const totalLbl = visible.length === scopeDefs.length ? 'Total' : visible.map(s => s.name.replace('Scope ', 'S')).join('+');
+      svg += `<text x="${W - padR + 6}" y="${totalEndY + 3}" font-size="11" font-weight="600" fill="#111">${totalEnd.toFixed(0)} ${totalLbl}</text>`;
+    }
+
+    // Target trajectory — black dashed line over the top (if visible)
+    if (targetSeriesVisibility.target) {
+      svg += `<path d="${pathFrom(targetVal)}" fill="none" stroke="#111" stroke-width="2" stroke-dasharray="6 4" stroke-linejoin="round" />`;
+    }
+  }
+
+  // Today marker
+  const todayX = padL + slot * todayIdx + slot / 2;
+  svg += `<line x1="${todayX}" x2="${todayX}" y1="${padT}" y2="${padT + plotH}" stroke="#111" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" />`;
+  svg += `<rect x="${todayX - 28}" y="${padT - 2}" width="56" height="18" fill="#111" rx="3" />`;
+  svg += `<text x="${todayX}" y="${padT + 11}" font-size="10" font-weight="600" fill="#fff" text-anchor="middle">TODAY</text>`;
+
+  // X labels every 6 months
+  for (let i = 0; i < months; i += 6) {
+    const cx = padL + slot * i + slot / 2;
+    const d = new Date(startDate.getFullYear(), startDate.getMonth() + i, 1);
+    const mlbl = d.toLocaleDateString('en-GB', { month: 'short' });
+    const ylbl = d.getFullYear().toString().slice(-2);
+    svg += `<text x="${cx}" y="${H - padB + 16}" font-size="10" font-weight="500" fill="#111" text-anchor="middle">${mlbl} ${ylbl}</text>`;
+  }
+
+  svg += `<text x="${padL + plotW / 2}" y="${H - 8}" font-size="11" font-weight="500" fill="#111" text-anchor="middle">Month</text>`;
+  svg += `<text x="14" y="${padT + plotH / 2}" font-size="11" font-weight="500" fill="#111" text-anchor="middle" transform="rotate(-90 14 ${padT + plotH / 2})">tCO₂e (annual rate)</text>`;
+
+  svg += `</svg>`;
+  document.getElementById('chartTarget').innerHTML = svg;
+}
+
+renderTarget();
+
+/* Simple toggle interactivity (visual only — except for the special handlers below) */
+document.querySelectorAll('.toggle').forEach(t => {
+  t.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      t.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+});
+
+/* Cumulative line toggle — re-render cash flow chart */
+document.querySelectorAll('#cumToggle button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    cashFlowShowCum = btn.dataset.cum === 'on';
+    renderCashFlow();
+  });
+});
+
+/* Target view toggle — switch between combined and 3-scope */
+function syncTargetLegends() {
+  const showCombined = (targetView === 'combined');
+  const showScopes   = (targetView === 'scopes' && targetScopeStyle === 'lines');
+  const showStacked  = (targetView === 'scopes' && targetScopeStyle === 'stacked');
+  document.getElementById('targetLegendCombined').hidden = !showCombined;
+  document.getElementById('targetLegendScopes').hidden   = !showScopes;
+  document.getElementById('targetLegendStacked').hidden  = !showStacked;
+  document.getElementById('scopeStyleGroup').hidden      = (targetView !== 'scopes');
+}
+
+document.querySelectorAll('#targetViewToggle button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#targetViewToggle button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    targetView = btn.dataset.targetView;
+    syncTargetLegends();
+    renderTarget();
+  });
+});
+
+/* Scope style toggle — switch between lines+markers and stacked area */
+document.querySelectorAll('#targetScopeStyleToggle button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#targetScopeStyleToggle button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    targetScopeStyle = btn.dataset.scopeStyle;
+    syncTargetLegends();
+    renderTarget();
+  });
+});
+
+/* Clickable legend items — toggle scope/target visibility */
+function syncLegendVisibilityClasses() {
+  document.querySelectorAll('.legend-item.is-toggle').forEach(item => {
+    const series = item.dataset.series;
+    item.classList.toggle('is-off', !targetSeriesVisibility[series]);
+  });
+}
+document.querySelectorAll('.legend-item.is-toggle').forEach(item => {
+  item.addEventListener('click', () => {
+    const series = item.dataset.series;
+    targetSeriesVisibility[series] = !targetSeriesVisibility[series];
+    syncLegendVisibilityClasses();
+    renderTarget();
+  });
+});
+
+/* Main tab switching — toggles active tab AND panel visibility */
+document.querySelectorAll('.main-tabs .main-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const panel = btn.dataset.panel;
+    document.querySelectorAll('.main-tabs .main-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('[data-tab-content]').forEach(c => {
+      c.hidden = c.dataset.tabContent !== panel;
+    });
+  });
+});
+
+/* Scenario switcher dropdown */
+const scenarioTrigger = document.getElementById('scenarioTrigger');
+const scenarioDropdown = document.getElementById('scenarioDropdown');
+const scenarioTriggerName = document.getElementById('scenarioTriggerName');
+const scenarioTriggerMeta = document.getElementById('scenarioTriggerMeta');
+const scenarioTriggerIcon = document.getElementById('scenarioTriggerIcon');
+
+scenarioTrigger.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const open = scenarioDropdown.hidden;
+  scenarioDropdown.hidden = !open;
+  scenarioTrigger.setAttribute('aria-expanded', String(open));
+});
+
+document.addEventListener('click', (e) => {
+  if (!scenarioDropdown.hidden && !scenarioDropdown.contains(e.target) && e.target !== scenarioTrigger) {
+    scenarioDropdown.hidden = true;
+    scenarioTrigger.setAttribute('aria-expanded', 'false');
+  }
+});
+
+scenarioDropdown.querySelectorAll('.dropdown-item:not(.create)').forEach(item => {
+  item.addEventListener('click', () => {
+    const name = item.querySelector('.item-name').textContent;
+    const icon = item.dataset.icon;
+    const meta = item.dataset.meta;
+
+    scenarioTriggerName.textContent = name;
+    scenarioTriggerMeta.textContent = meta;
+    scenarioTriggerIcon.textContent = icon;
+
+    scenarioDropdown.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+
+    scenarioDropdown.hidden = true;
+    scenarioTrigger.setAttribute('aria-expanded', 'false');
+  });
+});
+</script>
+<!-- Back to map button -->
+<style>
+.back-to-map-wrapper {
+  display: flex; justify-content: center;
+  padding: 32px 24px 24px 24px;
+  margin-top: 16px;
+}
+.back-to-map {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 18px; background: #FFFFFF; color: #111111;
+  border: 1px solid #111111; border-radius: 4px;
+  font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;
+  text-decoration: none; cursor: pointer;
+  transition: background 0.15s;
+}
+.back-to-map:hover { background: #F0F0F0; }
+</style>
+<div class="back-to-map-wrapper">
+  <a href="../sustainability-platform-map.html" class="back-to-map" onclick="if(window.opener){window.close();return false;}">← Back to map</a>
+</div>
+
+</body>
+</html>

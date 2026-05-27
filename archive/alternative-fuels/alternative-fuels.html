@@ -1,0 +1,959 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrueDI — Alternative Fuel Modelling Wireframe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #111111;
+      --white: #FFFFFF;
+      --hover: #F5F5F5;
+      --power-pink: #C04A74;
+      --gas-purple: #3F2A95;
+      --water-blue: #3185DA;
+      --success: #63C73B;
+      --warning: #FF9800;
+      --alert: #DC2626;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+      background: var(--white);
+      color: var(--black);
+      padding: 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── Wireframe annotation ── */
+    .wireframe-banner {
+      background: var(--black);
+      color: var(--white);
+      padding: 12px 24px;
+      border-radius: 8px;
+      margin-bottom: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .wireframe-banner .wb-title { font-size: 14px; font-weight: 600; }
+    .wireframe-banner .wb-sub { font-size: 12px; font-weight: 400; }
+
+    /* ── Screen nav ── */
+    .screen-nav {
+      display: flex;
+      margin-bottom: 48px;
+    }
+    .screen-nav-btn {
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 24px;
+      border: 1.5px solid var(--black);
+      background: var(--white);
+      color: var(--black);
+      cursor: pointer;
+      transition: background 150ms ease-out, color 150ms ease-out;
+      flex: 1;
+      text-align: center;
+    }
+    .screen-nav-btn:first-child { border-radius: 8px 0 0 8px; }
+    .screen-nav-btn:last-child { border-radius: 0 8px 8px 0; }
+    .screen-nav-btn:not(:first-child) { border-left: none; }
+    .screen-nav-btn.active { background: var(--black); color: var(--white); }
+    .screen-nav-btn:hover:not(.active) { background: var(--hover); }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ── Page header ── */
+    .page-header { margin-bottom: 32px; }
+    .page-header .breadcrumb { font-size: 12px; font-weight: 400; margin-bottom: 8px; }
+    .page-header .breadcrumb span { font-weight: 600; }
+    .page-header h1 { font-size: 32px; font-weight: 700; line-height: 1.3; margin-bottom: 4px; }
+    .page-header p { font-size: 14px; font-weight: 400; line-height: 1.5; }
+
+    /* ── Section ── */
+    .section { margin-bottom: 48px; }
+    .section-title { font-size: 24px; font-weight: 600; line-height: 1.3; margin-bottom: 24px; }
+    .section-subtitle { font-size: 14px; font-weight: 400; line-height: 1.5; margin-bottom: 24px; }
+
+    /* ── Cards ── */
+    .card {
+      border: 1.5px solid var(--black);
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .card-title { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .card-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+    }
+
+    /* ── Form elements ── */
+    .form-group { margin-bottom: 20px; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .form-input, .form-select {
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      padding: 10px 14px;
+      border: 1.5px solid var(--black);
+      border-radius: 6px;
+      background: var(--white);
+      color: var(--black);
+      width: 100%;
+    }
+    .form-select {
+      appearance: none;
+      -webkit-appearance: none;
+      padding-right: 36px;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+    }
+    .form-input:focus, .form-select:focus { outline: 2px solid var(--black); outline-offset: 2px; }
+    .form-input::placeholder { color: var(--black); opacity: 0.35; }
+    .form-hint {
+      font-size: 12px;
+      font-weight: 400;
+      margin-top: 6px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1.5px solid var(--black);
+      transition: opacity 150ms ease-out;
+    }
+    .btn-filled { background: var(--black); color: var(--white); }
+    .btn-filled:hover { opacity: 0.8; }
+    .btn-outline { background: var(--white); color: var(--black); }
+    .btn-outline:hover { background: var(--black); color: var(--white); }
+    .btn-sm { font-size: 12px; padding: 8px 16px; }
+    .btn-group { display: flex; gap: 12px; align-items: center; }
+
+    /* ── Data table ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .data-table thead th {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 12px 16px;
+      border-bottom: 2px solid var(--black);
+      text-align: left;
+      white-space: nowrap;
+    }
+    .data-table thead th.numeric { text-align: right; }
+    .data-table tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--black);
+      font-variant-numeric: tabular-nums;
+      vertical-align: middle;
+    }
+    .data-table tbody td.numeric { text-align: right; }
+    .data-table tbody tr:hover { background: rgba(17, 17, 17, 0.03); }
+    .data-table tbody tr:last-child td { border-bottom: 2px solid var(--black); }
+    .data-table tfoot td {
+      padding: 14px 16px;
+      font-weight: 700;
+      border-top: 2px solid var(--black);
+    }
+    .data-table tfoot td.numeric { text-align: right; }
+
+    /* ── Fuel type tag ── */
+    .fuel-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 12px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .fuel-tag-default { background: var(--black); color: var(--white); }
+    .fuel-tag-electric { background: var(--power-pink); color: var(--white); }
+    .fuel-tag-gas { background: var(--gas-purple); color: var(--white); }
+
+    /* ── Metric cards ── */
+    .metric-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .metric-card {
+      border: 1.5px solid var(--black);
+      border-radius: 8px;
+      padding: 24px;
+    }
+    .metric-card .mc-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .metric-card .mc-value {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .metric-card .mc-unit { font-size: 14px; font-weight: 400; }
+    .metric-card .mc-sub { font-size: 12px; font-weight: 400; margin-top: 6px; }
+    .trend-down { color: var(--success); font-size: 12px; font-weight: 600; margin-left: 6px; }
+    .trend-up { color: var(--alert); font-size: 12px; font-weight: 600; margin-left: 6px; }
+
+    /* ── Fuel switch visual ── */
+    .fuel-switch-visual {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 32px;
+      border: 1.5px solid var(--black);
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }
+    .fuel-switch-box {
+      flex: 1;
+      border: 1.5px solid var(--black);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+    }
+    .fuel-switch-box .fsb-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .fuel-switch-box .fsb-fuel { font-size: 18px; font-weight: 700; }
+    .fuel-switch-box .fsb-detail { font-size: 12px; font-weight: 400; margin-top: 4px; }
+    .fuel-switch-arrow {
+      font-size: 24px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .fuel-switch-result {
+      flex: 1;
+      border: 1.5px solid var(--success);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      background: rgba(99, 199, 59, 0.05);
+    }
+    .fuel-switch-result .fsr-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .fuel-switch-result .fsr-value { font-size: 24px; font-weight: 700; }
+    .fuel-switch-result .fsr-sub { font-size: 12px; font-weight: 400; margin-top: 4px; }
+
+    /* ── Bar chart (simple CSS) ── */
+    .bar-chart { margin-top: 16px; }
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .bar-label { font-size: 12px; font-weight: 500; width: 100px; text-align: right; flex-shrink: 0; }
+    .bar-track { flex: 1; height: 24px; background: var(--hover); border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px 0 0 4px; }
+    .bar-value { font-size: 12px; font-weight: 600; width: 80px; font-variant-numeric: tabular-nums; }
+
+    /* ── Annotation callout ── */
+    .annotation {
+      border-left: 3px solid var(--warning);
+      padding: 12px 16px;
+      margin: 16px 0;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.5;
+      background: rgba(255, 152, 0, 0.05);
+      border-radius: 0 6px 6px 0;
+    }
+    .annotation strong { font-weight: 600; }
+
+    /* ── Divider ── */
+    .divider { border: none; border-top: 2px solid var(--black); margin: 48px 0; }
+
+    /* ── Status indicator ── */
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .status-pill-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .status-auto { background: rgba(99, 199, 59, 0.1); }
+    .status-auto .status-pill-dot { background: var(--success); }
+    .status-manual { background: rgba(255, 152, 0, 0.1); }
+    .status-manual .status-pill-dot { background: var(--warning); }
+
+    /* ── Emission factor table row highlight ── */
+    .ef-auto { }
+    .ef-custom td { background: rgba(255, 152, 0, 0.04); }
+
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<body>
+
+  <!-- Wireframe Banner -->
+  <div class="wireframe-banner">
+    <span class="wb-title">Alternative Fuel Modelling — Rough Wireframe</span>
+    <span class="wb-sub">V0.1 &middot; April 2026 &middot; Mike Gammon</span>
+  </div>
+
+  <!-- Screen Navigation -->
+  <div class="screen-nav">
+    <button class="screen-nav-btn active" onclick="showScreen('screen1', this)">1. Fuel Input</button>
+    <button class="screen-nav-btn" onclick="showScreen('screen2', this)">2. Fuel Switching</button>
+    <button class="screen-nav-btn" onclick="showScreen('screen3', this)">3. Project Summary</button>
+    <button class="screen-nav-btn" onclick="showScreen('screen4', this)">4. Emission Factors</button>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- SCREEN 1: Fuel Type Input                   -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="screen active" id="screen1">
+
+    <div class="page-header">
+      <div class="breadcrumb">Projects &rsaquo; Acme Manufacturing &rsaquo; <span>Boiler Replacement</span></div>
+      <h1>Fuel Consumption Input</h1>
+      <p>Define the fuel types, volumes, and costs for this project. Carbon emissions are calculated automatically from built-in conversion factors.</p>
+    </div>
+
+    <div class="annotation">
+      <strong>Design note:</strong> This screen sits within the existing Project model. The fuel type selector extends the current electricity/gas input pattern to support any fuel type. Otto's principle applies — "numbers come in, crunch a couple, numbers come out" — keep the input generic so it works for any fuel.
+    </div>
+
+    <!-- Add Fuel Entry -->
+    <div class="section">
+      <div class="section-title">Add Fuel Source</div>
+
+      <div class="card">
+        <div class="form-row-3">
+          <div class="form-group">
+            <label class="form-label">Fuel Type</label>
+            <select class="form-select">
+              <option>Select fuel type...</option>
+              <option>Diesel</option>
+              <option>Petrol</option>
+              <option>LPG</option>
+              <option>Kerosene</option>
+              <option>HVO (Hydrotreated Vegetable Oil)</option>
+              <option>Biomethane</option>
+              <option>Propane</option>
+              <option>Biomass (Wood Pellets)</option>
+              <option>Biomass (Wood Chips)</option>
+              <option>Natural Gas</option>
+              <option>Electricity (Grid)</option>
+              <option>Other (Custom)</option>
+            </select>
+            <div class="form-hint">Emission factor auto-populated from DESNZ/DEFRA 2025 database</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Unit</label>
+            <select class="form-select">
+              <option>Litres</option>
+              <option>Tonnes</option>
+              <option>Cubic metres (m&sup3;)</option>
+              <option>Kilograms (kg)</option>
+              <option>kWh</option>
+            </select>
+            <div class="form-hint">Auto-suggested based on fuel type selection</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Annual Consumption</label>
+            <input type="text" class="form-input" placeholder="e.g. 45,000">
+          </div>
+        </div>
+
+        <div style="margin-top:20px;">
+          <div class="form-row-3">
+            <div class="form-group">
+              <label class="form-label">Unit Cost (Current)</label>
+              <input type="text" class="form-input" placeholder="e.g. 1.42 / litre">
+              <div class="form-hint">&pound; per unit</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Unit Cost (Projected)</label>
+              <input type="text" class="form-input" placeholder="e.g. 1.58 / litre">
+              <div class="form-hint">Optional — used in future cost modelling</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Emission Factor</label>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <input type="text" class="form-input" value="2.5407" style="background:var(--hover);">
+                <span class="status-pill status-auto"><span class="status-pill-dot"></span>Auto</span>
+              </div>
+              <div class="form-hint">kgCO&#8322;e per litre &middot; DEFRA 2025</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Scope</label>
+              <select class="form-select">
+                <option>Scope 1 — Direct combustion</option>
+                <option>Scope 2 — Purchased energy</option>
+                <option>Scope 3 — Upstream / downstream</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Compliance Schemes</label>
+              <select class="form-select">
+                <option>SECR, ESOS</option>
+              </select>
+              <div class="form-hint">Auto-tagged based on fuel type and scope</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:24px;" class="btn-group">
+          <button class="btn btn-filled">Add Fuel Source</button>
+          <button class="btn btn-outline">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Current fuel sources table -->
+    <div class="section">
+      <div class="section-title">Project Fuel Sources</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Fuel Type</th>
+            <th>Scope</th>
+            <th class="numeric">Volume</th>
+            <th>Unit</th>
+            <th class="numeric">Annual Cost</th>
+            <th class="numeric">tCO&#8322;e</th>
+            <th>Factor Source</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="fuel-tag fuel-tag-default">Diesel</span></td>
+            <td>Scope 1</td>
+            <td class="numeric">45,000</td>
+            <td>Litres</td>
+            <td class="numeric">&pound;63,900</td>
+            <td class="numeric">114.3</td>
+            <td><span class="status-pill status-auto"><span class="status-pill-dot"></span>DEFRA 2025</span></td>
+            <td><button class="btn btn-outline btn-sm">Edit</button></td>
+          </tr>
+          <tr>
+            <td><span class="fuel-tag fuel-tag-gas">Natural Gas</span></td>
+            <td>Scope 1</td>
+            <td class="numeric">180,000</td>
+            <td>kWh</td>
+            <td class="numeric">&pound;12,600</td>
+            <td class="numeric">33.0</td>
+            <td><span class="status-pill status-auto"><span class="status-pill-dot"></span>DEFRA 2025</span></td>
+            <td><button class="btn btn-outline btn-sm">Edit</button></td>
+          </tr>
+          <tr>
+            <td><span class="fuel-tag fuel-tag-default">LPG</span></td>
+            <td>Scope 1</td>
+            <td class="numeric">12,000</td>
+            <td>Litres</td>
+            <td class="numeric">&pound;7,200</td>
+            <td class="numeric">18.5</td>
+            <td><span class="status-pill status-auto"><span class="status-pill-dot"></span>DEFRA 2025</span></td>
+            <td><button class="btn btn-outline btn-sm">Edit</button></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4">Total (3 fuel sources)</td>
+            <td class="numeric">&pound;83,700</td>
+            <td class="numeric">165.8</td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- SCREEN 2: Fuel Switching Project            -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="screen" id="screen2">
+
+    <div class="page-header">
+      <div class="breadcrumb">Projects &rsaquo; Acme Manufacturing &rsaquo; <span>Fleet Fuel Switch: Diesel to HVO</span></div>
+      <h1>Fuel Switching Model</h1>
+      <p>Model the impact of replacing one fuel with another. Compare cost, carbon, and compliance implications side by side.</p>
+    </div>
+
+    <div class="annotation">
+      <strong>Design note:</strong> Fuel switching is the core modelling action. The user selects a "from" fuel and a "to" fuel, enters volumes, and the platform calculates the carbon and cost delta. This pattern should feel familiar from the existing project modelling flow — just extended to handle fuel-to-fuel comparisons.
+    </div>
+
+    <!-- Switch visual -->
+    <div class="section">
+      <div class="section-title">Fuel Switch Configuration</div>
+
+      <div class="fuel-switch-visual">
+        <div class="fuel-switch-box">
+          <div class="fsb-label">Current Fuel</div>
+          <div class="fsb-fuel">Diesel</div>
+          <div class="fsb-detail">45,000 litres / year</div>
+          <div class="fsb-detail">114.3 tCO&#8322;e &middot; &pound;63,900</div>
+        </div>
+        <div class="fuel-switch-arrow">&rarr;</div>
+        <div class="fuel-switch-box">
+          <div class="fsb-label">Replacement Fuel</div>
+          <div class="fsb-fuel">HVO</div>
+          <div class="fsb-detail">45,000 litres / year</div>
+          <div class="fsb-detail">5.9 tCO&#8322;e &middot; &pound;72,000</div>
+        </div>
+        <div class="fuel-switch-arrow">=</div>
+        <div class="fuel-switch-result">
+          <div class="fsr-label">Net Carbon Saving</div>
+          <div class="fsr-value">&#9660; 108.4 tCO&#8322;e</div>
+          <div class="fsr-sub">94.8% reduction &middot; +&pound;8,100 cost increase</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configuration form -->
+    <div class="section">
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title">Current Fuel</div>
+          <div class="form-group">
+            <label class="form-label">Fuel Type</label>
+            <select class="form-select"><option>Diesel</option></select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Volume</label>
+              <input type="text" class="form-input" value="45,000">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Unit</label>
+              <select class="form-select"><option>Litres</option></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Unit Cost</label>
+              <input type="text" class="form-input" value="1.42">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Emission Factor</label>
+              <input type="text" class="form-input" value="2.5407" style="background:var(--hover);">
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Replacement Fuel</div>
+          <div class="form-group">
+            <label class="form-label">Fuel Type</label>
+            <select class="form-select">
+              <option>HVO (Hydrotreated Vegetable Oil)</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Volume</label>
+              <input type="text" class="form-input" value="45,000">
+              <div class="form-hint">1:1 volume for HVO drop-in</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Unit</label>
+              <select class="form-select"><option>Litres</option></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Unit Cost</label>
+              <input type="text" class="form-input" value="1.60">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Emission Factor</label>
+              <input type="text" class="form-input" value="0.1313" style="background:var(--hover);">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison bars -->
+    <div class="section">
+      <div class="section-title">Impact Comparison</div>
+
+      <div class="card">
+        <div class="card-title">Carbon Emissions (tCO&#8322;e / year)</div>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">Diesel</span>
+            <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--gas-purple);"></div></div>
+            <span class="bar-value">114.3 t</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">HVO</span>
+            <div class="bar-track"><div class="bar-fill" style="width:5.2%; background:var(--success);"></div></div>
+            <span class="bar-value">5.9 t<span class="trend-down"> &#9660; 95%</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Annual Cost (&pound; / year)</div>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">Diesel</span>
+            <div class="bar-track"><div class="bar-fill" style="width:88.8%; background:var(--black);"></div></div>
+            <span class="bar-value">&pound;63,900</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">HVO</span>
+            <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--black);"></div></div>
+            <span class="bar-value">&pound;72,000<span class="trend-up"> &#9650; 13%</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;" class="btn-group">
+        <button class="btn btn-filled">Save Fuel Switch to Project</button>
+        <button class="btn btn-outline">Add to Strategy</button>
+        <button class="btn btn-outline">Export Comparison</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- SCREEN 3: Project Summary View              -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="screen" id="screen3">
+
+    <div class="page-header">
+      <div class="breadcrumb">Projects &rsaquo; Acme Manufacturing &rsaquo; <span>Boiler Replacement</span></div>
+      <h1>Project Summary</h1>
+      <p>Overview of all fuel sources, switching scenarios, and compliance alignment for this project.</p>
+    </div>
+
+    <div class="annotation">
+      <strong>Design note:</strong> This is how alternative fuel data surfaces on the existing project summary page. The fuel breakdown integrates alongside the existing electricity and gas summary cards. Compliance scheme tags (SECR, ESOS) auto-populate based on the fuel types present.
+    </div>
+
+    <!-- Metric cards -->
+    <div class="metric-cards">
+      <div class="metric-card">
+        <div class="mc-label">Total Energy &amp; Fuel Cost</div>
+        <div class="mc-value">&pound;156,300 <span class="mc-unit">/ year</span></div>
+        <div class="mc-sub">Across 5 fuel sources</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-label">Total Carbon</div>
+        <div class="mc-value">298.4 <span class="mc-unit">tCO&#8322;e</span></div>
+        <div class="mc-sub">Scope 1: 165.8 &middot; Scope 2: 132.6</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-label">Post-Switch Carbon</div>
+        <div class="mc-value">190.0 <span class="mc-unit">tCO&#8322;e</span></div>
+        <div class="mc-sub"><span class="trend-down">&#9660; 36.3%</span> from baseline</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-label">Compliance</div>
+        <div class="mc-value" style="font-size:18px; margin-top:4px;">
+          <span class="fuel-tag fuel-tag-default" style="font-size:12px;">SECR</span>
+          <span class="fuel-tag fuel-tag-default" style="font-size:12px;">ESOS</span>
+        </div>
+        <div class="mc-sub">All fuel types scheme-aligned</div>
+      </div>
+    </div>
+
+    <!-- Fuel source breakdown -->
+    <div class="section">
+      <div class="section-title">Fuel Source Breakdown</div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Fuel Type</th>
+            <th>Category</th>
+            <th>Scope</th>
+            <th class="numeric">Volume</th>
+            <th>Unit</th>
+            <th class="numeric">Cost / year</th>
+            <th class="numeric">tCO&#8322;e</th>
+            <th class="numeric">% of Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="fuel-tag fuel-tag-electric">Electricity</span></td>
+            <td>Grid</td>
+            <td>Scope 2</td>
+            <td class="numeric">640,000</td>
+            <td>kWh</td>
+            <td class="numeric">&pound;179,200</td>
+            <td class="numeric">132.6</td>
+            <td class="numeric">44.4%</td>
+          </tr>
+          <tr>
+            <td><span class="fuel-tag fuel-tag-gas">Natural Gas</span></td>
+            <td>Fossil</td>
+            <td>Scope 1</td>
+            <td class="numeric">180,000</td>
+            <td>kWh</td>
+            <td class="numeric">&pound;12,600</td>
+            <td class="numeric">33.0</td>
+            <td class="numeric">11.1%</td>
+          </tr>
+          <tr>
+            <td><span class="fuel-tag fuel-tag-default">Diesel</span></td>
+            <td>Fossil</td>
+            <td>Scope 1</td>
+            <td class="numeric">45,000</td>
+            <td>Litres</td>
+            <td class="numeric">&pound;63,900</td>
+            <td class="numeric">114.3</td>
+            <td class="numeric">38.3%</td>
+          </tr>
+          <tr>
+            <td><span class="fuel-tag fuel-tag-default">LPG</span></td>
+            <td>Fossil</td>
+            <td>Scope 1</td>
+            <td class="numeric">12,000</td>
+            <td>Litres</td>
+            <td class="numeric">&pound;7,200</td>
+            <td class="numeric">18.5</td>
+            <td class="numeric">6.2%</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="5">Total (4 sources)</td>
+            <td class="numeric">&pound;262,900</td>
+            <td class="numeric">298.4</td>
+            <td class="numeric">100%</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Active fuel switches -->
+    <div class="section">
+      <div class="section-title">Active Fuel Switches</div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Switch</th>
+            <th class="numeric">Carbon Saving</th>
+            <th class="numeric">Cost Impact</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Diesel &#8594; HVO</td>
+            <td class="numeric"><span class="trend-down">&#9660;</span> 108.4 tCO&#8322;e (94.8%)</td>
+            <td class="numeric"><span class="trend-up">&#9650;</span> +&pound;8,100 / year</td>
+            <td><span class="status-pill status-manual"><span class="status-pill-dot"></span>Proposed</span></td>
+            <td><button class="btn btn-outline btn-sm">View Model</button></td>
+          </tr>
+          <tr>
+            <td>LPG &#8594; Biomethane</td>
+            <td class="numeric"><span class="trend-down">&#9660;</span> 16.2 tCO&#8322;e (87.6%)</td>
+            <td class="numeric"><span class="trend-up">&#9650;</span> +&pound;1,800 / year</td>
+            <td><span class="status-pill status-manual"><span class="status-pill-dot"></span>Proposed</span></td>
+            <td><button class="btn btn-outline btn-sm">View Model</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- SCREEN 4: Emission Factor Reference         -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="screen" id="screen4">
+
+    <div class="page-header">
+      <h1>Emission Factor Reference</h1>
+      <p>Built-in carbon conversion factors sourced from DESNZ/DEFRA. Users can override with custom factors where needed.</p>
+    </div>
+
+    <div class="annotation">
+      <strong>Design note:</strong> This is the admin/reference layer. Most users never see this — factors auto-populate when a fuel type is selected. Power users and auditors need it for verification. Custom overrides are flagged with an amber indicator so they're always visible.
+    </div>
+
+    <div class="section">
+      <div class="section-title">DEFRA 2025 Conversion Factors</div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Fuel Type</th>
+            <th>Category</th>
+            <th>Default Unit</th>
+            <th class="numeric">kgCO&#8322;e / unit</th>
+            <th class="numeric">kWh / unit</th>
+            <th>Source</th>
+            <th>Override</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="ef-auto">
+            <td><span class="fuel-tag fuel-tag-default">Diesel</span></td>
+            <td>Fossil — Liquid</td>
+            <td>Litre</td>
+            <td class="numeric">2.5407</td>
+            <td class="numeric">9.96</td>
+            <td><span class="status-pill status-auto"><span class="status-pill-dot"></span>DEFRA 2025</span></td>
+            <td><button class="btn btn-outline btn-sm">Override</button></td>
+          </tr>
+          <tr class="ef-auto">
+            <td><span class="fuel-tag fuel-tag-default">Petrol</span></td>
+            <td>Fossil — Liquid</td>
+            <td>Litre</td>
+            <td class="numeric">2.1040</td>
+            <td class="numeric">8.46</td>
+            <td><span class="status-pill status-auto"><span class="status-pill-dot"></span>DEFRA 2025</span></td>
+            <td><button class="btn btn-outline btn-sm">Override</button></td>
+          </tr>
+          <tr class="ef-auto">
+            <td><span class="fuel-tag fuel-tag-default">LPG</span></td>
+            <td>Fossil — Gas</td>
+            <td>Litre</td>
+            <td class="numeric">1.5415</td>
+            <td class="numeric">6.63</td>
+            <td><span class="status-pill status-auto"><span class="status-pill-dot"></span>DEFRA 2025</span></td>
+            <td><button class="btn btn-outline btn-sm">Override</button></td>
+          </tr>
+          <tr class="ef-auto">
+            <td><span class="fuel-tag fuel-tag-default">Kerosene</span></td>
+            <td>Fossil — Liquid</td>
+            <td>Litre</td>
+            <td class="numeric">2.5407</td>
+            <td class="numeric">10.35</td>
+            <td><span class="status-pill status-auto"><span class="status-pill-dot"></span>DEFRA 2025</span></td>
+            <td><button class="btn btn-outline btn-sm">Override</button></td>
+          </tr>
+          <tr class="ef-auto">
+            <td><span class="fuel-tag fuel-tag-gas">Natural Gas</span></td>
+            <td>Fossil — Gas</td>
+            <td>kWh</td>
+            <td class="numeric">0.1832</td>
+            <td class="numeric">1.00</td>
+            <td><span class="status-pill status-auto"><span class="status-pill-dot"></span>DEFRA 2025</span></td>
+            <td><button class="btn btn-outline btn-sm">Override</button></td>
+          </tr>
+          <tr class="ef-auto">
+            <td><span class="fuel-tag fuel-tag-default">HVO</span></td>
+            <td>Biofuel — Liquid</td>
+            <td>Litre</td>
+            <td class="numeric">0.1313</td>
+            <td class="numeric">9.24</td>
+            <td><span class="status-pill status-auto"><span class="status-pill-dot"></span>DEFRA 2025</span></td>
+            <td><button class="btn btn-outline btn-sm">Override</button></td>
+          </tr>
+          <tr class="ef-auto">
+            <td><span class="fuel-tag fuel-tag-default">Biomethane</span></td>
+            <td>Biofuel — Gas</td>
+            <td>kWh</td>
+            <td class="numeric">0.0003</td>
+            <td class="numeric">1.00</td>
+            <td><span class="status-pill status-auto"><span class="status-pill-dot"></span>DEFRA 2025</span></td>
+            <td><button class="btn btn-outline btn-sm">Override</button></td>
+          </tr>
+          <tr class="ef-auto">
+            <td><span class="fuel-tag fuel-tag-default">Biomass (Pellets)</span></td>
+            <td>Biofuel — Solid</td>
+            <td>Tonne</td>
+            <td class="numeric">57.23</td>
+            <td class="numeric">4,800</td>
+            <td><span class="status-pill status-auto"><span class="status-pill-dot"></span>DEFRA 2025</span></td>
+            <td><button class="btn btn-outline btn-sm">Override</button></td>
+          </tr>
+          <tr class="ef-custom">
+            <td><span class="fuel-tag fuel-tag-default">Propane</span></td>
+            <td>Fossil — Gas</td>
+            <td>Litre</td>
+            <td class="numeric">1.5098</td>
+            <td class="numeric">7.11</td>
+            <td><span class="status-pill status-manual"><span class="status-pill-dot"></span>Custom</span></td>
+            <td><button class="btn btn-outline btn-sm">Reset</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="annotation" style="margin-top:24px;">
+        <strong>Admin note:</strong> Custom overrides are persisted per organisation. When DEFRA publishes updated factors annually, the platform prompts admins to review and accept the new values. Custom overrides are preserved but flagged for re-validation.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showScreen(id, btn) {
+      document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+      document.querySelectorAll('.screen-nav-btn').forEach(function(b) { b.classList.remove('active'); });
+      document.getElementById(id).classList.add('active');
+      btn.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Occam's Razor — Sustainability Platform Cut</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+<style>
+:root {
+  --primary: #3F2A95;
+  --secondary: #111111;
+  --accent: #3185DA;
+  --highlight: #C04A74;
+  --total: #7F3A84;
+  --success: #63C73B;
+  --warning: #FF9800;
+  --alert: #DC2626;
+  --white: #ffffff;
+  --grey: #F5F5F5;
+  --font: 'Poppins', system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  background: var(--white);
+  color: var(--secondary);
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 48px;
+}
+.container { max-width: 1400px; margin: 0 auto; }
+
+/* ---------- HEADER ---------- */
+.page-header {
+  border-bottom: 1.5px solid var(--secondary);
+  padding-bottom: 32px;
+  margin-bottom: 48px;
+}
+.page-header .label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.page-header .subhead {
+  font-size: 15px;
+  font-weight: 400;
+  max-width: 800px;
+  margin-top: 8px;
+}
+.page-header .meta {
+  font-size: 13px;
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.page-header .meta span { display: inline-flex; align-items: center; gap: 6px; }
+.page-header .meta .material-symbols-outlined { font-size: 16px; }
+
+/* ---------- INTRO ---------- */
+.intro {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 48px;
+  margin-bottom: 64px;
+}
+.intro p { font-size: 15px; line-height: 1.6; margin-bottom: 12px; }
+.intro p.lead { font-size: 17px; font-weight: 500; line-height: 1.5; }
+.principle-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 20px 24px;
+}
+.principle-card h3 {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+.principle-card p {
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+.principle-card .attribution {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--grey);
+}
+
+/* ---------- SECTION ---------- */
+.section { margin-bottom: 72px; }
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 32px;
+  border-bottom: 1.5px solid var(--secondary);
+}
+.section-header .num {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 10px;
+  background: var(--secondary);
+  color: var(--white);
+  border-radius: 4px;
+}
+.section-header h2 { font-size: 24px; font-weight: 700; }
+.section-header .tag {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 4px;
+}
+.section-description {
+  font-size: 14px;
+  color: var(--secondary);
+  margin-bottom: 32px;
+  max-width: 900px;
+}
+
+/* ---------- THE COLLAPSE ---------- */
+.collapse-container {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.collapse-before {
+  padding: 32px;
+  background: var(--white);
+}
+.collapse-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.collapse-label .count {
+  background: var(--secondary);
+  color: var(--white);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+}
+.feature-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.feature-chip {
+  padding: 6px 12px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 400;
+  background: var(--white);
+  white-space: nowrap;
+}
+
+.collapse-divider {
+  background: var(--secondary);
+  color: var(--white);
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  position: relative;
+}
+.collapse-divider .razor-text {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.collapse-divider .razor-icon {
+  font-size: 20px;
+}
+.collapse-divider .razor-action {
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 400;
+  opacity: 0.85;
+}
+
+.collapse-after {
+  padding: 32px;
+  background: var(--grey);
+}
+.three-jobs-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+.job-block {
+  background: var(--white);
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 24px 20px;
+  text-align: center;
+}
+.job-block .job-num {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  display: inline-block;
+  padding: 2px 10px;
+  background: var(--secondary);
+  color: var(--white);
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+.job-block .job-name {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.job-block .job-desc {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* ---------- PILLAR DETAIL ---------- */
+.pillar-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+.pillar {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.pillar-head {
+  padding: 20px 24px;
+  background: var(--secondary);
+  color: var(--white);
+}
+.pillar-head .pillar-num {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+  margin-bottom: 4px;
+}
+.pillar-head .pillar-name {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.pillar-head .pillar-question {
+  font-size: 13px;
+  font-weight: 400;
+  font-style: italic;
+  opacity: 0.9;
+}
+.pillar-body {
+  padding: 20px 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.pillar-zone .zone-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pillar-zone .zone-label .material-symbols-outlined { font-size: 16px; }
+.pillar-zone ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pillar-zone li {
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 10px 12px;
+  border-radius: 6px;
+}
+.pillar-zone.essential li {
+  background: rgba(99,199,59,0.1);
+  border-left: 4px solid var(--success);
+  border-radius: 0 6px 6px 0;
+}
+.pillar-zone.sophistication li {
+  background: rgba(255,152,0,0.1);
+  border-left: 4px solid var(--warning);
+  border-radius: 0 6px 6px 0;
+}
+.pillar-zone li strong {
+  font-weight: 600;
+  display: block;
+  font-size: 13px;
+}
+.pillar-zone li.feature-flag {
+  background: rgba(192,74,116,0.1);
+  border-left: 4px solid var(--highlight);
+  border-radius: 0 6px 6px 0;
+  font-weight: 500;
+}
+.zone-key {
+  font-size: 12px;
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 12px 16px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  flex-wrap: wrap;
+}
+.zone-key .key-item { display: flex; align-items: center; gap: 8px; }
+.zone-key .key-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+}
+.zone-key .key-swatch.essential { background: var(--success); }
+.zone-key .key-swatch.sophistication { background: var(--warning); }
+.zone-key .key-swatch.flag { background: var(--highlight); }
+
+/* ---------- INSIGHTS ---------- */
+.insights-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+.insight-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+.insight-card .insight-num {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+.insight-card .insight-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+.insight-card .insight-body {
+  font-size: 13px;
+  line-height: 1.55;
+  margin-bottom: 16px;
+}
+.insight-card .insight-tag {
+  margin-top: auto;
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  align-self: flex-start;
+}
+.insight-tag.priority-now { background: rgba(192,74,116,0.15); }
+.insight-tag.priority-retain { background: rgba(99,199,59,0.15); }
+.insight-tag.priority-wedge { background: rgba(63,42,149,0.12); }
+
+/* ---------- THE TEST BANNER ---------- */
+.test-banner {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 28px 32px;
+  margin-bottom: 48px;
+  background: var(--secondary);
+  color: var(--white);
+}
+.test-banner h3 {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+  opacity: 0.7;
+}
+.test-banner p {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.test-banner p strong { font-weight: 700; }
+
+/* ---------- FOOTER ---------- */
+.page-footer {
+  margin-top: 72px;
+  padding-top: 32px;
+  border-top: 1.5px solid var(--secondary);
+  font-size: 12px;
+  color: var(--secondary);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 900px) {
+  body { padding: 24px; }
+  .intro { grid-template-columns: 1fr; gap: 24px; }
+  .three-jobs-row { grid-template-columns: 1fr; }
+  .pillar-grid { grid-template-columns: 1fr; }
+  .insights-grid { grid-template-columns: 1fr; }
+  .page-header h1 { font-size: 26px; }
+  .job-block .job-name { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <div class="label">TrueDI · Strategic Synthesis</div>
+    <h1>Occam's razor — the sustainability platform cut</h1>
+    <div class="subhead">A 17-page roadmap meeting compressed to three jobs and three priorities.</div>
+    <div class="meta">
+      <span><span class="material-symbols-outlined">person</span>Mike Gammon · Lead Product Designer</span>
+      <span><span class="material-symbols-outlined">groups</span>Source: Otto · Paul roadmap meeting</span>
+      <span><span class="material-symbols-outlined">calendar_today</span>May 2026</span>
+    </div>
+  </header>
+
+  <!-- INTRO -->
+  <div class="intro">
+    <div>
+      <p class="lead">The meeting reads as twenty-plus features but it's really one product doing one thing, three ways.</p>
+      <p style="margin-top: 16px;">Strip it back and the platform answers a single question for the customer: <em>what should I do next, and is it working?</em> Underneath that question sit three irreducible jobs — Ingest, Decide, Prove. Every other feature discussed (virtual contracts, Monte Carlo, AI optimisation, soft credit checks, funding integration) is a refinement of one of those three, not a fourth job.</p>
+      <p style="margin-top: 16px;">This document maps the meeting onto the cut, separates v1 essentials from later sophistication, and lands the three strategic priorities that follow.</p>
+    </div>
+    <div class="principle-card">
+      <h3>The principle</h3>
+      <p>"Entities should not be multiplied beyond necessity."</p>
+      <p style="font-style: normal; font-size: 13px; margin-top: 12px;">Translated to product: if a feature doesn't make ingestion cleaner, decisions sharper, or proof easier — it's premature.</p>
+      <div class="attribution">William of Ockham · 14th century</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: THE COLLAPSE -->
+  <section class="section">
+    <div class="section-header">
+      <span class="num">1</span>
+      <h2>The collapse</h2>
+      <span class="tag">From 20+ features → 3 jobs</span>
+    </div>
+    <p class="section-description">
+      Every feature surfaced in the roadmap meeting, in raw form. The shave: collapse duplicates, group sophistications under their parent job, surface the three irreducible structural elements.
+    </p>
+
+    <div class="collapse-container">
+
+      <!-- BEFORE -->
+      <div class="collapse-before">
+        <div class="collapse-label">
+          <span>Before — the meeting</span>
+          <span class="count">22 features</span>
+        </div>
+        <div class="feature-cloud">
+          <span class="feature-chip">Bulk upload</span>
+          <span class="feature-chip">Proposal extraction</span>
+          <span class="feature-chip">Invoice ingestion</span>
+          <span class="feature-chip">Meter feeds</span>
+          <span class="feature-chip">SECR automation</span>
+          <span class="feature-chip">Forecasting</span>
+          <span class="feature-chip">Scenario engine</span>
+          <span class="feature-chip">Monte Carlo modelling</span>
+          <span class="feature-chip">Virtual contracts</span>
+          <span class="feature-chip">Project comparison</span>
+          <span class="feature-chip">Targets V2</span>
+          <span class="feature-chip">Multi-target tracking</span>
+          <span class="feature-chip">Live project tracking</span>
+          <span class="feature-chip">Strategy V2</span>
+          <span class="feature-chip">AI scenario optimisation</span>
+          <span class="feature-chip">Soft credit check</span>
+          <span class="feature-chip">Funding integration</span>
+          <span class="feature-chip">Confidence scoring</span>
+          <span class="feature-chip">Scope 3 expansion</span>
+          <span class="feature-chip">Site categorisation</span>
+          <span class="feature-chip">Board packs</span>
+          <span class="feature-chip">CSRD output</span>
+        </div>
+      </div>
+
+      <!-- DIVIDER -->
+      <div class="collapse-divider">
+        <span class="material-symbols-outlined razor-icon">filter_alt</span>
+        <span class="razor-text">Occam's razor</span>
+        <span class="razor-action">— shave duplicates and sophistication —</span>
+        <span class="material-symbols-outlined razor-icon">south</span>
+      </div>
+
+      <!-- AFTER -->
+      <div class="collapse-after">
+        <div class="collapse-label">
+          <span>After — the irreducible jobs</span>
+          <span class="count">3 jobs</span>
+        </div>
+        <div class="three-jobs-row">
+          <div class="job-block">
+            <div class="job-num">01</div>
+            <div class="job-name">Ingest</div>
+            <div class="job-desc">Get the right data in cleanly.</div>
+          </div>
+          <div class="job-block">
+            <div class="job-num">02</div>
+            <div class="job-name">Decide</div>
+            <div class="job-desc">Help the customer choose what to do next.</div>
+          </div>
+          <div class="job-block">
+            <div class="job-num">03</div>
+            <div class="job-name">Prove</div>
+            <div class="job-desc">Produce the documents that evidence the action.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 2: THE THREE PILLARS -->
+  <section class="section">
+    <div class="section-header">
+      <span class="num">2</span>
+      <h2>What sits inside each job</h2>
+      <span class="tag">Essential vs sophistication</span>
+    </div>
+    <p class="section-description">
+      Each job contains a v1 foundation (must ship for the platform to function) and a body of sophistication (refinements that come later, when the foundation is solid). Strategy V2 is flagged because it spans Decide and Prove and is the platform's retention loop.
+    </p>
+
+    <!-- KEY -->
+    <div class="zone-key">
+      <div class="key-item"><div class="key-swatch essential"></div>Foundational — v1 essential</div>
+      <div class="key-item"><div class="key-swatch sophistication"></div>Sophistication — v2/v3 refinement</div>
+      <div class="key-item"><div class="key-swatch flag"></div>Strategic feature — already in flight</div>
+    </div>
+
+    <div class="pillar-grid">
+
+      <!-- INGEST -->
+      <div class="pillar">
+        <div class="pillar-head">
+          <div class="pillar-num">01</div>
+          <div class="pillar-name">Ingest</div>
+          <div class="pillar-question">Get the right data in cleanly.</div>
+        </div>
+        <div class="pillar-body">
+          <div class="pillar-zone essential">
+            <div class="zone-label"><span class="material-symbols-outlined" style="color: var(--success);">check_circle</span>Foundational</div>
+            <ul>
+              <li><strong>Bulk upload</strong>Multi-site portfolios at scale</li>
+              <li><strong>Proposal extraction</strong>PDFs → structured project records</li>
+              <li><strong>Invoice ingestion</strong>Automated, not manual review</li>
+              <li><strong>Meter feeds</strong>HH electricity, gas, water</li>
+              <li><strong>Site &amp; meter categorisation</strong>So comparisons stay valid</li>
+            </ul>
+          </div>
+          <div class="pillar-zone sophistication">
+            <div class="zone-label"><span class="material-symbols-outlined" style="color: var(--warning);">schedule</span>Sophistication — later</div>
+            <ul>
+              <li><strong>Confidence scoring</strong>Data completeness signal</li>
+              <li><strong>Benchmark fallbacks</strong>Fill gaps with sector data</li>
+              <li><strong>AI document parsing</strong>Beyond rule-based extraction</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- DECIDE -->
+      <div class="pillar">
+        <div class="pillar-head">
+          <div class="pillar-num">02</div>
+          <div class="pillar-name">Decide</div>
+          <div class="pillar-question">Help the customer choose what to do next.</div>
+        </div>
+        <div class="pillar-body">
+          <div class="pillar-zone essential">
+            <div class="zone-label"><span class="material-symbols-outlined" style="color: var(--success);">check_circle</span>Foundational</div>
+            <ul>
+              <li class="feature-flag"><strong>Strategy V2</strong>Forecast + live actuals + variance</li>
+              <li><strong>Project comparison</strong>Side-by-side on shared axes</li>
+              <li><strong>Targets V2</strong>Set, track, see progress</li>
+              <li><strong>Forecasting engine</strong>Generic, unit-agnostic per Otto</li>
+              <li><strong>Scope 3 foundational</strong>Beyond electricity &amp; gas</li>
+            </ul>
+          </div>
+          <div class="pillar-zone sophistication">
+            <div class="zone-label"><span class="material-symbols-outlined" style="color: var(--warning);">schedule</span>Sophistication — later</div>
+            <ul>
+              <li><strong>Monte Carlo / range modelling</strong>Confidence bands on payback</li>
+              <li><strong>Virtual contracts</strong>Hypothetical pricing structures</li>
+              <li><strong>AI scenario optimisation</strong>Sequencing across constraints</li>
+              <li><strong>Soft credit check</strong>Project viability heuristics</li>
+              <li><strong>Funding &amp; finance integration</strong>Adjacent business</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROVE -->
+      <div class="pillar">
+        <div class="pillar-head">
+          <div class="pillar-num">03</div>
+          <div class="pillar-name">Prove</div>
+          <div class="pillar-question">Produce the documents that evidence the action.</div>
+        </div>
+        <div class="pillar-body">
+          <div class="pillar-zone essential">
+            <div class="zone-label"><span class="material-symbols-outlined" style="color: var(--success);">check_circle</span>Foundational</div>
+            <ul>
+              <li><strong>SECR automation</strong>Cleanest commercial wedge</li>
+              <li><strong>Board-ready packs</strong>Exportable investment cases</li>
+              <li><strong>Evidence packs</strong>Audit-trail outputs</li>
+              <li><strong>Progress vs target reports</strong>Closes the loop with Targets V2</li>
+            </ul>
+          </div>
+          <div class="pillar-zone sophistication">
+            <div class="zone-label"><span class="material-symbols-outlined" style="color: var(--warning);">schedule</span>Sophistication — later</div>
+            <ul>
+              <li><strong>CSRD automation</strong>EU compliance layer</li>
+              <li><strong>Drift / assumption-change alerts</strong>Pushed not pulled</li>
+              <li><strong>QA on customer-produced reports</strong>Service line, not feature</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TEST BANNER -->
+  <div class="test-banner">
+    <h3>The test</h3>
+    <p>If a feature doesn't make <strong>ingestion cleaner</strong>, <strong>decisions sharper</strong>, or <strong>proof easier</strong> — it's premature. Park it until the foundation is solid.</p>
+  </div>
+
+  <!-- SECTION 3: STRATEGIC IMPLICATIONS -->
+  <section class="section">
+    <div class="section-header">
+      <span class="num">3</span>
+      <h2>Three implications</h2>
+      <span class="tag">What the cut tells us to do</span>
+    </div>
+    <p class="section-description">
+      Three insights fall out of the analysis — one about the bottleneck, one about retention, one about commercial entry. They define the order of work.
+    </p>
+
+    <div class="insights-grid">
+
+      <div class="insight-card">
+        <div class="insight-num">01</div>
+        <div class="insight-title">Ingestion is the bottleneck under everything else</div>
+        <div class="insight-body">
+          Until data flows in cleanly, every layer above is constrained. No amount of clever scenario modelling fixes the underlying complaint that customers are entering proposals manually, reviewing invoices by hand, and waiting on spreadsheets. Fix the pipe before designing what flows through it.
+        </div>
+        <span class="insight-tag priority-now">Priority — fix first</span>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-num">02</div>
+        <div class="insight-title">Strategy V2 is where Decide closes the loop</div>
+        <div class="insight-body">
+          It's the only screen in the platform where forecast meets live actuals meets the prompt to act. That's why Otto's flagged it as retention — it's the one place a customer comes back to weekly. Already in flight. Ship it next.
+        </div>
+        <span class="insight-tag priority-retain">Priority — ship next</span>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-num">03</div>
+        <div class="insight-title">SECR is the cleanest commercial wedge</div>
+        <div class="insight-body">
+          It's pure Prove, customers can't avoid it, they don't do it well, and TRUE already holds most of the data. Anywhere ingestion plus automation collapses a manual job is high-leverage — SECR is the most obvious one in the meeting. Strong candidate for the first dedicated workstream after Strategy V2.
+        </div>
+        <span class="insight-tag priority-wedge">Priority — wedge to market</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SUMMARY -->
+  <div class="test-banner">
+    <h3>The honest compression</h3>
+    <p><strong>Fix ingestion. Ship Strategy V2. Automate SECR.</strong> The rest follows once those three are in place.</p>
+  </div>
+
+  <footer class="page-footer">
+    <div>Occam's Razor · Sustainability Platform Cut · v1</div>
+    <div>TrueDI — Control. Clarity. Confidence.</div>
+  </footer>
+
+</div>
+</body>
+</html>

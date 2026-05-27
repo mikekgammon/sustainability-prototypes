@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strategy V2 — Logic Flowchart</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+<style>
+:root {
+  --primary: #3F2A95;
+  --secondary: #111111;
+  --accent: #3185DA;
+  --highlight: #C04A74;
+  --total: #7F3A84;
+  --success: #63C73B;
+  --warning: #FF9800;
+  --alert: #DC2626;
+  --white: #ffffff;
+  --grey: #F5F5F5;
+  --font: 'Poppins', system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  background: var(--white);
+  color: var(--secondary);
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 48px;
+}
+.container { max-width: 1600px; margin: 0 auto; }
+
+/* ---------- HEADER ---------- */
+.page-header {
+  border-bottom: 1.5px solid var(--secondary);
+  padding-bottom: 32px;
+  margin-bottom: 48px;
+}
+.page-header .label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.page-header .meta {
+  font-size: 13px;
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+}
+.page-header .meta span { display: inline-flex; align-items: center; gap: 6px; }
+.page-header .meta .material-symbols-outlined { font-size: 16px; }
+
+/* ---------- INTRO ---------- */
+.intro {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 48px;
+  margin-bottom: 64px;
+}
+.intro p { font-size: 15px; line-height: 1.6; margin-bottom: 12px; }
+.principle-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 20px 24px;
+}
+.principle-card h3 {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+.principle-card ul { list-style: none; }
+.principle-card li {
+  padding: 8px 0;
+  font-size: 13px;
+  border-bottom: 1px solid var(--grey);
+}
+.principle-card li:last-child { border-bottom: none; }
+
+/* ---------- SECTION ---------- */
+.section { margin-bottom: 72px; }
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 32px;
+  border-bottom: 1.5px solid var(--secondary);
+}
+.section-header .num {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 10px;
+  background: var(--secondary);
+  color: var(--white);
+  border-radius: 4px;
+}
+.section-header h2 { font-size: 24px; font-weight: 700; }
+.section-header .tag {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 4px;
+}
+.section-description {
+  font-size: 14px;
+  color: var(--secondary);
+  margin-bottom: 32px;
+  max-width: 900px;
+}
+
+/* ---------- FLOW NODES ---------- */
+.node {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 14px 18px;
+  background: var(--white);
+  min-width: 180px;
+  position: relative;
+}
+.node .node-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.node .node-label .material-symbols-outlined { font-size: 14px; }
+.node .node-title { font-size: 14px; font-weight: 600; line-height: 1.3; }
+.node .node-detail { font-size: 12px; line-height: 1.4; margin-top: 6px; color: var(--secondary); }
+
+.node.user { }
+.node.user .node-label { color: var(--secondary); }
+.node.system { background: var(--grey); }
+.node.external { border-style: dashed; }
+.node.data { border-left: 6px solid var(--accent); padding-left: 16px; }
+.node.decision {
+  border: 1.5px solid var(--secondary);
+  background: var(--white);
+  text-align: center;
+}
+.node.decision .node-title { font-style: italic; }
+.node.start-end {
+  background: var(--secondary);
+  color: var(--white);
+  border-radius: 24px;
+  padding: 12px 20px;
+  min-width: 140px;
+  text-align: center;
+}
+.node.start-end .node-title { color: var(--white); font-size: 13px; }
+.node.state-good { border-left: 6px solid var(--success); padding-left: 16px; }
+.node.state-warn { border-left: 6px solid var(--warning); padding-left: 16px; }
+.node.state-alert { border-left: 6px solid var(--alert); padding-left: 16px; }
+
+/* ---------- ARROWS ---------- */
+.arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--secondary);
+}
+.arrow-down, .arrow-right {
+  position: relative;
+}
+.arrow-down { width: 2px; height: 32px; background: var(--secondary); margin: 0 auto; }
+.arrow-down::after {
+  content: ''; position: absolute; bottom: -1px; left: 50%;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid var(--secondary);
+}
+.arrow-right { width: 40px; height: 2px; background: var(--secondary); align-self: center; flex-shrink: 0; }
+.arrow-right::after {
+  content: ''; position: absolute; right: -1px; top: 50%;
+  transform: translateY(-50%);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 8px solid var(--secondary);
+}
+.arrow-label {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  background: var(--white);
+  position: absolute;
+  white-space: nowrap;
+}
+.arrow-down-wrap { position: relative; display: flex; flex-direction: column; align-items: center; }
+.arrow-down-wrap .arrow-label { top: 50%; transform: translate(calc(100% + 12px), -50%); left: 50%; }
+.arrow-right-wrap { position: relative; display: flex; align-items: center; }
+.arrow-right-wrap .arrow-label { top: -18px; left: 50%; transform: translateX(-50%); }
+
+/* ---------- FLOW LAYOUT: MASTER ---------- */
+.master-flow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 48px;
+}
+.master-flow .flow-step { display: flex; flex-direction: column; align-items: stretch; }
+.master-flow .flow-connector { display: flex; align-items: center; justify-content: center; }
+
+/* Branch layout */
+.branch-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 16px;
+}
+.branch-container > div { display: flex; flex-direction: column; gap: 16px; }
+
+/* ---------- DATA ARCHITECTURE ---------- */
+.data-arch {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+.arch-column {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.arch-column .col-header {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding-bottom: 12px;
+  border-bottom: 1.5px solid var(--secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.arch-column .col-header .material-symbols-outlined { font-size: 18px; }
+.arch-column .col-subhead { font-size: 11px; font-weight: 500; color: var(--secondary); margin-top: 4px; line-height: 1.4; }
+
+.pipe-flow { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.pipe-flow .node { width: 100%; }
+
+/* ---------- M&T INTEGRATION ---------- */
+.mt-flow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+.mt-col { display: flex; flex-direction: column; gap: 16px; }
+.mt-col .node { width: 100%; }
+
+.branch-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-top: 8px;
+}
+.branch-row .node { width: 100%; }
+
+/* ---------- SCENARIO COMPARISON ---------- */
+.scenario-flow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.scenario-col { display: flex; flex-direction: column; gap: 16px; }
+.scenario-strategies {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.strategy-mini {
+  border: 1.5px solid var(--secondary);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ---------- DEPENDENCIES ---------- */
+.deps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.dep-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 20px;
+}
+.dep-card .dep-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.dep-card .dep-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.dep-card .dep-body { font-size: 13px; line-height: 1.5; }
+.dep-card .dep-status {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-top: 12px;
+}
+.dep-status.ready { background: rgba(99,199,59,0.15); color: var(--secondary); }
+.dep-status.partial { background: rgba(255,152,0,0.15); color: var(--secondary); }
+.dep-status.blocked { background: rgba(220,38,38,0.15); color: var(--secondary); }
+
+/* ---------- OPEN QUESTIONS ---------- */
+.questions-list { display: flex; flex-direction: column; gap: 12px; }
+.question {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 20px;
+  padding: 18px 20px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  align-items: center;
+}
+.question .q-num {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--secondary);
+}
+.question .q-body { font-size: 14px; line-height: 1.5; }
+.question .q-body strong { font-weight: 600; }
+.question .q-owner {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* ---------- LEGEND ---------- */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 20px 24px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  margin-bottom: 48px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+.legend-swatch {
+  width: 40px;
+  height: 28px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 4px;
+  background: var(--white);
+}
+.legend-swatch.system { background: var(--grey); }
+.legend-swatch.external { border-style: dashed; }
+.legend-swatch.data { border-left: 6px solid var(--accent); }
+.legend-swatch.start-end { background: var(--secondary); border-radius: 16px; }
+
+/* ---------- FOOTER ---------- */
+.page-footer {
+  margin-top: 72px;
+  padding-top: 32px;
+  border-top: 1.5px solid var(--secondary);
+  font-size: 12px;
+  color: var(--secondary);
+  display: flex;
+  justify-content: space-between;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <div class="label">TrueDI · Logic Flowchart</div>
+    <h1>Strategy V2</h1>
+    <div style="font-size: 15px; font-weight: 400; max-width: 800px; margin-top: 8px;">
+      How the page works — user journey, data flows, M&amp;T integration, and scenario logic.
+    </div>
+    <div class="meta">
+      <span><span class="material-symbols-outlined">person</span>Mike Gammon · Lead Product Designer</span>
+      <span><span class="material-symbols-outlined">calendar_today</span>April 2026</span>
+      <span><span class="material-symbols-outlined">description</span>Prepared for Otto review</span>
+    </div>
+  </header>
+
+  <!-- INTRO -->
+  <div class="intro">
+    <div>
+      <p style="font-size: 16px; font-weight: 500;">Strategy V2 is the rework of the Strategy page — currently the weakest screen in the platform (one red bar per year, no drill-down, no live data). This flowchart establishes the logic before the UI design to make sure the data architecture, calculation path, and retention loop are all sound.</p>
+      <p style="margin-top: 16px;">The page sits on three foundations: the <strong>Project Calculation engine</strong> (builds the forecast), the <strong>M&amp;T API</strong> (supplies the actual), and the <strong>Scenario modelling engine</strong> (compares alternatives). Variance detection on top of these creates the retention loop — the reason customers stay on the platform after deployment.</p>
+    </div>
+    <div class="principle-card">
+      <h3>Design principles</h3>
+      <ul>
+        <li>Match Schemes for quality</li>
+        <li>Live data is the centre of gravity</li>
+        <li>Monthly base, aggregate up</li>
+        <li>Compare on shared axes only</li>
+        <li>Variance surfaces drift, doesn't hide it</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch start-end"></div>Start / end</div>
+    <div class="legend-item"><div class="legend-swatch"></div>User action</div>
+    <div class="legend-item"><div class="legend-swatch system"></div>System process</div>
+    <div class="legend-item"><div class="legend-swatch external"></div>External / API</div>
+    <div class="legend-item"><div class="legend-swatch data"></div>Data store / output</div>
+    <div class="legend-item"><span style="font-style: italic; font-size: 13px;">Decision point (italic label)</span></div>
+  </div>
+
+  <!-- SECTION 1: MASTER FLOW -->
+  <section class="section">
+    <div class="section-header">
+      <span class="num">1</span>
+      <h2>Master flow — user journey</h2>
+      <span class="tag">Page-level logic</span>
+    </div>
+    <p class="section-description">
+      High-level path from entry to outcome. A user lands on the Strategy page, either creates or opens a strategy, sees forecast overlaid with live actuals, and either stays in a tracking loop or moves into comparison. Every downstream detail hangs off this spine.
+    </p>
+
+    <div class="master-flow">
+      <div class="flow-step">
+        <div class="node start-end"><div class="node-title">Enter Strategy page</div></div>
+      </div>
+      <div class="flow-connector"><div class="arrow-right"></div></div>
+      <div class="flow-step">
+        <div class="node decision">
+          <div class="node-label"><span class="material-symbols-outlined">fork_right</span>Decision</div>
+          <div class="node-title">Create new or open existing?</div>
+        </div>
+      </div>
+      <div class="flow-connector"><div class="arrow-right"></div></div>
+      <div class="flow-step">
+        <div class="node user">
+          <div class="node-label"><span class="material-symbols-outlined">edit_note</span>User action</div>
+          <div class="node-title">Define or select</div>
+          <div class="node-detail">Name, interventions, horizon</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="branch-container">
+      <!-- Left branch -->
+      <div>
+        <div class="node" style="align-self:center;">
+          <div class="node-label"><span class="material-symbols-outlined">add_circle</span>Create path</div>
+          <div class="node-title">Build strategy</div>
+          <div class="node-detail">Add interventions · set baseline · pick horizon</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node system">
+          <div class="node-label"><span class="material-symbols-outlined">settings</span>System</div>
+          <div class="node-title">Run Project Calculation engine</div>
+          <div class="node-detail">Monthly forecast: carbon, cost, savings</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node data">
+          <div class="node-label"><span class="material-symbols-outlined">database</span>Data</div>
+          <div class="node-title">Persist strategy + forecast</div>
+        </div>
+      </div>
+
+      <!-- Right branch -->
+      <div>
+        <div class="node" style="align-self:center;">
+          <div class="node-label"><span class="material-symbols-outlined">visibility</span>View path</div>
+          <div class="node-title">Open strategy</div>
+          <div class="node-detail">Load saved forecast + live layer</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node system">
+          <div class="node-label"><span class="material-symbols-outlined">sync</span>System</div>
+          <div class="node-title">Pull actuals via M&amp;T API</div>
+          <div class="node-detail">Aggregate meter data to month-level</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node data">
+          <div class="node-label"><span class="material-symbols-outlined">compare_arrows</span>Output</div>
+          <div class="node-title">Render forecast + actual overlay</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; justify-content:center; margin-top: 24px;">
+      <div class="arrow-down"></div>
+    </div>
+
+    <div class="node decision" style="max-width: 400px; margin: 0 auto;">
+      <div class="node-label" style="justify-content: center;"><span class="material-symbols-outlined">fork_right</span>Decision</div>
+      <div class="node-title">Within variance threshold?</div>
+    </div>
+
+    <div class="branch-container" style="grid-template-columns: 1fr 1fr 1fr;">
+      <div>
+        <div class="arrow-down"></div>
+        <div class="node state-good">
+          <div class="node-label"><span class="material-symbols-outlined" style="color: var(--success);">check_circle</span>On track</div>
+          <div class="node-title">Continue tracking</div>
+          <div class="node-detail">Green live indicator · no action required</div>
+        </div>
+      </div>
+      <div>
+        <div class="arrow-down"></div>
+        <div class="node state-warn">
+          <div class="node-label"><span class="material-symbols-outlined" style="color: var(--warning);">warning</span>Drift warning</div>
+          <div class="node-title">Surface variance to user</div>
+          <div class="node-detail">Show amber indicator · suggest investigation</div>
+        </div>
+      </div>
+      <div>
+        <div class="arrow-down"></div>
+        <div class="node state-alert">
+          <div class="node-label"><span class="material-symbols-outlined" style="color: var(--alert);">error</span>Threshold breach</div>
+          <div class="node-title">Alert + recommend review</div>
+          <div class="node-detail">Red state · optional notification out</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: DATA ARCHITECTURE -->
+  <section class="section">
+    <div class="section-header">
+      <span class="num">2</span>
+      <h2>Data architecture</h2>
+      <span class="tag">Inputs → Engine → Outputs</span>
+    </div>
+    <p class="section-description">
+      What feeds the page. The calculation engine produces the forecast; the M&amp;T integration produces the actual; the variance layer compares them. Keep the calculation engine generic per Otto's principle: <em>numbers come in, crunch a couple, numbers come out</em>.
+    </p>
+
+    <div class="data-arch">
+      <!-- Inputs -->
+      <div class="arch-column">
+        <div class="col-header"><span class="material-symbols-outlined">input</span>Inputs</div>
+        <div class="node"><div class="node-title">Interventions</div><div class="node-detail">Per project — flexible unit input</div></div>
+        <div class="node"><div class="node-title">Baseline consumption</div><div class="node-detail">Pre-intervention profile</div></div>
+        <div class="node"><div class="node-title">Emission factors</div><div class="node-detail">Scope 1, 2, 3 factors by year</div></div>
+        <div class="node"><div class="node-title">Time horizon</div><div class="node-detail">User-defined: 5–25 yr</div></div>
+        <div class="node external"><div class="node-label"><span class="material-symbols-outlined">api</span>External</div><div class="node-title">Future energy cost forecast</div><div class="node-detail">Non-commodity overlay (Phase 2)</div></div>
+      </div>
+
+      <!-- Engine -->
+      <div class="arch-column" style="background: var(--grey);">
+        <div class="col-header"><span class="material-symbols-outlined">memory</span>Calculation engine</div>
+        <div class="col-subhead">Generic, unit-agnostic. Takes any emission source type via flexible unit input.</div>
+        <div class="node system" style="background:var(--white);">
+          <div class="node-label"><span class="material-symbols-outlined">calculate</span>Step 1</div>
+          <div class="node-title">Normalise inputs to monthly</div>
+        </div>
+        <div class="node system" style="background:var(--white);">
+          <div class="node-label"><span class="material-symbols-outlined">calculate</span>Step 2</div>
+          <div class="node-title">Apply intervention deltas</div>
+        </div>
+        <div class="node system" style="background:var(--white);">
+          <div class="node-label"><span class="material-symbols-outlined">calculate</span>Step 3</div>
+          <div class="node-title">Calc carbon, cost, savings</div>
+        </div>
+        <div class="node system" style="background:var(--white);">
+          <div class="node-label"><span class="material-symbols-outlined">calculate</span>Step 4</div>
+          <div class="node-title">Project forward to horizon</div>
+        </div>
+      </div>
+
+      <!-- Outputs -->
+      <div class="arch-column">
+        <div class="col-header"><span class="material-symbols-outlined">output</span>Outputs</div>
+        <div class="node data"><div class="node-title">Monthly forecast series</div><div class="node-detail">Carbon kgCO₂e / month</div></div>
+        <div class="node data"><div class="node-title">Monthly cost series</div><div class="node-detail">£ / month + savings delta</div></div>
+        <div class="node data"><div class="node-title">Cumulative returns</div><div class="node-detail">NPV · payback period</div></div>
+        <div class="node data"><div class="node-title">Stack breakdown</div><div class="node-detail">By intervention · by source</div></div>
+        <div class="node data" style="border-left-color: var(--highlight);">
+          <div class="node-title">Renders as stacked chart</div>
+          <div class="node-detail">Month / quarter / year toggle</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: M&T INTEGRATION -->
+  <section class="section">
+    <div class="section-header">
+      <span class="num">3</span>
+      <h2>M&amp;T live data integration</h2>
+      <span class="tag">Retention loop</span>
+    </div>
+    <p class="section-description">
+      This is the retention feature — the reason customers stay on the platform post-deployment. Meter data flows in continuously, gets aggregated, and overlays the forecast as a solid line against the dashed projection.
+    </p>
+
+    <div class="mt-flow">
+      <div class="mt-col">
+        <div class="node external">
+          <div class="node-label"><span class="material-symbols-outlined">api</span>Source</div>
+          <div class="node-title">M&amp;T meter data</div>
+          <div class="node-detail">HH Electricity · Gas · Water · Total</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node system">
+          <div class="node-label"><span class="material-symbols-outlined">schedule</span>Ingestion</div>
+          <div class="node-title">Scheduled pull</div>
+          <div class="node-detail">Frequency: TBD · likely daily batched</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node system">
+          <div class="node-label"><span class="material-symbols-outlined">compress</span>Processing</div>
+          <div class="node-title">Aggregate to month</div>
+          <div class="node-detail">Sum HH → daily → monthly</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node data">
+          <div class="node-title">Actual monthly series</div>
+          <div class="node-detail">Per meter type · per project</div>
+        </div>
+      </div>
+
+      <div class="mt-col">
+        <div class="node data">
+          <div class="node-title">Forecast monthly series</div>
+          <div class="node-detail">From calc engine · dashed line</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node system">
+          <div class="node-label"><span class="material-symbols-outlined">compare_arrows</span>Compare</div>
+          <div class="node-title">Variance = actual − forecast</div>
+          <div class="node-detail">% delta per month · running average</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node decision">
+          <div class="node-label" style="justify-content:center;"><span class="material-symbols-outlined">fork_right</span>Decision</div>
+          <div class="node-title">Check against threshold</div>
+        </div>
+        <div class="branch-row">
+          <div class="node state-good"><div class="node-title">≤ ±5%</div><div class="node-detail">On track</div></div>
+          <div class="node state-warn"><div class="node-title">±5–15%</div><div class="node-detail">Drift</div></div>
+          <div class="node state-alert"><div class="node-title">&gt; ±15%</div><div class="node-detail">Breach</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: SCENARIO COMPARISON -->
+  <section class="section">
+    <div class="section-header">
+      <span class="num">4</span>
+      <h2>Scenario comparison</h2>
+      <span class="tag">Multi-strategy logic</span>
+    </div>
+    <p class="section-description">
+      Users should be able to run a baseline and several alternatives side-by-side, comparing on shared axes. Each strategy is a full calculation run — the comparison layer normalises timebases and renders them together.
+    </p>
+
+    <div class="scenario-flow">
+      <div class="scenario-col">
+        <div class="node" style="text-align:center;">
+          <div class="node-label" style="justify-content:center;"><span class="material-symbols-outlined">layers</span>Input set</div>
+          <div class="node-title">N strategies per project</div>
+        </div>
+        <div class="scenario-strategies">
+          <div class="strategy-mini">Strategy A · baseline</div>
+          <div class="strategy-mini">Strategy B · alt</div>
+          <div class="strategy-mini">Strategy C · alt</div>
+          <div class="strategy-mini">Strategy N · alt</div>
+        </div>
+        <div class="node"><div class="node-detail" style="margin-top:0;"><strong>Open Q:</strong> max concurrent strategies? Performance vs UX trade-off.</div></div>
+      </div>
+
+      <div class="scenario-col">
+        <div class="arrow-down" style="margin-top: 40px;"></div>
+        <div class="node system">
+          <div class="node-label"><span class="material-symbols-outlined">tune</span>Normalise</div>
+          <div class="node-title">Align to shared timebase</div>
+          <div class="node-detail">Same horizon · same granularity</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node system">
+          <div class="node-label"><span class="material-symbols-outlined">bar_chart</span>Render</div>
+          <div class="node-title">Multi-series chart</div>
+          <div class="node-detail">Per metric: carbon · cost · payback · NPV</div>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="node decision">
+          <div class="node-label" style="justify-content:center;"><span class="material-symbols-outlined">fork_right</span>Decision</div>
+          <div class="node-title">User promotes winner?</div>
+        </div>
+      </div>
+
+      <div class="scenario-col">
+        <div class="arrow-down" style="margin-top: 40px;"></div>
+        <div class="node" style="border-left: 6px solid var(--success); padding-left: 16px;">
+          <div class="node-label"><span class="material-symbols-outlined">star</span>Path A</div>
+          <div class="node-title">Set as baseline</div>
+          <div class="node-detail">New baseline tracks via M&amp;T · old strategies archived or retained</div>
+        </div>
+        <div class="node" style="border-left: 6px solid var(--accent); padding-left: 16px;">
+          <div class="node-label"><span class="material-symbols-outlined">refresh</span>Path B</div>
+          <div class="node-title">Iterate</div>
+          <div class="node-detail">Adjust interventions · re-run · compare again</div>
+        </div>
+        <div class="node" style="border-left: 6px solid var(--warning); padding-left: 16px;">
+          <div class="node-label"><span class="material-symbols-outlined">bookmark</span>Path C</div>
+          <div class="node-title">Retain for reference</div>
+          <div class="node-detail">Link: Strategy V2 Retention feature</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: DEPENDENCIES -->
+  <section class="section">
+    <div class="section-header">
+      <span class="num">5</span>
+      <h2>Dependencies</h2>
+      <span class="tag">What Strategy V2 rests on</span>
+    </div>
+    <p class="section-description">
+      Four upstream dependencies. One is ready, two are in-flight, one needs confirmation. Scope 3 Foundational Update status determines how much of the engine work gets redone vs reused.
+    </p>
+
+    <div class="deps-grid">
+      <div class="dep-card">
+        <div class="dep-label">Dependency 1</div>
+        <div class="dep-title">M&amp;T API</div>
+        <div class="dep-body">Existing integration. Need to confirm field coverage is sufficient for the red/dashed line comparison at monthly granularity.</div>
+        <div class="dep-status partial">Partial · confirm coverage</div>
+      </div>
+      <div class="dep-card">
+        <div class="dep-label">Dependency 2</div>
+        <div class="dep-title">Project Calculation engine</div>
+        <div class="dep-body">Existing. The generic unit-agnostic principle (Otto) means no per-source rework. But the Improved Project Calc &amp; Financial Modelling item in Phase 1 will alter outputs.</div>
+        <div class="dep-status partial">In flight · coordinate</div>
+      </div>
+      <div class="dep-card">
+        <div class="dep-label">Dependency 3</div>
+        <div class="dep-title">Scope 3 Foundational Update</div>
+        <div class="dep-body">Already designed (sent to Otto). Affects which intervention types can feed into strategies and how multi-scope stacking works.</div>
+        <div class="dep-status ready">Designed · awaiting build</div>
+      </div>
+      <div class="dep-card">
+        <div class="dep-label">Dependency 4</div>
+        <div class="dep-title">Advanced Scenario Modelling</div>
+        <div class="dep-body">Energy cost forecasting, long-term carbon modelling. The scenario comparison layer here should reuse this engine, not rebuild it.</div>
+        <div class="dep-status partial">Phase 2 · align scope</div>
+      </div>
+      <div class="dep-card">
+        <div class="dep-label">Dependency 5</div>
+        <div class="dep-title">Targets V2</div>
+        <div class="dep-body">Not a hard dependency, but Strategy V2 and Targets V2 share a natural user loop: <em>set target → design strategy → track progress</em>. Design them together.</div>
+        <div class="dep-status partial">Aligned · not blocking</div>
+      </div>
+      <div class="dep-card">
+        <div class="dep-label">Dependency 6</div>
+        <div class="dep-title">Schemes UI pattern</div>
+        <div class="dep-body">The design blueprint. Month-by-month breakdown, stacked graphs, time-frame zoom — Schemes already does this well. Strategy V2 should borrow heavily.</div>
+        <div class="dep-status ready">Blueprint in place</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: OPEN QUESTIONS -->
+  <section class="section">
+    <div class="section-header">
+      <span class="num">6</span>
+      <h2>Open logic questions</h2>
+      <span class="tag">Resolve before wireframing</span>
+    </div>
+    <p class="section-description">
+      Six questions the flowchart can't answer alone. Answers shape the wireframes, so best to close these out with Otto before moving to UI.
+    </p>
+
+    <div class="questions-list">
+      <div class="question">
+        <div class="q-num">1</div>
+        <div class="q-body"><strong>Variance thresholds</strong> — who sets them? Platform defaults (±5% / ±15%), customer-configurable, or per-strategy override? Different answers imply different settings patterns in the UI.</div>
+        <div class="q-owner">Otto</div>
+      </div>
+      <div class="question">
+        <div class="q-num">2</div>
+        <div class="q-body"><strong>Alert delivery</strong> — is the drift / breach state purely in-platform (red dot + banner), or does it trigger email / Teams notifications? Ties into the Client Notifications workstream.</div>
+        <div class="q-owner">Otto · Rochelle</div>
+      </div>
+      <div class="question">
+        <div class="q-num">3</div>
+        <div class="q-body"><strong>Concurrent strategy limit</strong> — how many strategies can a user run in parallel per project? 3? 5? Unlimited? Performance and UI density both affected.</div>
+        <div class="q-owner">Otto · Dev</div>
+      </div>
+      <div class="question">
+        <div class="q-num">4</div>
+        <div class="q-body"><strong>Targets V2 linkage</strong> — do we treat Strategy and Target as one connected journey (single page tabs) or as linked-but-separate pages? Otto's call on information architecture.</div>
+        <div class="q-owner">Otto</div>
+      </div>
+      <div class="question">
+        <div class="q-num">5</div>
+        <div class="q-body"><strong>MVP scope for Otto review</strong> — is the first wireframe round covering the full vision (create + track + compare), or just the tracking view with existing strategies? Scoping affects next-sprint size.</div>
+        <div class="q-owner">Otto · Mike</div>
+      </div>
+      <div class="question">
+        <div class="q-num">6</div>
+        <div class="q-body"><strong>Retired strategy handling</strong> — when a user promotes a new baseline, what happens to the old one? Archive, hide, or retain visible for audit trail? CSRD implications.</div>
+        <div class="q-owner">Rochelle</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    <div>Strategy V2 · Logic Flowchart · v1</div>
+    <div>TrueDI — Control. Clarity. Confidence.</div>
+  </footer>
+
+</div>
+</body>
+</html>

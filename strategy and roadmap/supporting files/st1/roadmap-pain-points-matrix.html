@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap × Pain Points — Coverage Matrix</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+<style>
+:root {
+  --primary: #3F2A95;
+  --secondary: #111111;
+  --accent: #3185DA;
+  --highlight: #C04A74;
+  --total: #7F3A84;
+  --success: #63C73B;
+  --warning: #FF9800;
+  --alert: #DC2626;
+  --white: #ffffff;
+  --grey: #F5F5F5;
+  --font: 'Poppins', system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  background: var(--white);
+  color: var(--secondary);
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 48px;
+}
+.container { max-width: 1500px; margin: 0 auto; }
+
+/* ---------- HEADER ---------- */
+.page-header {
+  padding-bottom: 0;
+  margin-bottom: 40px;
+}
+.page-header .label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 14px;
+}
+.page-header .subhead {
+  font-size: 15px;
+  font-weight: 400;
+  max-width: 800px;
+  margin-top: 8px;
+}
+.page-header .meta {
+  font-size: 13px;
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.page-header .meta span { display: inline-flex; align-items: center; gap: 6px; }
+.page-header .meta .material-symbols-outlined { font-size: 16px; }
+
+/* ---------- INTRO ---------- */
+.intro {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+.intro p { font-size: 15px; line-height: 1.6; margin-bottom: 12px; }
+.intro p.lead { font-size: 17px; font-weight: 500; line-height: 1.5; }
+
+.guide-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 20px 24px;
+}
+.guide-card h3 {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.guide-card h3 .material-symbols-outlined { font-size: 16px; }
+.guide-card .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--grey);
+  font-size: 13px;
+}
+.guide-card .legend-item:last-child { border-bottom: none; }
+.guide-card .legend-swatch {
+  width: 36px;
+  height: 22px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+}
+.guide-card .legend-swatch.full {
+  background: rgba(99,199,59,0.18);
+  border-left: 4px solid var(--success);
+}
+.guide-card .legend-swatch.partial {
+  background: rgba(255,152,0,0.15);
+  border-left: 4px solid var(--warning);
+}
+.guide-card .legend-swatch.gap {
+  background: var(--white);
+  border-left: 4px solid var(--secondary);
+  border-style: dashed;
+  border-width: 1.5px;
+}
+
+/* ---------- FY27 TIMING BAND ---------- */
+.timing-section { margin-bottom: 48px; }
+.timing-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--secondary);
+}
+.timing-header h3 {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.timing-header .timing-note {
+  font-size: 12px;
+  color: var(--secondary);
+  margin-left: auto;
+}
+.timing-band {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 20px 24px;
+  background: var(--white);
+}
+.timing-track {
+  position: relative;
+  height: 80px;
+  margin: 8px 0;
+}
+.timing-months {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--secondary);
+}
+.timing-months span {
+  text-align: center;
+  border-left: 1px solid var(--grey);
+  padding: 4px 0;
+  height: 24px;
+}
+.timing-months span:first-child { border-left: none; }
+.timing-bars {
+  position: relative;
+  height: 48px;
+}
+.timing-bar {
+  position: absolute;
+  top: 8px;
+  height: 32px;
+  border-radius: 16px;
+  border: 1.5px solid var(--secondary);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.timing-bar.sustainability {
+  background: var(--secondary);
+  color: var(--white);
+  font-weight: 600;
+}
+.timing-bar.context {
+  background: var(--white);
+  color: var(--secondary);
+  border-style: dashed;
+  font-size: 11px;
+  height: 24px;
+  top: 12px;
+}
+
+/* ---------- SECTION ---------- */
+.section { margin-bottom: 0; }
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  border-bottom: 1.5px solid var(--secondary);
+}
+.section-header .num {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 10px;
+  background: var(--secondary);
+  color: var(--white);
+  border-radius: 4px;
+}
+.section-header h2 { font-size: 24px; font-weight: 700; }
+.section-header .tag {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 4px;
+}
+.section-description {
+  font-size: 14px;
+  color: var(--secondary);
+  margin-bottom: 28px;
+  max-width: 900px;
+}
+
+/* ---------- MATRIX AXIS LABEL ---------- */
+.matrix-axis-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-left: 240px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+/* ---------- THE MATRIX ---------- */
+.matrix {
+  display: grid;
+  grid-template-columns: 240px repeat(5, 1fr);
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.matrix-cell {
+  padding: 16px 14px;
+  border-right: 1.5px solid var(--secondary);
+  border-bottom: 1.5px solid var(--secondary);
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.matrix-cell:nth-child(6n) { border-right: none; }
+.matrix .matrix-row-end { border-bottom: none; }
+
+.matrix-cell.col-header {
+  background: var(--secondary);
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 16px 14px;
+  text-align: left;
+  justify-content: flex-start;
+}
+.matrix-cell.col-header .col-name {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.matrix-cell.col-header .col-detail {
+  font-size: 11px;
+  font-weight: 400;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.matrix-cell.corner {
+  background: var(--secondary);
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  padding: 16px 14px;
+  line-height: 1.3;
+}
+
+.matrix-cell.row-label {
+  background: var(--grey);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.35;
+}
+.matrix-cell.row-label .row-detail {
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: 4px;
+  color: var(--secondary);
+}
+
+.matrix-cell.coverage {
+  position: relative;
+  text-align: center;
+}
+.matrix-cell.coverage.full {
+  background: rgba(99,199,59,0.22);
+}
+.matrix-cell.coverage.partial {
+  background: rgba(255,152,0,0.18);
+}
+.matrix-cell.coverage.gap {
+  background: var(--white);
+}
+.coverage-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+.coverage-label.full-label { color: var(--secondary); }
+.coverage-label.partial-label { color: var(--secondary); }
+.coverage-label.gap-label {
+  color: var(--secondary);
+}
+.coverage-detail {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Highlight gap row */
+.matrix-cell.row-label.gap-row {
+  background: rgba(192,74,116,0.12);
+  border-left: 4px solid var(--highlight);
+  border-right: 1.5px solid var(--secondary);
+}
+
+/* ---------- COVERAGE STATS ---------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.stat-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 20px 24px;
+}
+.stat-card .stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.stat-card .stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.stat-card .stat-detail {
+  font-size: 12px;
+  line-height: 1.4;
+}
+.stat-card.full {
+  border-left: 6px solid var(--success);
+  border-radius: 0 8px 8px 0;
+}
+.stat-card.partial {
+  border-left: 6px solid var(--warning);
+  border-radius: 0 8px 8px 0;
+}
+.stat-card.gap {
+  border-left: 6px solid var(--highlight);
+  border-radius: 0 8px 8px 0;
+}
+
+/* ---------- FINDINGS ---------- */
+.finding {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin-bottom: 16px;
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.finding .find-num {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+}
+.finding .find-title {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 10px;
+}
+.finding .find-body {
+  font-size: 14px;
+  line-height: 1.55;
+}
+.finding.headline {
+  background: var(--secondary);
+  color: var(--white);
+}
+
+/* ---------- PARKED SOPHISTICATION ---------- */
+.parked-card {
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  padding: 24px 28px;
+  background: var(--grey);
+  margin-top: 24px;
+}
+.parked-card h3 {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+.parked-card p {
+  font-size: 13px;
+  line-height: 1.55;
+}
+.parked-card .parked-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.parked-card .parked-tag {
+  padding: 4px 10px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 4px;
+  background: var(--white);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ---------- FOOTER ---------- */
+.page-footer {
+  margin-top: 64px;
+  padding-top: 32px;
+  border-top: 1.5px solid var(--secondary);
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* ---------- INLINE MATRIX LEGEND ---------- */
+.matrix-legend {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 12px;
+  padding: 4px 0;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+.matrix-legend .legend-label {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+}
+.matrix-legend .legend-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.matrix-legend .legend-dot {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--secondary);
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.matrix-legend .legend-dot.full {
+  background: rgba(99,199,59,0.22);
+}
+.matrix-legend .legend-dot.partial {
+  background: rgba(255,152,0,0.18);
+}
+.matrix-legend .legend-dot.gap {
+  background: var(--white);
+}
+
+/* ---------- HEADLINE LINE ---------- */
+.headline-line {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.5;
+  max-width: 1000px;
+}
+.headline-line strong {
+  font-weight: 700;
+}
+
+/* ---------- INTRO SINGLE ---------- */
+.intro.single {
+  display: block;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 1100px) {
+  body { padding: 24px; }
+  .intro { grid-template-columns: 1fr; gap: 24px; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .matrix { grid-template-columns: 200px repeat(5, 1fr); font-size: 12px; }
+  .matrix-cell { padding: 10px 8px; font-size: 12px; }
+  .matrix-cell.col-header .col-name { font-size: 12px; }
+  .matrix-axis-label { margin-left: 200px; }
+  .page-header h1 { font-size: 26px; }
+}
+@media (max-width: 700px) {
+  .matrix { grid-template-columns: 1fr; }
+  .matrix-cell { border-right: none !important; }
+  .matrix-cell.col-header { font-size: 11px; padding: 8px; }
+  .matrix-axis-label { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <h1>Roadmap × Pain Points — coverage matrix</h1>
+    <div class="subhead">Maps the sustainability roadmap onto the pain points raised in the 7 May meeting — seven customer pains across five workstreams. Each cell shows how strongly that workstream addresses that pain: full, partial, or gap. Pain points come from the meeting; workstreams from the Phase 1–4 priorities in Asana, sequenced left-to-right in rough delivery order. Coverage varies by row — some pains are addressed by multiple workstreams, others rest on a single primary one.</div>
+  </header>
+
+  <!-- MATRIX -->
+  <section class="section">
+    <div class="matrix-axis-label">Workstreams</div>
+    <div class="matrix">
+
+      <!-- HEADER ROW -->
+      <div class="matrix-cell corner">
+        Pain points
+      </div>
+      <div class="matrix-cell col-header">
+        <div class="col-name">Foundational modelling</div>
+        <div class="col-detail">Scope 3 · Scope 2 forecasting · Alt fuels · Scenario engine</div>
+      </div>
+      <div class="matrix-cell col-header">
+        <div class="col-name">Strategy V2 + Live</div>
+        <div class="col-detail">Forecast vs actual · Notes &amp; Assumptions · M&amp;T integration</div>
+      </div>
+      <div class="matrix-cell col-header">
+        <div class="col-name">SECR automation</div>
+        <div class="col-detail">Sohil-led · Compliance reporting layer</div>
+      </div>
+      <div class="matrix-cell col-header">
+        <div class="col-name">Targets V2</div>
+        <div class="col-detail">Multi-target · Phase filtering · Progress tracking</div>
+      </div>
+      <div class="matrix-cell col-header">
+        <div class="col-name">Ingestion redesign</div>
+        <div class="col-detail">Bulk upload · Proposal extraction · Invoice ingestion</div>
+      </div>
+
+      <!-- ROW 1: Manual data ingestion -->
+      <div class="matrix-cell row-label">
+        Manual data ingestion
+        <div class="row-detail">Proposals in PDFs, manual invoice review, bulk upload pain</div>
+      </div>
+      <div class="matrix-cell coverage gap">
+        <div class="coverage-label gap-label">—</div>
+      </div>
+      <div class="matrix-cell coverage gap">
+        <div class="coverage-label gap-label">—</div>
+      </div>
+      <div class="matrix-cell coverage partial">
+        <div class="coverage-detail">Auto-extracts data from True for SECR reports</div>
+      </div>
+      <div class="matrix-cell coverage gap">
+        <div class="coverage-label gap-label">—</div>
+      </div>
+      <div class="matrix-cell coverage full">
+        <div class="coverage-detail">Bulk upload, proposal extraction, automated invoice ingestion</div>
+      </div>
+
+      <!-- ROW 2: Calculation accuracy -->
+      <div class="matrix-cell row-label">
+        Calculation accuracy
+        <div class="row-detail">Modelling accuracy &amp; need for confidence ranges</div>
+      </div>
+      <div class="matrix-cell coverage full">
+        <div class="coverage-detail">Refreshed calculation engine across all scopes</div>
+      </div>
+      <div class="matrix-cell coverage partial">
+        <div class="coverage-detail">Surfaces engine outputs through strategy views</div>
+      </div>
+      <div class="matrix-cell coverage gap">
+        <div class="coverage-label gap-label">—</div>
+      </div>
+      <div class="matrix-cell coverage partial">
+        <div class="coverage-detail">Target trajectories share the calc foundations</div>
+      </div>
+      <div class="matrix-cell coverage partial">
+        <div class="coverage-detail">Cleaner inputs reduce error at source</div>
+      </div>
+
+      <!-- ROW 3: Limited scope coverage -->
+      <div class="matrix-cell row-label">
+        Limited emissions scope coverage
+        <div class="row-detail">Too Scope 2 / energy focused — missing Scope 1, 3, transport, fuels</div>
+      </div>
+      <div class="matrix-cell coverage full">
+        <div class="coverage-detail">Scope 3 modelling and alternative fuel tracking land here</div>
+      </div>
+      <div class="matrix-cell coverage partial">
+        <div class="coverage-detail">Renders multi-scope data through strategies</div>
+      </div>
+      <div class="matrix-cell coverage gap">
+        <div class="coverage-label gap-label">—</div>
+      </div>
+      <div class="matrix-cell coverage partial">
+        <div class="coverage-detail">Multi-scope target tracking across 1, 2, 3</div>
+      </div>
+      <div class="matrix-cell coverage partial">
+        <div class="coverage-detail">Ingests non-energy data — transport, waste, fuels</div>
+      </div>
+
+      <!-- ROW 4: Data trust -->
+      <div class="matrix-cell row-label">
+        Data trust &amp; confidence
+        <div class="row-detail">Customers and TRUE both lack confidence in shown figures</div>
+      </div>
+      <div class="matrix-cell coverage partial">
+        <div class="coverage-detail">Stronger calcs are the foundation of trust</div>
+      </div>
+      <div class="matrix-cell coverage full">
+        <div class="coverage-detail">Live actuals overlay forecasts; Notes &amp; Assumptions surface uncertainty</div>
+      </div>
+      <div class="matrix-cell coverage partial">
+        <div class="coverage-detail">Automated reports remove human-error doubts</div>
+      </div>
+      <div class="matrix-cell coverage gap">
+        <div class="coverage-label gap-label">—</div>
+      </div>
+      <div class="matrix-cell coverage partial">
+        <div class="coverage-detail">Cleaner inputs raise output credibility</div>
+      </div>
+
+      <!-- ROW 5: Project decision support -->
+      <div class="matrix-cell row-label">
+        Project decision support
+        <div class="row-detail">Customers act without comparison · no scenario / sequencing help</div>
+      </div>
+      <div class="matrix-cell coverage partial">
+        <div class="coverage-detail">Scenario engine enables what-if comparison</div>
+      </div>
+      <div class="matrix-cell coverage full">
+        <div class="coverage-detail">Side-by-side strategy comparison with live data overlay</div>
+      </div>
+      <div class="matrix-cell coverage gap">
+        <div class="coverage-label gap-label">—</div>
+      </div>
+      <div class="matrix-cell coverage partial">
+        <div class="coverage-detail">Targets give decisions a benchmark to land against</div>
+      </div>
+      <div class="matrix-cell coverage gap">
+        <div class="coverage-label gap-label">—</div>
+      </div>
+
+      <!-- ROW 6: Live performance tracking -->
+      <div class="matrix-cell row-label">
+        Live project performance tracking
+        <div class="row-detail">No actuals vs. predicted for completed projects</div>
+      </div>
+      <div class="matrix-cell coverage gap">
+        <div class="coverage-label gap-label">—</div>
+      </div>
+      <div class="matrix-cell coverage full">
+        <div class="coverage-detail">M&amp;T integration overlays actuals on forecast — the retention loop</div>
+      </div>
+      <div class="matrix-cell coverage gap">
+        <div class="coverage-label gap-label">—</div>
+      </div>
+      <div class="matrix-cell coverage partial">
+        <div class="coverage-detail">Progress-vs-target tracking on running projects</div>
+      </div>
+      <div class="matrix-cell coverage gap">
+        <div class="coverage-label gap-label">—</div>
+      </div>
+
+      <!-- ROW 7: Manual SECR / compliance (now last row) -->
+      <div class="matrix-cell row-label matrix-row-end">
+        Manual SECR / compliance
+        <div class="row-detail">Customers calculate SECR manually, no internal QA</div>
+      </div>
+      <div class="matrix-cell coverage gap matrix-row-end">
+        <div class="coverage-label gap-label">—</div>
+      </div>
+      <div class="matrix-cell coverage gap matrix-row-end">
+        <div class="coverage-label gap-label">—</div>
+      </div>
+      <div class="matrix-cell coverage full matrix-row-end">
+        <div class="coverage-detail">Auto-generates SECR-ready compliance reports</div>
+      </div>
+      <div class="matrix-cell coverage gap matrix-row-end">
+        <div class="coverage-label gap-label">—</div>
+      </div>
+      <div class="matrix-cell coverage partial matrix-row-end">
+        <div class="coverage-detail">Cleaner data inputs reduce SECR prep time</div>
+      </div>
+
+    </div>
+
+    <!-- INLINE LEGEND -->
+    <div class="matrix-legend">
+      <span class="legend-label">Reading the matrix</span>
+      <span class="legend-inline"><span class="legend-dot full"></span> Full — directly addresses the pain</span>
+      <span class="legend-inline"><span class="legend-dot partial"></span> Partial — helps address the pain</span>
+      <span class="legend-inline"><span class="legend-dot gap"></span> Gap — doesn't address the pain</span>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

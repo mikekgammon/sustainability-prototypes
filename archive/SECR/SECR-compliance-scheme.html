@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrueDI — SECR Compliance Scheme Design Brief</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <style>
+    :root {
+      --black: #111111;
+      --white: #FFFFFF;
+      --hover: #F5F5F5;
+      --power-pink: #C04A74;
+      --gas-purple: #3F2A95;
+      --water-blue: #3185DA;
+      --success: #63C73B;
+      --warning: #FF9800;
+      --alert: #DC2626;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+      background: var(--white);
+      color: var(--black);
+      line-height: 1.6;
+    }
+
+    /* ── Nav ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--black);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 48px;
+    }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .topbar-logo {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .topbar-divider {
+      width: 1px;
+      height: 18px;
+      background: rgba(255,255,255,0.25);
+    }
+    .topbar-label {
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0.7;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.12);
+    }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--warning);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 64px 48px 48px;
+      border-bottom: 2px solid var(--black);
+    }
+    .hero-overline {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+    .hero h1 {
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .hero-subtitle {
+      font-size: 16px;
+      font-weight: 400;
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+    .hero-meta {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .hero-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .hero-meta-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .hero-meta-value {
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    /* ── Sections ── */
+    .content { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+
+    .section {
+      padding: 48px 0;
+      border-bottom: 1px solid var(--black);
+    }
+    .section:last-child { border-bottom: none; }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .section-number {
+      font-size: 14px;
+      font-weight: 700;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid var(--black);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .section h2 {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    p { margin-bottom: 16px; font-size: 14px; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── Cards ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin: 24px 0;
+    }
+    .card {
+      border: 1.5px solid var(--black);
+      border-radius: 8px;
+      padding: 24px;
+    }
+    .card-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .card p { font-size: 13px; margin-bottom: 0; }
+
+    /* ── Tables ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin: 24px 0;
+    }
+    .data-table thead th {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 12px 16px;
+      border-bottom: 2px solid var(--black);
+      text-align: left;
+      vertical-align: bottom;
+    }
+    .data-table tbody td {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--black);
+      vertical-align: top;
+    }
+    .data-table tbody tr:hover { background: rgba(17,17,17,0.03); }
+    .data-table tbody tr:last-child td { border-bottom: 2px solid var(--black); }
+
+    .data-table .group-row td {
+      font-weight: 700;
+      padding-top: 16px;
+      border-bottom: 1px solid var(--black);
+      background: none;
+    }
+
+    /* ── Tags ── */
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .tag-black { background: var(--black); color: var(--white); }
+    .tag-outline { border: 1.5px solid var(--black); }
+    .tag-pink { background: var(--power-pink); color: var(--white); }
+    .tag-purple { background: var(--gas-purple); color: var(--white); }
+    .tag-green { background: var(--success); color: var(--white); }
+    .tag-orange { background: var(--warning); color: var(--white); }
+
+    /* ── Flow diagram ── */
+    .flow {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin: 32px 0;
+      overflow-x: auto;
+    }
+    .flow-step {
+      flex: 1;
+      min-width: 160px;
+      border: 1.5px solid var(--black);
+      border-radius: 8px;
+      padding: 20px 16px;
+      text-align: center;
+      position: relative;
+    }
+    .flow-step-number {
+      font-size: 11px;
+      font-weight: 700;
+      width: 22px;
+      height: 22px;
+      border: 1.5px solid var(--black);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+    }
+    .flow-step h4 {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .flow-step p {
+      font-size: 11px;
+      font-weight: 400;
+      margin-bottom: 0;
+    }
+    .flow-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      flex-shrink: 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    /* ── Callout ── */
+    .callout {
+      border: 1.5px solid var(--black);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 24px 0;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .callout .material-symbols-outlined {
+      font-size: 20px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .callout p { margin-bottom: 0; font-size: 13px; }
+    .callout-warning {
+      background: rgba(255,152,0,0.06);
+      border-color: var(--warning);
+    }
+    .callout-success {
+      background: rgba(99,199,59,0.06);
+      border-color: var(--success);
+    }
+    .callout-info {
+      background: rgba(17,17,17,0.03);
+    }
+
+    /* ── Scope colours ── */
+    .scope1 { color: var(--power-pink); font-weight: 600; }
+    .scope2 { color: var(--gas-purple); font-weight: 600; }
+    .scope3 { color: var(--water-blue); font-weight: 600; }
+
+    /* ── Two column ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin: 24px 0;
+    }
+    @media (max-width: 768px) {
+      .two-col { grid-template-columns: 1fr; }
+      .hero { padding: 32px 24px; }
+      .content { padding: 0 24px; }
+      .topbar { padding: 14px 24px; }
+    }
+
+    /* ── Output preview ── */
+    .output-preview {
+      border: 1.5px solid var(--black);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 24px 0;
+    }
+    .output-preview-header {
+      background: var(--black);
+      color: var(--white);
+      padding: 12px 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .output-preview-body {
+      padding: 24px;
+    }
+    .output-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .output-table th {
+      text-align: left;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-bottom: 2px solid var(--black);
+      font-size: 12px;
+    }
+    .output-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(17,17,17,0.15);
+    }
+    .output-table td.numeric {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .output-table .section-row td {
+      font-weight: 700;
+      padding-top: 16px;
+      border-bottom: 1px solid var(--black);
+    }
+    .output-table .total-row td {
+      font-weight: 700;
+    }
+    .output-table .intensity-row td {
+      font-weight: 600;
+      border-top: 1px solid var(--black);
+    }
+    .pct-change-up { color: var(--alert); font-weight: 600; }
+    .pct-change-down { color: var(--success); font-weight: 600; }
+
+    /* ── Inline list styling ── */
+    .inline-list {
+      margin: 12px 0;
+      padding-left: 20px;
+    }
+    .inline-list li {
+      font-size: 13px;
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+
+    /* ── Comparison blocks ── */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0;
+      align-items: center;
+      margin: 24px 0;
+    }
+    .compare-block {
+      border: 1.5px solid var(--black);
+      border-radius: 8px;
+      padding: 24px;
+    }
+    .compare-block h4 {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .compare-block p {
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+    .compare-arrow {
+      font-size: 24px;
+      font-weight: 700;
+      padding: 0 16px;
+    }
+
+    /* ── Sticky section nav ── */
+    .section-nav {
+      position: sticky;
+      top: 52px;
+      z-index: 50;
+      background: var(--white);
+      border-bottom: 1.5px solid var(--black);
+      padding: 0 48px;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+    }
+    .section-nav a {
+      display: block;
+      padding: 12px 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--black);
+      text-decoration: none;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: border-color 150ms ease-out;
+    }
+    .section-nav a:hover {
+      border-bottom-color: var(--black);
+    }
+
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-logo">TrueDI</span>
+      <span class="topbar-divider"></span>
+      <span class="topbar-label">Design Brief</span>
+    </div>
+    <div class="topbar-right">
+      <span class="status-pill"><span class="status-dot"></span> In Progress</span>
+      <span>V1 — April 2026</span>
+    </div>
+  </div>
+
+  <!-- Section Nav -->
+  <nav class="section-nav">
+    <a href="#overview">Overview</a>
+    <a href="#current-workflow">Current Workflow</a>
+    <a href="#data-model">Data Model</a>
+    <a href="#output-spec">Output Spec</a>
+    <a href="#platform-mapping">Platform Mapping</a>
+    <a href="#conversion-factors">Conversion Factors</a>
+    <a href="#design-recs">Design Recommendations</a>
+    <a href="#open-questions">Open Questions</a>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-overline">Compliance Scheme</div>
+    <h1>SECR — Streamlined Energy &amp; Carbon Reporting</h1>
+    <p class="hero-subtitle">Design brief for building the SECR compliance module in TrueDI. This scheme sets the pattern for all future compliance modules (CCA, ESOS, RE100).</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Prepared by</span>
+        <span class="hero-meta-value">Mike Gammon</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">SME / Source</span>
+        <span class="hero-meta-value">Sohil (Sustainability Team)</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Priority</span>
+        <span class="hero-meta-value">High — Pattern Setter</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Phase</span>
+        <span class="hero-meta-value">Phase 2 (Active Workstream)</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Design Approach</span>
+        <span class="hero-meta-value">Flowchart + Wireframes</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- 1. Overview -->
+    <div class="section" id="overview">
+      <div class="section-header">
+        <span class="section-number">1</span>
+        <h2>What is SECR?</h2>
+      </div>
+      <p>Streamlined Energy and Carbon Reporting (SECR) is a UK Government regulation requiring qualifying organisations to report their energy consumption and associated greenhouse gas emissions in their annual directors' report. It replaced the CRC Energy Efficiency Scheme in April 2019.</p>
+      <p>True's sustainability team currently produces SECR reports manually using Excel templates. The goal is to automate this within TrueDI, creating a reusable pattern that future compliance schemes can follow.</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-label">What's Reported</div>
+          <h3>Energy Consumption</h3>
+          <p>Total kWh across stationary combustion, mobile combustion, electricity, generated electricity, and business travel — with year-on-year comparison and intensity metric.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">What's Reported</div>
+          <h3>Carbon Emissions</h3>
+          <p>Total tCO2e calculated two ways: location-based (grid average factors) and market-based (accounting for renewable energy certificates). Broken down by the same categories.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">What's Reported</div>
+          <h3>Intensity Metric</h3>
+          <p>Energy and carbon normalised by a chosen business metric — e.g. kWh/pupil, tCO2e/£m turnover, kWh/employee. Enables meaningful year-on-year comparison.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="material-symbols-outlined">lightbulb</span>
+        <p><strong>Pattern setter.</strong> SECR is the first compliance scheme to be built. The data structures, UI patterns, and calculation engine designed here will be reused for CCA, ESOS, RE100, and future schemes. Getting this right is critical.</p>
+      </div>
+    </div>
+
+    <!-- 2. Current Workflow -->
+    <div class="section" id="current-workflow">
+      <div class="section-header">
+        <span class="section-number">2</span>
+        <h2>Current Workflow (Sohil's Excel Process)</h2>
+      </div>
+      <p>Based on the two Excel files Sohil shared — a blank template and a live client example (KES Bath FY24/25) — the current process follows this flow:</p>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-step-number">1</div>
+          <h4>Gather Raw Data</h4>
+          <p>Pull monthly consumption from invoices, meter reads, fuel cards. Collate in working sheets.</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-number">2</div>
+          <h4>Fill Data Gaps</h4>
+          <p>Extrapolate or estimate where months are missing. Flag with notes.</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-number">3</div>
+          <h4>Enter Site Data</h4>
+          <p>Map each resource to a site, scope, category, value, and unit in the main input sheet.</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-number">4</div>
+          <h4>Apply Factors</h4>
+          <p>Conversion factors auto-calculate kWh and tCO2e using year-weighted blended rates.</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-number">5</div>
+          <h4>Generate Output</h4>
+          <p>Outputs sheet produces the SECR disclosure table with YoY comparison.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-warning">
+        <span class="material-symbols-outlined">warning</span>
+        <p><strong>Pain points in the current process:</strong> Manual data gathering from multiple sources (invoices, meter reads, fuel cards). Data gap filling is manual and error-prone. Conversion factor updates require manual entry each year. No audit trail for extrapolated values. The whole process takes multiple days per client.</p>
+      </div>
+
+      <p>The live KES Bath example has 5 extra working sheets beyond the template — monthly breakdowns for gas, electricity across two financial years, plus Esso fuel card data. These working sheets are where most of the manual effort sits.</p>
+
+      <div class="two-col">
+        <div>
+          <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">Template Sheets (6)</h3>
+          <ul class="inline-list">
+            <li><strong>Outputs</strong> — Final SECR disclosure table</li>
+            <li><strong>Site Data</strong> — Sites, addresses, intensity metric</li>
+            <li><strong>Energy &amp; Carbon Data</strong> — Main input: site × resource × scope</li>
+            <li><strong>Energy Conversion Factors</strong> — kWh per unit by resource &amp; year</li>
+            <li><strong>Carbon Conversion Factors</strong> — kgCO2e per kWh by resource &amp; year</li>
+            <li><strong>Lists</strong> — Dropdown reference data</li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">Extra Working Sheets (KES Bath)</h3>
+          <ul class="inline-list">
+            <li><strong>Gas FY2324</strong> — Monthly gas reads by site</li>
+            <li><strong>Elec FY2324</strong> — Monthly elec reads by site</li>
+            <li><strong>Elec FY2425</strong> — Monthly elec reads by site</li>
+            <li><strong>Esso FY2324</strong> — Fuel card records</li>
+            <li><strong>Esso FY2425</strong> — Fuel card records</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Data Model -->
+    <div class="section" id="data-model">
+      <div class="section-header">
+        <span class="section-number">3</span>
+        <h2>Data Model</h2>
+      </div>
+      <p>The SECR report is built from a single core data structure: one row per resource per site, for each reporting period. Every row maps to a scope and SECR category, and the conversion factors do the rest.</p>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin: 24px 0 16px;">Energy &amp; Carbon Data — Row Structure</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Type</th>
+            <th>Example (KES Bath)</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Site Name</td><td>Text (dropdown)</td><td>North Road</td><td>From Site Data sheet</td></tr>
+          <tr><td>Scope</td><td>Enum</td><td>Scope 1</td><td>Scope 1, 2, or 3</td></tr>
+          <tr><td>Category</td><td>Enum</td><td>Stationary combustion of fuels and equipment</td><td>SECR reporting category</td></tr>
+          <tr><td>Resource</td><td>Text (dropdown)</td><td>Natural Gas</td><td>Mapped to conversion factors</td></tr>
+          <tr><td>Value</td><td>Number</td><td>230,193</td><td>Raw consumption value</td></tr>
+          <tr><td>Unit</td><td>Enum</td><td>kWh</td><td>kWh, litres, kg, m³, miles, km</td></tr>
+          <tr><td>REC (%)</td><td>Percentage</td><td>100%</td><td>Renewable Energy Certificate coverage. Reduces market-based emissions.</td></tr>
+          <tr><td>Energy (kWh)</td><td>Calculated</td><td>230,193</td><td>Value × energy conversion factor</td></tr>
+          <tr><td>Location-Based Carbon</td><td>Calculated</td><td>42.10 tCO2e</td><td>Energy × location-based carbon factor</td></tr>
+          <tr><td>Market-Based Carbon</td><td>Calculated</td><td>42.10 tCO2e</td><td>Energy × market-based factor × (1 - REC%)</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin: 24px 0 16px;">SECR Categories &amp; Scopes</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>SECR Category</th>
+            <th>Scope</th>
+            <th>Typical Resources</th>
+            <th>Common Units</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Stationary combustion of fuels and equipment</td>
+            <td><span class="scope1">Scope 1</span></td>
+            <td>Natural gas, LPG, gas oil, burning oil, kerosene</td>
+            <td>kWh, m³, litres, kg</td>
+          </tr>
+          <tr>
+            <td>Mobile combustion of fuels and vehicles</td>
+            <td><span class="scope1">Scope 1</span></td>
+            <td>Diesel, petrol (fleet vehicles)</td>
+            <td>litres</td>
+          </tr>
+          <tr>
+            <td>Fugitive Emissions</td>
+            <td><span class="scope1">Scope 1</span></td>
+            <td>Refrigerant gases</td>
+            <td>kg</td>
+          </tr>
+          <tr>
+            <td>Electricity</td>
+            <td><span class="scope2">Scope 2</span></td>
+            <td>Grid electricity</td>
+            <td>kWh</td>
+          </tr>
+          <tr>
+            <td>Generated Electricity</td>
+            <td><span class="scope2">Scope 2</span></td>
+            <td>Solar PV, CHP, wind</td>
+            <td>kWh</td>
+          </tr>
+          <tr>
+            <td>District Heating</td>
+            <td><span class="scope2">Scope 2</span></td>
+            <td>District heating/cooling</td>
+            <td>kWh</td>
+          </tr>
+          <tr>
+            <td>Business Travel</td>
+            <td><span class="scope3">Scope 3</span></td>
+            <td>Car (unknown type), rail, air, taxi</td>
+            <td>miles, km</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin: 24px 0 16px;">Site Data Structure</h3>
+      <table class="data-table">
+        <thead>
+          <tr><th>Field</th><th>Type</th><th>Example</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Site Name</td><td>Text</td><td>North Road</td><td>Used as row key in Energy &amp; Carbon Data</td></tr>
+          <tr><td>Address</td><td>Text</td><td>BA2 6HU</td><td>Postcode or full address</td></tr>
+          <tr><td>Notes</td><td>Text</td><td>MPAN 2200030352617, MPRN 11582509</td><td>Meter references, special notes</td></tr>
+          <tr><td>Intensity Metric</td><td>Dropdown</td><td>Pupils</td><td>Options: Turnover, Employees, GIA, Mileage, Production, Rooms, Guests</td></tr>
+          <tr><td>Intensity Value</td><td>Number</td><td>1,163</td><td>For the reporting period</td></tr>
+          <tr><td>Intensity Unit</td><td>Dropdown</td><td>pupil</td><td>Options: £, £k, £m, employee, m², mile, kg, m³, litre, unit, room, guest</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 4. Output Spec -->
+    <div class="section" id="output-spec">
+      <div class="section-header">
+        <span class="section-number">4</span>
+        <h2>Output Specification</h2>
+      </div>
+      <p>The SECR disclosure table is what goes into the client's annual report. It compares two reporting periods side-by-side with percentage change. Here's the actual output from the KES Bath example:</p>
+
+      <div class="output-preview">
+        <div class="output-preview-header">SECR Disclosure — King Edward's School, Bath (FY24/25)</div>
+        <div class="output-preview-body">
+          <p style="font-size: 12px; margin-bottom: 4px;"><strong>Previous:</strong> 1 Sep 2023 – 31 Aug 2024 &nbsp;&nbsp; <strong>Current:</strong> 1 Sep 2024 – 31 Aug 2025</p>
+          <p style="font-size: 12px; margin-bottom: 16px;"><strong>Intensity metric:</strong> Pupils (1,163 → 1,173)</p>
+          <table class="output-table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Unit</th>
+                <th style="text-align: right;">Previous Year</th>
+                <th style="text-align: right;">Current Year</th>
+                <th style="text-align: right;">% Change</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="section-row"><td colspan="5">Energy Consumption</td></tr>
+              <tr>
+                <td>Stationary combustion of fuels and equipment</td>
+                <td>kWh</td>
+                <td class="numeric">1,134,496</td>
+                <td class="numeric">1,263,134</td>
+                <td class="numeric pct-change-up">+11.3%</td>
+              </tr>
+              <tr>
+                <td>Mobile combustion of fuels and vehicles</td>
+                <td>kWh</td>
+                <td class="numeric">71,270</td>
+                <td class="numeric">152,867</td>
+                <td class="numeric pct-change-up">+114.5%</td>
+              </tr>
+              <tr>
+                <td>Electricity</td>
+                <td>kWh</td>
+                <td class="numeric">664,538</td>
+                <td class="numeric">605,810</td>
+                <td class="numeric pct-change-down">-8.8%</td>
+              </tr>
+              <tr>
+                <td>Generated Electricity</td>
+                <td>kWh</td>
+                <td class="numeric">159,422</td>
+                <td class="numeric">208,000</td>
+                <td class="numeric pct-change-up">+30.5%</td>
+              </tr>
+              <tr>
+                <td>Business Travel</td>
+                <td>kWh</td>
+                <td class="numeric">7,112</td>
+                <td class="numeric">4,908</td>
+                <td class="numeric pct-change-down">-31.0%</td>
+              </tr>
+              <tr class="total-row">
+                <td>Total</td>
+                <td>kWh</td>
+                <td class="numeric">2,036,838</td>
+                <td class="numeric">2,234,719</td>
+                <td class="numeric pct-change-up">+9.7%</td>
+              </tr>
+              <tr class="intensity-row">
+                <td>Energy Intensity</td>
+                <td>kWh/pupil</td>
+                <td class="numeric">1,751</td>
+                <td class="numeric">1,905</td>
+                <td class="numeric pct-change-up">+8.8%</td>
+              </tr>
+
+              <tr class="section-row"><td colspan="5">Location-Based Emissions</td></tr>
+              <tr>
+                <td>Stationary combustion of fuels and equipment</td>
+                <td>tCO2e</td>
+                <td class="numeric">207.51</td>
+                <td class="numeric">231.08</td>
+                <td class="numeric pct-change-up">+11.4%</td>
+              </tr>
+              <tr>
+                <td>Mobile combustion of fuels and vehicles</td>
+                <td>tCO2e</td>
+                <td class="numeric">16.94</td>
+                <td class="numeric">36.87</td>
+                <td class="numeric pct-change-up">+117.7%</td>
+              </tr>
+              <tr>
+                <td>Electricity</td>
+                <td>tCO2e</td>
+                <td class="numeric">137.60</td>
+                <td class="numeric">113.31</td>
+                <td class="numeric pct-change-down">-17.6%</td>
+              </tr>
+              <tr>
+                <td>Generated Electricity</td>
+                <td>tCO2e</td>
+                <td class="numeric">0.00</td>
+                <td class="numeric">0.00</td>
+                <td class="numeric">0.0%</td>
+              </tr>
+              <tr>
+                <td>Business Travel</td>
+                <td>tCO2e</td>
+                <td class="numeric">1.72</td>
+                <td class="numeric">1.19</td>
+                <td class="numeric pct-change-down">-30.7%</td>
+              </tr>
+              <tr class="total-row">
+                <td>Total</td>
+                <td>tCO2e</td>
+                <td class="numeric">363.77</td>
+                <td class="numeric">382.45</td>
+                <td class="numeric pct-change-up">+5.1%</td>
+              </tr>
+              <tr class="intensity-row">
+                <td>Carbon Intensity</td>
+                <td>tCO2e/pupil</td>
+                <td class="numeric">0.313</td>
+                <td class="numeric">0.326</td>
+                <td class="numeric pct-change-up">+4.2%</td>
+              </tr>
+
+              <tr class="section-row"><td colspan="5">Market-Based Emissions</td></tr>
+              <tr>
+                <td>Stationary combustion</td>
+                <td>tCO2e</td>
+                <td class="numeric">207.51</td>
+                <td class="numeric">231.08</td>
+                <td class="numeric pct-change-up">+11.4%</td>
+              </tr>
+              <tr>
+                <td>Mobile combustion</td>
+                <td>tCO2e</td>
+                <td class="numeric">16.94</td>
+                <td class="numeric">36.87</td>
+                <td class="numeric pct-change-up">+117.7%</td>
+              </tr>
+              <tr>
+                <td>Electricity</td>
+                <td>tCO2e</td>
+                <td class="numeric">0.00</td>
+                <td class="numeric">0.00</td>
+                <td class="numeric">0.0%</td>
+              </tr>
+              <tr>
+                <td>Business Travel</td>
+                <td>tCO2e</td>
+                <td class="numeric">1.72</td>
+                <td class="numeric">1.19</td>
+                <td class="numeric pct-change-down">-30.7%</td>
+              </tr>
+              <tr class="total-row">
+                <td>Total</td>
+                <td>tCO2e</td>
+                <td class="numeric">226.17</td>
+                <td class="numeric">269.14</td>
+                <td class="numeric pct-change-up">+19.0%</td>
+              </tr>
+              <tr class="intensity-row">
+                <td>Carbon Intensity</td>
+                <td>tCO2e/pupil</td>
+                <td class="numeric">0.194</td>
+                <td class="numeric">0.229</td>
+                <td class="numeric pct-change-up">+18.0%</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="font-size: 11px; margin-top: 16px; line-height: 1.6;">Energy consumption and associated carbon emissions have been calculated in line with the 2019 UK Government Environmental Reporting Guidelines and the GHG Protocol Corporate Accounting and Reporting Standard (revised edition), using site-level energy data, mileage and fuel-card records and the UK Government GHG Conversion Factors for Company Reporting. Since the reporting periods span multiple calendar years, a blended approach has been applied to the conversion factors from each calendar year.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-success">
+        <span class="material-symbols-outlined">check_circle</span>
+        <p><strong>Key observation:</strong> Market-based electricity is 0 tCO2e because KES Bath has 100% REC coverage on all electricity meters. The REC % field drives this — it's the mechanism for reflecting renewable tariffs in the market-based calculation.</p>
+      </div>
+    </div>
+
+    <!-- 5. Platform Mapping -->
+    <div class="section" id="platform-mapping">
+      <div class="section-header">
+        <span class="section-number">5</span>
+        <h2>Platform Mapping — What TrueDI Already Has</h2>
+      </div>
+      <p>Most of the data required for SECR already exists within the TrueDI platform. The key question is what can be auto-populated versus what needs manual entry.</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-label"><span class="tag tag-green">Auto-populated</span></div>
+          <h3>Site Information</h3>
+          <p>Site names, addresses, MPAN/MPRN references are already held in the platform from meter onboarding.</p>
+        </div>
+        <div class="card">
+          <div class="card-label"><span class="tag tag-green">Auto-populated</span></div>
+          <h3>Electricity Consumption</h3>
+          <p>HH and nHH meter data already flows into the platform. Can be summed per site for the reporting period.</p>
+        </div>
+        <div class="card">
+          <div class="card-label"><span class="tag tag-green">Auto-populated</span></div>
+          <h3>Gas Consumption</h3>
+          <p>Gas meter data (where available) already in platform. Can be mapped to sites and reporting periods.</p>
+        </div>
+        <div class="card">
+          <div class="card-label"><span class="tag tag-orange">Manual Entry</span></div>
+          <h3>Fleet &amp; Transport Data</h3>
+          <p>Diesel, petrol, and vehicle data from fuel cards or mileage logs. Not currently in the platform — needs a manual input interface.</p>
+        </div>
+        <div class="card">
+          <div class="card-label"><span class="tag tag-orange">Manual Entry</span></div>
+          <h3>Business Travel</h3>
+          <p>Mileage claims, unknown car type. Typically from expense systems. Needs manual entry or CSV upload.</p>
+        </div>
+        <div class="card">
+          <div class="card-label"><span class="tag tag-orange">Manual Entry</span></div>
+          <h3>Intensity Metric</h3>
+          <p>Client-specific: turnover, headcount, GIA, pupils. Needs to be entered once per reporting period per client.</p>
+        </div>
+        <div class="card">
+          <div class="card-label"><span class="tag tag-orange">Manual Entry</span></div>
+          <h3>REC Coverage</h3>
+          <p>Renewable Energy Certificate % per electricity meter. Determines market-based emissions calculation.</p>
+        </div>
+        <div class="card">
+          <div class="card-label"><span class="tag tag-black">System Managed</span></div>
+          <h3>Conversion Factors</h3>
+          <p>UK Government GHG factors updated annually. Should be stored centrally and auto-applied based on reporting year. Blended weighting needs to be automatic.</p>
+        </div>
+      </div>
+
+      <div class="compare-grid">
+        <div class="compare-block">
+          <h4>Today (Excel)</h4>
+          <p>Sohil manually collects data from 5+ sources</p>
+          <p>Creates working sheets to process monthly reads</p>
+          <p>Manually enters conversion factors</p>
+          <p>Manually calculates year-blended weightings</p>
+          <p>Multiple days per client</p>
+        </div>
+        <div class="compare-arrow">→</div>
+        <div class="compare-block">
+          <h4>Target (TrueDI)</h4>
+          <p>Energy data auto-pulled from platform meters</p>
+          <p>Data gaps flagged automatically with suggested fills</p>
+          <p>Conversion factors maintained centrally, auto-applied</p>
+          <p>Blended weightings calculated from reporting period dates</p>
+          <p>Minutes per client (review &amp; approve)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Conversion Factors -->
+    <div class="section" id="conversion-factors">
+      <div class="section-header">
+        <span class="section-number">6</span>
+        <h2>Conversion Factor Engine</h2>
+      </div>
+      <p>The conversion factor system is the calculation backbone of SECR. It handles two separate lookups — energy conversion (raw units → kWh) and carbon conversion (kWh → tCO2e) — each with year-blended weighting.</p>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin: 24px 0 16px;">How Blended Weighting Works</h3>
+      <p>SECR reporting periods often span calendar years (e.g. Sep 2023 – Aug 2024). Since UK Government conversion factors are published per calendar year, the template blends them proportionally based on how many days fall in each year.</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-label">Example — KES Bath Previous Period</div>
+          <h3>Sep 2023 – Aug 2024</h3>
+          <p>2023 weighting: 0.333 (4 months: Sep–Dec)<br>
+          2024 weighting: 0.667 (8 months: Jan–Aug)<br>
+          2025 weighting: 0.000</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Example — KES Bath Current Period</div>
+          <h3>Sep 2024 – Aug 2025</h3>
+          <p>2023 weighting: 0.000<br>
+          2024 weighting: 0.334 (4 months: Sep–Dec)<br>
+          2025 weighting: 0.666 (8 months: Jan–Aug)</p>
+        </div>
+      </div>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin: 24px 0 16px;">Energy Conversion Factors (sample)</h3>
+      <p>Converts raw input units to kWh. Factors vary by resource and input unit.</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Resource</th>
+            <th style="text-align: right;">kWh/kWh</th>
+            <th style="text-align: right;">kWh/litre</th>
+            <th style="text-align: right;">kWh/kg</th>
+            <th style="text-align: right;">kWh/m³</th>
+            <th style="text-align: right;">kWh/mile</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Natural Gas</td><td class="numeric">1.000</td><td class="numeric">—</td><td class="numeric">14.23</td><td class="numeric">11.30</td><td class="numeric">—</td></tr>
+          <tr><td>LPG</td><td class="numeric">1.000</td><td class="numeric">7.259</td><td class="numeric">13.704</td><td class="numeric">7,259.68</td><td class="numeric">—</td></tr>
+          <tr><td>Diesel</td><td class="numeric">1.000</td><td class="numeric">10.531</td><td class="numeric">—</td><td class="numeric">—</td><td class="numeric">—</td></tr>
+          <tr><td>Petrol</td><td class="numeric">1.000</td><td class="numeric">9.424</td><td class="numeric">—</td><td class="numeric">—</td><td class="numeric">—</td></tr>
+          <tr><td>Car (Unknown)</td><td class="numeric">1.000</td><td class="numeric">—</td><td class="numeric">—</td><td class="numeric">—</td><td class="numeric">1.107</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin: 24px 0 16px;">Carbon Conversion Factors (sample — 2025 values)</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Resource</th>
+            <th style="text-align: right;">Location-Based (kgCO2e/kWh)</th>
+            <th style="text-align: right;">Market-Based (kgCO2e/kWh)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Natural Gas</td><td class="numeric">0.18296</td><td class="numeric">0.18296</td></tr>
+          <tr><td>Diesel</td><td class="numeric">0.24411</td><td class="numeric">0.24411</td></tr>
+          <tr><td>Petrol</td><td class="numeric">0.21956</td><td class="numeric">0.21956</td></tr>
+          <tr><td>Electricity (UK Grid)</td><td class="numeric">0.17700</td><td class="numeric">0.00000</td></tr>
+          <tr><td>Car (Unknown)</td><td class="numeric">0.24318</td><td class="numeric">0.24318</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-info">
+        <span class="material-symbols-outlined">info</span>
+        <p><strong>Market-based electricity = 0</strong> because under market-based accounting, grid electricity with a REC is treated as zero-carbon. The REC % on each meter determines how much of the electricity is zero-rated. Location-based always uses the grid average factor regardless of tariff.</p>
+      </div>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin: 24px 0 16px;">Full Resource List (from template)</h3>
+      <p>The template supports 30+ resource types across all scopes. In practice, most clients use 5–8. The full list includes: Natural Gas, LPG, Propane, Kerosene, Burning Oil, Gas Oil, Diesel, Petrol, Fuel Oil, Marine Gas Oil, Marine Fuel Oil, Aviation Spirit, Aviation Turbine Fuel, Coal (Industrial), Coal (Domestic), Coking Coal, Petroleum Coke, Naphtha, Lubricants, White Spirit, Wood Logs, Wood Chips, Wood Pellets, Grass/Straw, Biogas, Biomethane, Biodiesel ME, Biogasoline/Bio-ETBE, Electricity, Solar PV, plus Scope 3 transport variants.</p>
+    </div>
+
+    <!-- 7. Design Recommendations -->
+    <div class="section" id="design-recs">
+      <div class="section-header">
+        <span class="section-number">7</span>
+        <h2>Design Recommendations</h2>
+      </div>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 16px;">Proposed Screen Flow</h3>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-step-number">1</div>
+          <h4>Setup</h4>
+          <p>Select client, set reporting periods (previous + current), choose intensity metric &amp; value.</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-number">2</div>
+          <h4>Review Sites</h4>
+          <p>Auto-populated from platform. Confirm sites, add/remove. Set REC % per electricity meter.</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-number">3</div>
+          <h4>Review Energy Data</h4>
+          <p>Auto-pulled consumption. Flag gaps. Add manual entries (fleet, travel). Approve or override.</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-number">4</div>
+          <h4>Preview &amp; Export</h4>
+          <p>Live preview of SECR disclosure table. Export as PDF or copy into annual report.</p>
+        </div>
+      </div>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin: 32px 0 16px;">Key Design Decisions</h3>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-label">Data Gaps</div>
+          <h3>Flag, Don't Block</h3>
+          <p>When monthly consumption data has gaps, show a warning with the gap period and offer options: extrapolate from adjacent months (like Sohil does manually), enter a manual override, or mark as estimated. Every estimated value should carry an audit flag.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Conversion Factors</div>
+          <h3>Invisible Unless Wrong</h3>
+          <p>Factors should be applied automatically based on the reporting period dates. The blended weighting should calculate itself. Only surface the factors if there's an error or the user explicitly wants to inspect them.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Fleet &amp; Travel</div>
+          <h3>Simple Entry Table</h3>
+          <p>A lightweight input table for resources not in the platform: resource type, value, unit. Support CSV upload for fuel card data. Keep it visually distinct from auto-populated data.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Output</div>
+          <h3>Match the Regulation Format</h3>
+          <p>The disclosure table format is well-defined (see Section 4). Don't redesign it — replicate it faithfully so clients can copy-paste directly into their annual report. Add a methodology statement auto-generated from the data.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Audit Trail</div>
+          <h3>Every Number Has a Source</h3>
+          <p>Platform data: link back to meters + date range. Manual entries: show who entered, when. Estimates: show method used. Conversion factors: show which year(s) and weighting. This is critical for compliance credibility.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Reusability</div>
+          <h3>Abstract the Pattern</h3>
+          <p>Build the "reporting period setup + site selection + data review + output" flow as a generic compliance framework. SECR-specific logic (categories, factors, output format) should be configuration, not hard-coded.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="material-symbols-outlined">architecture</span>
+        <p><strong>Otto's principle applies here:</strong> "Numbers come in, crunch a couple, numbers come out." The SECR module should be a thin layer on top of a generic calculation engine. The resource → conversion factor → output pipeline is the same for every compliance scheme — only the specific factors and output format change.</p>
+      </div>
+    </div>
+
+    <!-- 8. Open Questions -->
+    <div class="section" id="open-questions">
+      <div class="section-header">
+        <span class="section-number">8</span>
+        <h2>Open Questions</h2>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Question</th>
+            <th>Owner</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>How do we handle Solar PV where no meter data exists? KES Bath used estimated annual generation from installation certificates. Should we support a "certified estimate" input type?</td>
+            <td>Sohil / Otto</td>
+            <td><span class="tag tag-outline">Open</span></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Should conversion factors be updatable by the sustainability team, or locked to a central system-managed table? Current Excel lets Sohil override factors — is that needed in platform?</td>
+            <td>Otto</td>
+            <td><span class="tag tag-outline">Open</span></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>How should we handle the "previous reporting period" data for first-time platform users? Import from their existing Excel? Manual entry? Or skip the first year?</td>
+            <td>Mike / Sohil</td>
+            <td><span class="tag tag-outline">Open</span></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Fuel card integration — is there an API route (e.g. Esso, Shell) or will this always be CSV/manual? How many clients have fleet vehicles in scope?</td>
+            <td>Sohil</td>
+            <td><span class="tag tag-outline">Open</span></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Methodology statement — should this be fully auto-generated from the data inputs, or editable by the sustainability team? KES Bath's methodology mentions specific approaches (e.g. "blended approach", "gross calorific values").</td>
+            <td>Sohil</td>
+            <td><span class="tag tag-outline">Open</span></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Export format — PDF only, or also Excel/Word? Some clients may want the underlying data alongside the disclosure table.</td>
+            <td>Sohil / Otto</td>
+            <td><span class="tag tag-outline">Open</span></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>REC % — is this set per meter or per site? KES Bath has 100% on all electricity meters. Could a site have mixed REC coverage across meters?</td>
+            <td>Sohil</td>
+            <td><span class="tag tag-outline">Open</span></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>District Heating — the template includes it but KES Bath doesn't use it. How common is this? Do we need it for V1?</td>
+            <td>Sohil</td>
+            <td><span class="tag tag-outline">Open</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div style="padding: 48px; text-align: center; border-top: 2px solid var(--black); margin-top: 0;">
+    <p style="font-size: 12px; font-weight: 500;">TrueDI — SECR Compliance Scheme Design Brief — V1 April 2026</p>
+    <p style="font-size: 11px; font-weight: 400;">Prepared by Mike Gammon, Lead Product Designer · Source data from Sohil (Sustainability Team)</p>
+  </div>
+
+</body>
+</html>
