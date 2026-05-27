@@ -22,6 +22,17 @@
   a.card:hover { border-color:var(--accent); transform:translateY(-2px); }
   a.card .name { font-weight:600; font-size:15px; }
   footer { max-width:1000px; margin:0 auto; padding:24px; color:var(--muted); font-size:12px; border-top:1px solid var(--line); }
+  .callout { background:linear-gradient(180deg, rgba(74,222,128,0.08), rgba(74,222,128,0.02)); border:1px solid rgba(74,222,128,0.35); border-radius:12px; padding:24px; margin-top:28px; }
+  .callout .tag { display:inline-block; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--bg); background:var(--accent); padding:3px 8px; border-radius:5px; }
+  .callout h2 { border:none; margin:12px 0 10px; padding:0; font-size:20px; color:var(--text); text-transform:none; letter-spacing:-0.01em; }
+  .callout p { margin:0 0 14px; color:var(--text); max-width:72ch; }
+  .callout strong { color:var(--accent); font-weight:600; }
+  .callout ol { margin:0 0 18px; padding-left:22px; }
+  .callout li { margin:5px 0; }
+  .callout li a { color:var(--accent); text-decoration:none; }
+  .callout li a:hover { text-decoration:underline; }
+  .callout-cta { display:inline-flex; align-items:center; gap:6px; background:var(--accent); color:var(--bg); font-weight:600; font-size:14px; text-decoration:none; padding:10px 16px; border-radius:8px; }
+  .callout-cta:hover { filter:brightness(1.08); }
 </style>
 </head>
 <body>
@@ -30,6 +41,20 @@
   <p>Interactive prototype pages. Click any card to open it.</p>
 </header>
 <main>
+  <section class="callout">
+    <span class="tag">Dev team · start here</span>
+    <h2>Foundational modelling</h2>
+    <p>Your first piece is <strong>Foundational modelling</strong> — the calculation backbone that the rest of the roadmap depends on. Open the platform map and click <strong>Foundational modelling</strong> in the legend at the bottom of the page to filter down to the five tiles in scope:</p>
+    <ol>
+      <li><a href="scope-3/scope-3-project-creation.html">Scope 3 Project Modelling</a></li>
+      <li><a href="alternative-fuels/alternative-fuel-modelling.html">Alternative Fuel Modelling</a></li>
+      <li><a href="project-scenario-modelling/project-scenarios.html">Scenario Modelling</a></li>
+      <li>Scope 2 Carbon Forecasting</li>
+      <li>Scope 3 Platform-level</li>
+    </ol>
+    <a class="callout-cta" href="sustainability-platform-map.html">Open the platform map →</a>
+  </section>
+
   <section>
     <h2>Strategy &amp; Roadmap</h2>
     <div class="grid">
