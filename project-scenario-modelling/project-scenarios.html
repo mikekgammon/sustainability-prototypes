@@ -849,7 +849,7 @@ body {
     <div class="page-header-text">
       <h1 id="project-title">Install energy-efficient machinery</h1>
       <p>Your current and future market-reflective energy prices are used in the calculations to enhance the accuracy of your result.</p>
-      <textarea class="project-notes" placeholder="Add notes, assumptions or supplier context for this project — visible to anyone collaborating on it.">Baseline assumes 2026 mid-case market price. Non-commodity costs reviewed Q1 2026 with Krista. Replace this text with project-specific context.</textarea>
+      <textarea class="project-notes" placeholder="Add notes, assumptions or supplier context for this project — visible to anyone collaborating on it.">Baseline assumes 2026 mid-case market price; non-commodity costs reflect current network and policy rates.</textarea>
     </div>
     <button class="download-btn">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
@@ -925,9 +925,6 @@ body {
                   <button class="preset-form-btn preset-form-cancel" onclick="toggleSavePresetForm()">Cancel</button>
                 </div>
               </div>
-              <div style="font-size:9px; color:#111111; opacity:0.55; margin-top:8px; line-height:1.4;">
-                Future: link saved presets to procurement risk profile to drive cross-scenario comparison.
-              </div>
             </div>
           </div>
 
@@ -950,7 +947,7 @@ body {
             </div>
 
             <div class="layer-row" style="margin-top:10px; padding-left:14px;" id="layer-noncommodity">
-              <div class="layer-color-dot" style="border:1.5px dashed #111111; background:transparent;"></div>
+              <div class="layer-color-dot" style="background:#111111; opacity:0.18;"></div>
               <div class="layer-label">Non-commodity component<small>Network, policy, levies, margin</small></div>
               <div class="toggle" id="toggle-noncommodity" onclick="toggleLayer('noncommodity')"></div>
             </div>
@@ -1082,8 +1079,8 @@ body {
 
         <div class="chart-legend" id="chart-legend">
           <div class="legend-item"><div class="legend-line" style="background:#111111; height:2.5px;"></div>Energy cost (total)</div>
-          <div class="legend-item legend-extra" data-layer="commodity" style="display:none;"><div class="legend-line" style="background:#111111; height:2.5px; opacity:0.55;"></div>Commodity</div>
-          <div class="legend-item legend-extra" data-layer="noncommodity" style="display:none;"><div class="legend-dashed" style="opacity:0.5;"></div>Non-commodity</div>
+          <div class="legend-item legend-extra" data-layer="commodity" style="display:none;"><div style="width:18px; height:11px; background:#111111; opacity:0.14; border:1px solid rgba(17,17,17,0.45); flex-shrink:0;"></div>Commodity</div>
+          <div class="legend-item legend-extra" data-layer="noncommodity" style="display:none;"><div style="width:18px; height:11px; background:#111111; opacity:0.06; border:1px solid rgba(17,17,17,0.3); flex-shrink:0;"></div>Non-commodity</div>
           <div class="legend-item legend-extra" data-layer="degradation" style="display:none;"><div class="legend-dashed" style="opacity:0.5;"></div>Degradation</div>
           <div class="legend-item legend-extra" data-layer="grid" style="display:none;"><div class="legend-dashed" style="border-bottom-color:#63C73B; opacity:0.7;"></div>Grid decarb</div>
           <div class="legend-item legend-extra" data-layer="demand" style="display:none;"><div class="legend-dashed" style="border-bottom-color:#C04A74; opacity:0.7;"></div>Demand growth</div>
@@ -1187,11 +1184,11 @@ function xPos(year) {
   return PAD.left + ((monthCoord - windowStartMonth) / span) * CW;
 }
 function yPos(val) {
-  const minV = 10, maxV = 50;
+  const minV = 0, maxV = 50;
   return PAD.top + CH - ((val - minV) / (maxV - minV)) * CH;
 }
 function yToVal(y) {
-  const minV = 10, maxV = 50;
+  const minV = 0, maxV = 50;
   return maxV - ((y - PAD.top) / CH) * (maxV - minV);
 }
 
@@ -1235,7 +1232,7 @@ function buildChart() {
   svgRect = svg.getBoundingClientRect();
 
   // Grid lines + Y axis labels
-  [10, 20, 30, 40, 50].forEach(v => {
+  [0, 10, 20, 30, 40, 50].forEach(v => {
     const y = yPos(v);
     const line = document.createElementNS(SVG_NS, 'line');
     line.setAttribute('x1', PAD.left); line.setAttribute('x2', VW - PAD.right);
@@ -1379,45 +1376,65 @@ function buildChart() {
   // Each layer is independently togglable — read state from layerState
   const labelYr = Math.min(YEARS - 2, 8); // safe annotation x position for 10yr span
 
-  // Commodity component (~65% of total)
-  if (layerState.commodity) {
-    const comPts = userPoints.map(p => `${xPos(p.year)},${yPos(p.value * 0.65)}`).join(' ');
-    const comLine = document.createElementNS(SVG_NS, 'polyline');
-    comLine.setAttribute('points', comPts);
-    comLine.setAttribute('fill', 'none');
-    comLine.setAttribute('stroke', '#111111');
-    comLine.setAttribute('stroke-width', '1.5');
-    comLine.setAttribute('stroke-opacity', '0.55');
-    svg.appendChild(comLine);
+  // Commodity / Non-commodity decomposition.
+  // These are PARTS of the total delivered rate, so they're drawn as a stack, not as
+  // free-floating lines: commodity fills from 0 up to the split boundary, non-commodity
+  // fills from the boundary up to the total line. By construction the two bands add up
+  // to the total — the top of the stack sits exactly on the black line.
+  const COMMODITY_SHARE = 0.65; // commodity (wholesale) vs 0.35 non-commodity — clean partition, sums to 100%
+  if (layerState.commodity || layerState.noncommodity) {
+    const floorY = yPos(0);
+    const boundaryTop = userPoints.map(p => `${xPos(p.year)},${yPos(p.value * COMMODITY_SHARE)}`);
+    const boundaryRev = userPoints.slice().reverse().map(p => `${xPos(p.year)},${yPos(p.value * COMMODITY_SHARE)}`);
+    const totalTop = userPoints.map(p => `${xPos(p.year)},${yPos(p.value)}`);
+    const floorRev = userPoints.slice().reverse().map(p => `${xPos(p.year)},${floorY}`);
 
-    const comLbl = document.createElementNS(SVG_NS, 'text');
-    comLbl.setAttribute('x', xPos(labelYr)); comLbl.setAttribute('y', yPos(userPoints[labelYr].value * 0.65) - 5);
-    comLbl.setAttribute('font-size', '8'); comLbl.setAttribute('font-family', 'Poppins, sans-serif');
-    comLbl.setAttribute('fill', '#111111'); comLbl.setAttribute('opacity', '0.55');
-    comLbl.setAttribute('text-anchor', 'end');
-    comLbl.textContent = 'Commodity';
-    svg.appendChild(comLbl);
-  }
+    // Commodity band: 0 → boundary
+    if (layerState.commodity) {
+      const comBand = document.createElementNS(SVG_NS, 'polygon');
+      comBand.setAttribute('points', boundaryTop.join(' ') + ' ' + floorRev.join(' '));
+      comBand.setAttribute('fill', '#111111');
+      comBand.setAttribute('fill-opacity', '0.14');
+      comBand.setAttribute('clip-path', 'url(#chart-clip)');
+      svg.appendChild(comBand);
 
-  // Non-commodity component (~35% of total + small floor)
-  if (layerState.noncommodity) {
-    const ncPts = userPoints.map(p => `${xPos(p.year)},${yPos(p.value * 0.35 + 4)}`).join(' ');
-    const ncLine = document.createElementNS(SVG_NS, 'polyline');
-    ncLine.setAttribute('points', ncPts);
-    ncLine.setAttribute('fill', 'none');
-    ncLine.setAttribute('stroke', '#111111');
-    ncLine.setAttribute('stroke-width', '1.5');
-    ncLine.setAttribute('stroke-opacity', '0.45');
-    ncLine.setAttribute('stroke-dasharray', '4 3');
-    svg.appendChild(ncLine);
+      const comLbl = document.createElementNS(SVG_NS, 'text');
+      comLbl.setAttribute('x', xPos(labelYr)); comLbl.setAttribute('y', yPos(userPoints[labelYr].value * COMMODITY_SHARE * 0.5) + 3);
+      comLbl.setAttribute('font-size', '8'); comLbl.setAttribute('font-family', 'Poppins, sans-serif');
+      comLbl.setAttribute('fill', '#111111'); comLbl.setAttribute('opacity', '0.55');
+      comLbl.setAttribute('text-anchor', 'end');
+      comLbl.textContent = 'Commodity';
+      svg.appendChild(comLbl);
+    }
 
-    const ncLbl = document.createElementNS(SVG_NS, 'text');
-    ncLbl.setAttribute('x', xPos(labelYr)); ncLbl.setAttribute('y', yPos(userPoints[labelYr].value * 0.35 + 4) - 5);
-    ncLbl.setAttribute('font-size', '8'); ncLbl.setAttribute('font-family', 'Poppins, sans-serif');
-    ncLbl.setAttribute('fill', '#111111'); ncLbl.setAttribute('opacity', '0.5');
-    ncLbl.setAttribute('text-anchor', 'end');
-    ncLbl.textContent = 'Non-commodity';
-    svg.appendChild(ncLbl);
+    // Non-commodity band: boundary → total
+    if (layerState.noncommodity) {
+      const ncBand = document.createElementNS(SVG_NS, 'polygon');
+      ncBand.setAttribute('points', totalTop.join(' ') + ' ' + boundaryRev.join(' '));
+      ncBand.setAttribute('fill', '#111111');
+      ncBand.setAttribute('fill-opacity', '0.06');
+      ncBand.setAttribute('clip-path', 'url(#chart-clip)');
+      svg.appendChild(ncBand);
+
+      const ncMidVal = userPoints[labelYr].value * (COMMODITY_SHARE + (1 - COMMODITY_SHARE) * 0.5);
+      const ncLbl = document.createElementNS(SVG_NS, 'text');
+      ncLbl.setAttribute('x', xPos(labelYr)); ncLbl.setAttribute('y', yPos(ncMidVal) + 3);
+      ncLbl.setAttribute('font-size', '8'); ncLbl.setAttribute('font-family', 'Poppins, sans-serif');
+      ncLbl.setAttribute('fill', '#111111'); ncLbl.setAttribute('opacity', '0.5');
+      ncLbl.setAttribute('text-anchor', 'end');
+      ncLbl.textContent = 'Non-commodity';
+      svg.appendChild(ncLbl);
+    }
+
+    // Split boundary line (commodity top / non-commodity bottom) for a clean read
+    const splitLine = document.createElementNS(SVG_NS, 'polyline');
+    splitLine.setAttribute('points', boundaryTop.join(' '));
+    splitLine.setAttribute('fill', 'none');
+    splitLine.setAttribute('stroke', '#111111');
+    splitLine.setAttribute('stroke-width', '1');
+    splitLine.setAttribute('stroke-opacity', '0.35');
+    splitLine.setAttribute('clip-path', 'url(#chart-clip)');
+    svg.appendChild(splitLine);
   }
 
   // System degradation: declining curve (~10% drop over 10yr)

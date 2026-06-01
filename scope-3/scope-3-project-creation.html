@@ -585,15 +585,15 @@ body {
           <div class="field-group">
             <div class="field-label-text">Scope 3 category</div>
             <div class="field-input">
-              <select>
-                <option>1. Purchased goods and services</option>
-                <option>2. Capital goods</option>
-                <option>3. Fuel- and energy-related activities</option>
-                <option>4. Upstream transportation and distribution</option>
-                <option>5. Waste generated in operations</option>
-                <option>6. Business travel</option>
-                <option>7. Employee commuting</option>
-                <option>8. Upstream leased assets</option>
+              <select id="scope3-category" onchange="applyCategory(this.value)">
+                <option value="1">1. Purchased goods and services</option>
+                <option value="2">2. Capital goods</option>
+                <option value="3">3. Fuel- and energy-related activities</option>
+                <option value="4">4. Upstream transportation and distribution</option>
+                <option value="5">5. Waste generated in operations</option>
+                <option value="6">6. Business travel</option>
+                <option value="7">7. Employee commuting</option>
+                <option value="8">8. Upstream leased assets</option>
               </select>
             </div>
             <div class="field-hint">GHG Protocol upstream categories. Picking one shapes the unit list and example interventions on the next step.</div>
@@ -659,28 +659,28 @@ body {
           <div class="field-group">
             <div class="field-label-text">Activity type</div>
             <div class="activity-grid">
-              <div class="activity-card selected" onclick="selectActivity(this)">
+              <div class="activity-card selected" data-activity="mass" onclick="selectActivity(this)">
                 <div class="activity-radio"><div class="activity-radio-dot"></div></div>
                 <div class="activity-text">
                   <div class="activity-name">Mass / volume</div>
                   <div class="activity-desc">kg, litres, tonnes — feedstock, waste, fuel</div>
                 </div>
               </div>
-              <div class="activity-card" onclick="selectActivity(this)">
+              <div class="activity-card" data-activity="distance" onclick="selectActivity(this)">
                 <div class="activity-radio"><div class="activity-radio-dot"></div></div>
                 <div class="activity-text">
                   <div class="activity-name">Distance</div>
                   <div class="activity-desc">km or miles — fleet, transport, logistics</div>
                 </div>
               </div>
-              <div class="activity-card" onclick="selectActivity(this)">
+              <div class="activity-card" data-activity="fuel" onclick="selectActivity(this)">
                 <div class="activity-radio"><div class="activity-radio-dot"></div></div>
                 <div class="activity-text">
                   <div class="activity-name">Fuel switching</div>
                   <div class="activity-desc">Diesel → HVO, refrigerant gas changes</div>
                 </div>
               </div>
-              <div class="activity-card" onclick="selectActivity(this)">
+              <div class="activity-card" data-activity="other" onclick="selectActivity(this)">
                 <div class="activity-radio"><div class="activity-radio-dot"></div></div>
                 <div class="activity-text">
                   <div class="activity-name">Other</div>
@@ -697,7 +697,7 @@ body {
             <div class="field-group">
               <div class="field-label-text">Unit of measurement</div>
               <div class="field-input">
-                <select>
+                <select id="unit-select" onchange="updateUnitLabels()">
                   <optgroup label="Mass">
                     <option>kg</option>
                     <option>g</option>
@@ -741,7 +741,7 @@ body {
               <div class="field-label-text">Annual quantity</div>
               <div class="field-input">
                 <input type="text" placeholder="0" class="has-unit">
-                <span class="field-unit">kg / yr</span>
+                <span class="field-unit unit-qty">kg / yr</span>
               </div>
               <div class="field-hint">Current annual volume of this activity</div>
             </div>
@@ -753,7 +753,7 @@ body {
               <div class="field-label-text">Current carbon factor</div>
               <div class="field-input">
                 <input type="text" placeholder="0.00" class="has-unit">
-                <span class="field-unit">kgCO₂e/kg</span>
+                <span class="field-unit unit-factor">kgCO₂e/kg</span>
               </div>
               <div class="field-hint">Emissions per unit — current activity</div>
             </div>
@@ -761,7 +761,7 @@ body {
               <div class="field-label-text">Proposed carbon factor</div>
               <div class="field-input">
                 <input type="text" placeholder="0.00" class="has-unit">
-                <span class="field-unit">kgCO₂e/kg</span>
+                <span class="field-unit unit-factor">kgCO₂e/kg</span>
               </div>
               <div class="field-hint">Emissions per unit — after switching</div>
             </div>
@@ -769,7 +769,7 @@ body {
 
           <div class="info-box">
             <span class="info-box-icon">ⓘ</span>
-            <span><strong style="text-transform:uppercase;letter-spacing:0.05em;font-size:10px;background:#111111;color:#ffffff;padding:2px 6px;border-radius:3px;margin-right:6px;">Pending Rochelle</strong>Carbon factors are published annually by DEFRA / DESNZ. The platform will flag when an update is available. You can override these values at any time. Logic layer to be confirmed with Rochelle.</span>
+            <span>Carbon factors are published annually by DEFRA / DESNZ. The platform will flag when an update is available, and you can override these values at any time.</span>
           </div>
 
           <div class="section-divider"></div>
@@ -780,14 +780,14 @@ body {
               <div class="field-label-text">Current cost per unit</div>
               <div class="field-input">
                 <input type="text" placeholder="0.00" class="has-unit">
-                <span class="field-unit">£/kg</span>
+                <span class="field-unit unit-cost">£/kg</span>
               </div>
             </div>
             <div class="field-group">
               <div class="field-label-text">Proposed cost per unit</div>
               <div class="field-input">
                 <input type="text" placeholder="0.00" class="has-unit">
-                <span class="field-unit">£/kg</span>
+                <span class="field-unit unit-cost">£/kg</span>
               </div>
             </div>
           </div>
@@ -1058,10 +1058,61 @@ function showStep(index, btn) {
   btn.classList.add('active');
 }
 
-function selectActivity(card) {
-  card.closest('.activity-grid').querySelectorAll('.activity-card').forEach(c => c.classList.remove('selected'));
-  card.classList.add('selected');
+// ── Category-driven Step 2 wiring ──
+// Picking a Scope 3 category preselects the matching activity type, filters the unit
+// list to the relevant measurement groups, and updates the per-unit labels throughout.
+const ACTIVITY_GROUPS = {
+  mass:     { groups: ['Mass', 'Volume'], unit: 'kg' },
+  distance: { groups: ['Distance', 'Passenger transport', 'Freight transport'], unit: 'km' },
+  fuel:     { groups: ['Volume', 'Energy', 'Mass'], unit: 'litres' },
+  other:    { groups: ['Mass', 'Volume', 'Distance', 'Energy', 'Passenger transport', 'Freight transport', 'Other'], unit: 'kg' }
+};
+const CAT_TO_ACTIVITY = { '1':'mass', '2':'mass', '3':'fuel', '4':'distance', '5':'mass', '6':'distance', '7':'distance', '8':'other' };
+const DENOM = {
+  'kg':'kg', 'g':'g', 'tonnes':'tonne', 'litres':'litre', 'm³':'m³', 'UK gallons':'gallon',
+  'km':'km', 'miles':'mile', 'nautical miles':'nm', 'kWh':'kWh', 'MWh':'MWh', 'GJ':'GJ', 'therms':'therm',
+  'passenger.km':'passenger.km', 'passenger.miles':'passenger.mile', 'tonne.km':'tonne.km', 'tonne.miles':'tonne.mile',
+  'hours':'hour', 'units':'unit', 'm²':'m²', '£ (spend)':'£'
+};
+
+function updateUnitLabels() {
+  const sel = document.getElementById('unit-select');
+  const u = sel ? sel.value : 'kg';
+  const denom = DENOM[u] || u;
+  document.querySelectorAll('.unit-qty').forEach(s => s.textContent = u + ' / yr');
+  document.querySelectorAll('.unit-factor').forEach(s => s.textContent = 'kgCO₂e/' + denom);
+  document.querySelectorAll('.unit-cost').forEach(s => s.textContent = '£/' + denom);
 }
+
+function setActivity(key) {
+  const cfg = ACTIVITY_GROUPS[key] || ACTIVITY_GROUPS.other;
+  document.querySelectorAll('.activity-card').forEach(c => {
+    c.classList.toggle('selected', c.dataset.activity === key);
+  });
+  const sel = document.getElementById('unit-select');
+  if (sel) {
+    sel.querySelectorAll('optgroup').forEach(g => {
+      const show = cfg.groups.includes(g.label);
+      g.hidden = !show;
+      g.disabled = !show;
+    });
+    let target = Array.from(sel.options).find(o => o.value === cfg.unit && !o.parentNode.hidden);
+    if (!target) target = Array.from(sel.options).find(o => !o.parentNode.hidden);
+    if (target) sel.value = target.value;
+  }
+  updateUnitLabels();
+}
+
+function selectActivity(card) {
+  setActivity(card.dataset.activity);
+}
+
+function applyCategory(catVal) {
+  setActivity(CAT_TO_ACTIVITY[catVal] || 'other');
+}
+
+// Initialise to the default category so the unit list and labels are coherent from load
+applyCategory(document.getElementById('scope3-category') ? document.getElementById('scope3-category').value : '1');
 
 function selectDirection(option) {
   option.closest('.direction-toggle').querySelectorAll('.direction-option').forEach(o => o.classList.remove('selected'));
