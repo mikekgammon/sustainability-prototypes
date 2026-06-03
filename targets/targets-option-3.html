@@ -919,6 +919,70 @@ body {
   margin-top: 4px;
 }
 
+/* ---------- SITE BREAKDOWN (group → site cascade) ---------- */
+.site-section { margin-bottom: 48px; }
+.site-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1.5px solid var(--secondary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.site-table thead th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 12px 16px;
+  border-bottom: 1.5px solid var(--secondary);
+  background: var(--white);
+}
+.site-table thead th.num { text-align: right; }
+.site-table tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--grey);
+  font-size: 14px;
+  vertical-align: middle;
+}
+.site-table tbody tr:hover { background: var(--grey); }
+.site-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.site-table tfoot td {
+  padding: 14px 16px;
+  border-top: 1.5px solid var(--secondary);
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--grey);
+}
+.site-name { font-weight: 600; }
+.site-name-sub { font-size: 11px; font-weight: 400; }
+.owner-cell { display: inline-flex; align-items: center; gap: 10px; }
+.owner-badge {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--secondary);
+  background: var(--white);
+  color: var(--secondary);
+  font-size: 10px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.owner-text { display: flex; flex-direction: column; line-height: 1.25; }
+.owner-name { font-size: 13px; font-weight: 600; }
+.owner-role { font-size: 11px; font-weight: 400; }
+.site-alloc { font-weight: 600; font-variant-numeric: tabular-nums; }
+.site-alloc-sub { font-size: 11px; font-weight: 400; }
+.site-table .mini-progress { max-width: 170px; }
+@media (max-width: 760px) {
+  .site-table thead { display: none; }
+  .site-table, .site-table tbody, .site-table tr, .site-table td { display: block; width: 100%; }
+  .site-table tbody td { border-bottom: none; padding: 4px 16px; }
+  .site-table tbody tr { border-bottom: 1px solid var(--grey); padding: 10px 0; }
+}
+
 /* ---------- LINKED STRATEGIES ---------- */
 .linked-section { margin-bottom: 48px; }
 .linked-grid {
@@ -1231,7 +1295,7 @@ body {
   <!-- Version banner -->
   <div class="version-banner">
     <div class="version-banner-main"><strong>Targets V2 · Combined</strong> — list of all targets, with a unified cockpit that flips between Live tracking and Scenario planning on the same page.</div>
-    <div class="version-banner-meta">v4 · Mike Gammon</div>
+    <div class="version-banner-meta">v5 · group→site cascade · Mike Gammon</div>
   </div>
 
   <!-- Tab nav (constant) -->
@@ -1320,6 +1384,7 @@ body {
               <div class="target-name-meta">
                 <span><span class="material-symbols-outlined">layers</span>All Scopes</span>
                 <span><span class="material-symbols-outlined">trending_down</span>75% reduction vs 2021/22</span>
+                <span><span class="material-symbols-outlined">account_tree</span>Cascaded · 6 sites</span>
                 <span><span class="material-symbols-outlined">link</span>3 strategies</span>
               </div>
             </div>
@@ -1543,6 +1608,7 @@ body {
           <span class="cockpit-sub-item"><span class="material-symbols-outlined">flag_circle</span>Started 01 Apr 2022</span>
           <span class="cockpit-sub-item"><span class="material-symbols-outlined">event</span>Deadline 31 Mar 2038</span>
           <span class="cockpit-sub-item"><span class="material-symbols-outlined">percent</span>75% reduction vs 2021/22 baseline</span>
+          <span class="cockpit-sub-item"><span class="material-symbols-outlined">account_tree</span>Cascaded across 6 sites</span>
         </div>
       </div>
       <div class="cockpit-actions">
@@ -1798,6 +1864,187 @@ body {
 
       </div>
     </div>
+
+    <!-- Site breakdown — group → site cascade (Live mode, read-only) -->
+    <section class="site-section live-only">
+      <div class="section-head-row">
+        <h2>Site breakdown <span class="count">6 sites · 6 owners</span></h2>
+        <div class="section-head-sub">
+          The group target is cascaded to each site as its own allocation and annual KPI, owned by the site GM and tracked live. Set or reassign per-site allocations from <strong>Edit target</strong>.
+        </div>
+      </div>
+
+      <table class="site-table">
+        <thead>
+          <tr>
+            <th>Site</th>
+            <th>Owner</th>
+            <th>Allocation to 2038</th>
+            <th>Progress</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="site-name">Bristol DC</div>
+              <div class="site-name-sub">Scopes 1 &amp; 2</div>
+            </td>
+            <td>
+              <span class="owner-cell">
+                <span class="owner-badge">PS</span>
+                <span class="owner-text"><span class="owner-name">Priya Shah</span><span class="owner-role">Site GM</span></span>
+              </span>
+            </td>
+            <td>
+              <div class="site-alloc">−142 tCO₂e</div>
+              <div class="site-alloc-sub">−5%/yr KPI</div>
+            </td>
+            <td>
+              <div class="mini-progress">
+                <div class="mini-progress-track"><div class="mini-progress-fill on-track" style="width: 34%;"></div></div>
+                <div class="mini-progress-label"><span>34% reduced</span></div>
+              </div>
+            </td>
+            <td><span class="status-pill on-track"><span class="dot"></span>On Track</span></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="site-name">Birmingham Hub</div>
+              <div class="site-name-sub">Scopes 1 &amp; 2</div>
+            </td>
+            <td>
+              <span class="owner-cell">
+                <span class="owner-badge">TR</span>
+                <span class="owner-text"><span class="owner-name">Tom Reilly</span><span class="owner-role">Site GM</span></span>
+              </span>
+            </td>
+            <td>
+              <div class="site-alloc">−118 tCO₂e</div>
+              <div class="site-alloc-sub">−5%/yr KPI</div>
+            </td>
+            <td>
+              <div class="mini-progress">
+                <div class="mini-progress-track"><div class="mini-progress-fill on-track" style="width: 30%;"></div></div>
+                <div class="mini-progress-label"><span>30% reduced</span></div>
+              </div>
+            </td>
+            <td><span class="status-pill on-track"><span class="dot"></span>On Track</span></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="site-name">Cardiff Site</div>
+              <div class="site-name-sub">Scopes 1 &amp; 2</div>
+            </td>
+            <td>
+              <span class="owner-cell">
+                <span class="owner-badge">DO</span>
+                <span class="owner-text"><span class="owner-name">Dewi Owen</span><span class="owner-role">Site GM</span></span>
+              </span>
+            </td>
+            <td>
+              <div class="site-alloc">−90 tCO₂e</div>
+              <div class="site-alloc-sub">−5%/yr KPI</div>
+            </td>
+            <td>
+              <div class="mini-progress">
+                <div class="mini-progress-track"><div class="mini-progress-fill on-track" style="width: 29%;"></div></div>
+                <div class="mini-progress-label"><span>29% reduced</span></div>
+              </div>
+            </td>
+            <td><span class="status-pill on-track"><span class="dot"></span>On Track</span></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="site-name">Leeds Depot</div>
+              <div class="site-name-sub">Scopes 1 &amp; 2</div>
+            </td>
+            <td>
+              <span class="owner-cell">
+                <span class="owner-badge">AK</span>
+                <span class="owner-text"><span class="owner-name">Anna Kowalski</span><span class="owner-role">Site GM</span></span>
+              </span>
+            </td>
+            <td>
+              <div class="site-alloc">−96 tCO₂e</div>
+              <div class="site-alloc-sub">−5%/yr KPI</div>
+            </td>
+            <td>
+              <div class="mini-progress">
+                <div class="mini-progress-track"><div class="mini-progress-fill at-risk" style="width: 24%;"></div></div>
+                <div class="mini-progress-label"><span>24% reduced</span></div>
+              </div>
+            </td>
+            <td><span class="status-pill at-risk"><span class="dot"></span>At Risk</span></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="site-name">Glasgow Depot</div>
+              <div class="site-name-sub">Scopes 1 &amp; 2</div>
+            </td>
+            <td>
+              <span class="owner-cell">
+                <span class="owner-badge">FG</span>
+                <span class="owner-text"><span class="owner-name">Fiona Grant</span><span class="owner-role">Site GM</span></span>
+              </span>
+            </td>
+            <td>
+              <div class="site-alloc">−73 tCO₂e</div>
+              <div class="site-alloc-sub">−5%/yr KPI</div>
+            </td>
+            <td>
+              <div class="mini-progress">
+                <div class="mini-progress-track"><div class="mini-progress-fill at-risk" style="width: 21%;"></div></div>
+                <div class="mini-progress-label"><span>21% reduced</span></div>
+              </div>
+            </td>
+            <td><span class="status-pill at-risk"><span class="dot"></span>At Risk</span></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="site-name">Stanley Bridge</div>
+              <div class="site-name-sub">Scopes 1 &amp; 2</div>
+            </td>
+            <td>
+              <span class="owner-cell">
+                <span class="owner-badge">ME</span>
+                <span class="owner-text"><span class="owner-name">Mark Ellis</span><span class="owner-role">Site GM</span></span>
+              </span>
+            </td>
+            <td>
+              <div class="site-alloc">−88 tCO₂e</div>
+              <div class="site-alloc-sub">−5%/yr KPI</div>
+            </td>
+            <td>
+              <div class="mini-progress">
+                <div class="mini-progress-track"><div class="mini-progress-fill off-track" style="width: 14%;"></div></div>
+                <div class="mini-progress-label"><span>14% reduced</span></div>
+              </div>
+            </td>
+            <td><span class="status-pill off-track"><span class="dot"></span>Off Track</span></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Group · Net Zero by 2038</td>
+            <td>
+              <span class="owner-cell">
+                <span class="owner-badge">OT</span>
+                <span class="owner-text"><span class="owner-name">Otto</span><span class="owner-role">Group owner</span></span>
+              </span>
+            </td>
+            <td>−607 tCO₂e</td>
+            <td>28% reduced</td>
+            <td><span class="status-pill at-risk"><span class="dot"></span>At Risk</span></td>
+          </tr>
+        </tfoot>
+      </table>
+    </section>
 
     <!-- Action gap — Live mode -->
     <section class="action-gap-section live-only">

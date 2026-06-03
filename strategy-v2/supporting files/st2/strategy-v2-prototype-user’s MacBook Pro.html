@@ -728,7 +728,7 @@ body {
 .project-list-head,
 .project-row {
   display: grid;
-  grid-template-columns: 1fr 70px 140px 1fr 130px 72px 28px;
+  grid-template-columns: 1fr 70px 140px 1.2fr 100px 70px 28px;
   gap: 14px;
   align-items: center;
   padding: 0 4px;
@@ -765,25 +765,9 @@ body {
   flex-shrink: 0;
 }
 .project-name .p-icon.leaf { color: var(--success); }
-.project-name .p-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .project-name .p-title {
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.project-name .p-tags { display: flex; gap: 4px; flex-wrap: wrap; }
-.mono-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 1px 7px;
-  border: 1.5px solid var(--secondary);
-  border-radius: 10px;
-  background: var(--white);
-  color: var(--secondary);
-  font-size: 9px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
   white-space: nowrap;
 }
 
@@ -838,21 +822,6 @@ body {
 }
 .savings .unit { font-size: 11px; font-weight: 400; margin-left: 2px; }
 
-.benefit {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-  text-align: right;
-}
-.benefit .b-value {
-  font-size: 13px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-.benefit .b-value .b-unit { font-size: 11px; font-weight: 400; margin-left: 1px; }
-.benefit .b-sub { font-size: 10px; font-weight: 400; line-height: 1.3; }
-
 .variance {
   font-size: 12px;
   font-weight: 600;
@@ -891,7 +860,7 @@ body {
 </head>
 <body>
 <!-- site-breadcrumb: back to index -->
-<div class="site-bc"><a href="../index.html">← All prototypes</a><span class="sep">/</span><span class="cur">Strategy v2 — Prototype</span></div>
+<div class="site-bc"><a href="../../index.html">← All prototypes</a><span class="sep">/</span><span class="cur">Strategy v2 — Prototype</span></div>
 <style>
 .site-bc{font-family:'Poppins',system-ui,-apple-system,BlinkMacSystemFont,sans-serif;font-size:13px;background:#111111;color:#FFFFFF;padding:9px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.12);}
 .site-bc a{color:#FFFFFF;text-decoration:none;opacity:.85;font-weight:500;}
@@ -899,6 +868,7 @@ body {
 .site-bc .sep{opacity:.4;}
 .site-bc .cur{opacity:.95;}
 </style>
+
 <div class="container">
 
   <!-- HEADER -->
@@ -1277,7 +1247,7 @@ body {
       <h2>Projects in this strategy
         <span class="info-tip" tabindex="0">
           <span class="material-symbols-outlined">info</span>
-          <span class="tip-content">A single home for every project in the strategy — energy-saving measures and non-energy capital projects (e.g. grant-funded EV charging) alike. <strong>Net benefit</strong> is the £ return per year; energy projects also show kWh saved. <strong>Variance</strong> tracks realised benefit against forecast, calculated monthly via M&amp;T. <strong>Icons:</strong> leaf = scheme-driven (e.g. ESOS) · info = standard energy project · charger = non-energy capital project.</span>
+          <span class="tip-content"><strong>Icons:</strong> leaf = scheme-driven (e.g. ESOS) · info = standard project. <strong>Variance</strong> shows how each project's measured kWh savings compare to forecast: ▼ ahead, ▲ behind, calculated monthly via M&amp;T.</span>
         </span>
       </h2>
       <div class="right">
@@ -1296,8 +1266,8 @@ body {
         <span>Project</span>
         <span>Scope</span>
         <span>Active period</span>
-        <span>Contribution to benefit</span>
-        <span class="col-right">Net benefit / yr</span>
+        <span>Contribution to savings</span>
+        <span class="col-right">Savings</span>
         <span class="col-right">Variance</span>
         <span></span>
       </div>
@@ -1305,18 +1275,15 @@ body {
       <div class="project-row">
         <div class="project-name">
           <span class="material-symbols-outlined p-icon">info</span>
-          <div class="p-text"><span class="p-title">VO Site 2</span></div>
+          <span class="p-title">VO Site 2</span>
         </div>
         <span class="scope-chip s2">Scope 2</span>
         <span class="date-range">Jan 23 <span class="arrow">→</span> Dec 42</span>
         <div class="proportion">
           <div class="proportion-bar"><div class="fill high" style="width: 53%;"></div></div>
-          <span class="caption">53% of strategy benefit</span>
+          <span class="caption">53% of strategy savings</span>
         </div>
-        <div class="benefit">
-          <span class="b-value">£72,400<span class="b-unit">/yr</span></span>
-          <span class="b-sub">686,880 kWh saved</span>
-        </div>
+        <span class="savings">686,880<span class="unit">kWh</span></span>
         <span class="variance good">1.2%</span>
         <span class="kebab"><span class="material-symbols-outlined">more_vert</span></span>
       </div>
@@ -1324,18 +1291,15 @@ body {
       <div class="project-row">
         <div class="project-name">
           <span class="material-symbols-outlined p-icon leaf">eco</span>
-          <div class="p-text"><span class="p-title">[ESOS] Staff Energy Awareness Training</span></div>
+          <span class="p-title">[ESOS] Staff Energy Awareness Training</span>
         </div>
         <span class="scope-chip s3">Scope 3</span>
         <span class="date-range">Jun 23 <span class="arrow">→</span> May 26</span>
         <div class="proportion">
           <div class="proportion-bar"><div class="fill low" style="width: 2%;"></div></div>
-          <span class="caption">2% of strategy benefit</span>
+          <span class="caption">2% of strategy savings</span>
         </div>
-        <div class="benefit">
-          <span class="b-value">£2,900<span class="b-unit">/yr</span></span>
-          <span class="b-sub">29,988 kWh saved</span>
-        </div>
+        <span class="savings">29,988<span class="unit">kWh</span></span>
         <span class="variance good">0.4%</span>
         <span class="kebab"><span class="material-symbols-outlined">more_vert</span></span>
       </div>
@@ -1343,18 +1307,15 @@ body {
       <div class="project-row">
         <div class="project-name">
           <span class="material-symbols-outlined p-icon leaf">eco</span>
-          <div class="p-text"><span class="p-title">[ESOS] Replace light fittings with LED units</span></div>
+          <span class="p-title">[ESOS] Replace light fittings with LED units</span>
         </div>
         <span class="scope-chip s2">Scope 2</span>
         <span class="date-range">Oct 23 <span class="arrow">→</span> Sep 33</span>
         <div class="proportion">
           <div class="proportion-bar"><div class="fill high" style="width: 38%;"></div></div>
-          <span class="caption">38% of strategy benefit</span>
+          <span class="caption">38% of strategy savings</span>
         </div>
-        <div class="benefit">
-          <span class="b-value">£41,800<span class="b-unit">/yr</span></span>
-          <span class="b-sub">499,920 kWh saved</span>
-        </div>
+        <span class="savings">499,920<span class="unit">kWh</span></span>
         <span class="variance warn">7.2%</span>
         <span class="kebab"><span class="material-symbols-outlined">more_vert</span></span>
       </div>
@@ -1362,18 +1323,15 @@ body {
       <div class="project-row">
         <div class="project-name">
           <span class="material-symbols-outlined p-icon leaf">eco</span>
-          <div class="p-text"><span class="p-title">[ESOS] Building Energy Management System</span></div>
+          <span class="p-title">[ESOS] Building Energy Management System</span>
         </div>
         <span class="scope-chip s2">Scope 2</span>
         <span class="date-range">Aug 24 <span class="arrow">→</span> Jul 34</span>
         <div class="proportion">
           <div class="proportion-bar"><div class="fill high" style="width: 51%;"></div></div>
-          <span class="caption">51% of strategy benefit</span>
+          <span class="caption">51% of strategy savings</span>
         </div>
-        <div class="benefit">
-          <span class="b-value">£63,200<span class="b-unit">/yr</span></span>
-          <span class="b-sub">668,281 kWh saved</span>
-        </div>
+        <span class="savings">668,281<span class="unit">kWh</span></span>
         <span class="variance good">0.8%</span>
         <span class="kebab"><span class="material-symbols-outlined">more_vert</span></span>
       </div>
@@ -1381,44 +1339,16 @@ body {
       <div class="project-row">
         <div class="project-name">
           <span class="material-symbols-outlined p-icon">info</span>
-          <div class="p-text"><span class="p-title">Compressed Air System Optimisation</span></div>
+          <span class="p-title">Compressed Air System Optimisation</span>
         </div>
         <span class="scope-chip s1">Scope 1</span>
         <span class="date-range">Mar 25 <span class="arrow">→</span> Feb 32</span>
         <div class="proportion">
           <div class="proportion-bar"><div class="fill med" style="width: 18%;"></div></div>
-          <span class="caption">18% of strategy benefit</span>
+          <span class="caption">18% of strategy savings</span>
         </div>
-        <div class="benefit">
-          <span class="b-value">£19,600<span class="b-unit">/yr</span></span>
-          <span class="b-sub">238,440 kWh saved</span>
-        </div>
+        <span class="savings">238,440<span class="unit">kWh</span></span>
         <span class="variance good">1.9%</span>
-        <span class="kebab"><span class="material-symbols-outlined">more_vert</span></span>
-      </div>
-
-      <div class="project-row">
-        <div class="project-name">
-          <span class="material-symbols-outlined p-icon">ev_station</span>
-          <div class="p-text">
-            <span class="p-title">EV Charging Points — Depot Network</span>
-            <span class="p-tags">
-              <span class="mono-tag">Non-energy</span>
-              <span class="mono-tag">Grant-funded</span>
-            </span>
-          </div>
-        </div>
-        <span class="scope-chip s1">Scope 1</span>
-        <span class="date-range">Jan 26 <span class="arrow">→</span> Dec 35</span>
-        <div class="proportion">
-          <div class="proportion-bar"><div class="fill med" style="width: 14%;"></div></div>
-          <span class="caption">14% of strategy benefit</span>
-        </div>
-        <div class="benefit">
-          <span class="b-value">£28,500<span class="b-unit">/yr</span></span>
-          <span class="b-sub">Fuel saving + grant offset</span>
-        </div>
-        <span class="variance good">0.6%</span>
         <span class="kebab"><span class="material-symbols-outlined">more_vert</span></span>
       </div>
     </div>
@@ -1435,7 +1365,7 @@ body {
 
   <!-- FOOTER -->
   <footer class="page-footer">
-    <div>Strategy V2 · Prototype v2 · June 2026 · ROI &amp; non-energy projects (Kinaxia-informed)</div>
+    <div>Strategy V2 · Prototype v1 · April 2026</div>
     <div class="footer-actions">
       <button class="btn btn-outline">Back</button>
       <button class="btn btn-filled">Save &amp; finish</button>
@@ -2216,5 +2146,26 @@ scenarioDropdown.querySelectorAll('.dropdown-item:not(.create)').forEach(item =>
   });
 });
 </script>
+<!-- Back to map button -->
+<style>
+.back-to-map-wrapper {
+  display: flex; justify-content: center;
+  padding: 32px 24px 24px 24px;
+  margin-top: 16px;
+}
+.back-to-map {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 18px; background: #FFFFFF; color: #111111;
+  border: 1px solid #111111; border-radius: 4px;
+  font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;
+  text-decoration: none; cursor: pointer;
+  transition: background 0.15s;
+}
+.back-to-map:hover { background: #F0F0F0; }
+</style>
+<div class="back-to-map-wrapper">
+  <a href="../../sustainability-platform-map.html" class="back-to-map" onclick="if(window.opener){window.close();return false;}">← Back to map</a>
+</div>
+
 </body>
 </html>

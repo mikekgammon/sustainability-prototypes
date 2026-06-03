@@ -67,6 +67,22 @@ body {
 }
 .btn-download:hover { background: var(--grey); }
 .btn-download .material-symbols-outlined { font-size: 18px; }
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--secondary);
+  text-decoration: none;
+  margin-bottom: 16px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--secondary);
+}
+.back-link:hover { background: var(--grey); }
+.back-link .material-symbols-outlined { font-size: 14px; }
 .compare-header h1 {
   font-size: 28px;
   font-weight: 700;
@@ -384,7 +400,7 @@ th.sc-baseline-col .sc-col-name { color: var(--white); }
 </head>
 <body>
 <!-- site-breadcrumb: back to index -->
-<div class="site-bc"><a href="../index.html">← All prototypes</a><span class="sep">/</span><span class="cur">Strategy v2 — Compare</span></div>
+<div class="site-bc"><a href="../../index.html">← All prototypes</a><span class="sep">/</span><span class="cur">Strategy v2 — Compare</span></div>
 <style>
 .site-bc{font-family:'Poppins',system-ui,-apple-system,BlinkMacSystemFont,sans-serif;font-size:13px;background:#111111;color:#FFFFFF;padding:9px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.12);}
 .site-bc a{color:#FFFFFF;text-decoration:none;opacity:.85;font-weight:500;}
@@ -392,14 +408,19 @@ th.sc-baseline-col .sc-col-name { color: var(--white); }
 .site-bc .sep{opacity:.4;}
 .site-bc .cur{opacity:.95;}
 </style>
+
 <div class="container">
 
   <!-- HEADER -->
   <header class="compare-header">
+    <a href="strategy-v2-prototype.html" class="back-link" onclick="if(window.history.length>1){window.history.back();return false;}">
+      <span class="material-symbols-outlined">arrow_back</span>
+      Back to Strategy
+    </a>
     <div class="header-row">
       <div>
         <h1>Compare scenarios</h1>
-        <p>Evaluate alternatives side-by-side on cost, return and carbon — then promote one as baseline and take the business case to the board.</p>
+        <p>Evaluate alternatives side-by-side to decide which to promote as baseline.</p>
       </div>
       <button class="btn-download">
         <span class="material-symbols-outlined">download</span>
@@ -522,13 +543,6 @@ th.sc-baseline-col .sc-col-name { color: var(--white); }
             <td class="sc-val sc-sub-val">288 tCO₂e</td>
           </tr>
           <tr>
-            <td class="sc-label">Total investment</td>
-            <td class="sc-val sc-baseline-col">£1,180,000</td>
-            <td class="sc-val">£1,920,000</td>
-            <td class="sc-val">£980,000</td>
-            <td class="sc-val">£1,180,000</td>
-          </tr>
-          <tr>
             <td class="sc-label">Max cash commitment</td>
             <td class="sc-val sc-baseline-col">£720,948</td>
             <td class="sc-val">£1,120,500</td>
@@ -541,13 +555,6 @@ th.sc-baseline-col .sc-col-name { color: var(--white); }
             <td class="sc-val">8.4 yrs</td>
             <td class="sc-val">5.8 yrs</td>
             <td class="sc-val">5.4 yrs</td>
-          </tr>
-          <tr>
-            <td class="sc-label">ROI (10 yr)</td>
-            <td class="sc-val sc-baseline-col">84%</td>
-            <td class="sc-val">65%</td>
-            <td class="sc-val">86%</td>
-            <td class="sc-val">111%</td>
           </tr>
           <tr>
             <td class="sc-label">NPV (10 yr)</td>
@@ -762,5 +769,26 @@ th.sc-baseline-col .sc-col-name { color: var(--white); }
   document.getElementById('overlayChart').innerHTML = svg;
 })();
 </script>
+<!-- Back to map button -->
+<style>
+.back-to-map-wrapper {
+  display: flex; justify-content: center;
+  padding: 32px 24px 24px 24px;
+  margin-top: 16px;
+}
+.back-to-map {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 18px; background: #FFFFFF; color: #111111;
+  border: 1px solid #111111; border-radius: 4px;
+  font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;
+  text-decoration: none; cursor: pointer;
+  transition: background 0.15s;
+}
+.back-to-map:hover { background: #F0F0F0; }
+</style>
+<div class="back-to-map-wrapper">
+  <a href="../../sustainability-platform-map.html" class="back-to-map" onclick="if(window.opener){window.close();return false;}">← Back to map</a>
+</div>
+
 </body>
 </html>
