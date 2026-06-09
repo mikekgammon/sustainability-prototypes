@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scenario Modelling — Wireframe</title>
+<title>Scenario Modelling — Heat Recovery · The Snow Centre</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -363,6 +363,24 @@ body {
   outline-offset: 2px;
 }
 
+/* Scenario date input */
+.scenario-date {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 7px 10px;
+  border: 1px solid #111111;
+  border-radius: 4px;
+  background: #ffffff;
+  outline: none;
+  color: #111111;
+}
+.scenario-date:focus {
+  outline: 2px solid #111111;
+  outline-offset: 2px;
+}
+
 .divider {
   height: 1px;
   background: #111111;
@@ -390,6 +408,77 @@ body {
   cursor: pointer;
 }
 .reset-btn:hover { background: #F5F5F5; }
+
+/* Custom preset save UI */
+.save-preset-btn {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px 8px;
+  border: 1px dashed #111111;
+  border-radius: 4px;
+  background: #ffffff;
+  cursor: pointer;
+  color: #111111;
+}
+.save-preset-btn:hover { background: #F5F5F5; }
+.preset-name-input {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  padding: 6px 8px;
+  border: 1px solid #111111;
+  border-radius: 4px;
+  background: #ffffff;
+  outline: none;
+}
+.preset-name-input:focus { outline: 2px solid #111111; outline-offset: 1px; }
+.preset-form-btn {
+  flex: 1;
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px;
+  border: 1px solid #111111;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.preset-form-save { background: #111111; color: #ffffff; }
+.preset-form-cancel { background: #ffffff; color: #111111; }
+.preset-form-save:hover { opacity: 0.85; }
+.preset-form-cancel:hover { background: #F5F5F5; }
+.saved-preset-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 4px 3px 8px;
+  border: 1px solid #111111;
+  border-radius: 12px;
+  background: #ffffff;
+  cursor: pointer;
+  color: #111111;
+}
+.saved-preset-chip:hover { background: #F5F5F5; }
+.saved-preset-chip .chip-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  color: #111111;
+  padding: 0;
+}
+.saved-preset-chip .chip-delete:hover { background: #F5F5F5; }
 
 /* ── Right panel — chart area ── */
 .right-panel {
@@ -531,6 +620,148 @@ body {
   min-height: 300px;
 }
 
+/* ── Time window panel (granularity slider) ── */
+.time-window {
+  margin-top: 14px;
+  padding: 14px 0 10px;
+  border-top: 1px solid #111111;
+}
+.tw-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.tw-presets { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.tw-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #111111;
+  margin-right: 4px;
+}
+.tw-preset-btn {
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border: 1px solid #111111;
+  border-radius: 4px;
+  background: #ffffff;
+  cursor: pointer;
+  color: #111111;
+  transition: background 150ms;
+}
+.tw-preset-btn:hover { background: #F5F5F5; }
+.tw-preset-btn.active { background: #111111; color: #ffffff; }
+.tw-info { display: flex; align-items: center; gap: 10px; }
+.tw-mode-pill {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1px solid #111111;
+  border-radius: 3px;
+  background: #ffffff;
+  color: #111111;
+}
+.tw-mode-pill.monthly { background: #111111; color: #ffffff; }
+.tw-range-readout {
+  font-size: 11px;
+  font-weight: 500;
+  color: #111111;
+}
+
+/* Dual-range slider (two range inputs overlaid on a track) */
+.tw-slider-wrap {
+  position: relative;
+  height: 26px;
+  margin: 0 8px;
+}
+.tw-track {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #F5F5F5;
+  border: 1px solid #111111;
+  border-radius: 2px;
+}
+.tw-track-fill {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: #111111;
+}
+.tw-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 26px;
+  margin: 0;
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+.tw-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #111111;
+  cursor: grab;
+  margin-top: 0;
+}
+.tw-slider::-webkit-slider-thumb:active { cursor: grabbing; }
+.tw-slider::-moz-range-thumb {
+  pointer-events: auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #111111;
+  cursor: grab;
+}
+.tw-slider::-webkit-slider-runnable-track { background: transparent; }
+.tw-slider::-moz-range-track { background: transparent; }
+.tw-slider-end::-webkit-slider-thumb { background: #111111; }
+.tw-slider-end::-moz-range-thumb { background: #111111; }
+
+.tw-axis-labels {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0 8px;
+  font-size: 9px;
+  font-weight: 500;
+  color: #111111;
+  opacity: 0.55;
+  padding: 0 6px;
+}
+.tw-helper {
+  font-size: 10px;
+  color: #111111;
+  opacity: 0.65;
+  line-height: 1.5;
+  margin-top: 2px;
+}
+.tw-helper.read-only {
+  opacity: 1;
+  background: #F5F5F5;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
 /* Legend */
 .chart-legend {
   display: flex;
@@ -599,35 +830,26 @@ body {
 </style>
 </head>
 <body>
-<!-- Back to map button -->
+<!-- site-breadcrumb: back to index -->
+<div class="site-bc"><a href="../index.html">← All prototypes</a><span class="sep">/</span><span class="cur">Project Scenario Modelling — Heat Recovery</span></div>
 <style>
-.back-to-map {
-  position: fixed; top: 16px; left: 16px;
-  z-index: 1000;
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 14px; background: #FFFFFF; color: #111111;
-  border: 1px solid #111111; border-radius: 4px;
-  font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 500;
-  text-decoration: none; cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: background 0.15s;
-}
-.back-to-map:hover { background: #F0F0F0; }
+.site-bc{font-family:'Poppins',system-ui,-apple-system,BlinkMacSystemFont,sans-serif;font-size:13px;background:#111111;color:#FFFFFF;padding:9px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.12);}
+.site-bc a{color:#FFFFFF;text-decoration:none;opacity:.85;font-weight:500;}
+.site-bc a:hover{opacity:1;text-decoration:underline;}
+.site-bc .sep{opacity:.4;}
+.site-bc .cur{opacity:.95;}
 </style>
-<a href="../sustainability-platform-map.html" class="back-to-map" onclick="if(window.opener){window.close();return false;}">← Back to map</a>
-
-
 <div class="wf-badge">Wireframe — Low fidelity · Scenario Modelling v0.1</div>
-<p class="wf-note">This wireframe replaces the current Scenario Planning panel with an interactive energy cost curve editor. Users drag existing data points to reshape the 30-year forecast. The chart updates in real time and the impact summary reflects the change. Annotations numbered in purple.</p>
+<p class="wf-note">This wireframe replaces the current Scenario Planning panel with an interactive cost-curve editor. The worked example here is a heat-recovery retrofit for The Snow Centre — capturing rejected heat from the refrigeration plant to displace bought-in heating. Drag the cost points to reshape the forecast over the project lifespan; the impact summary updates in real time.</p>
 
 <div class="page">
 
   <!-- Page header -->
   <div class="page-header">
     <div class="page-header-text">
-      <h1 id="project-title">Install energy-efficient machinery</h1>
-      <p>Your current and future market-reflective energy prices are used in the calculations to enhance the accuracy of your result.</p>
-      <textarea class="project-notes" placeholder="Add notes, assumptions or supplier context for this project — visible to anyone collaborating on it.">Baseline assumes 2026 mid-case market price. Non-commodity costs reviewed Q1 2026 with Krista. Replace this text with project-specific context.</textarea>
+      <h1 id="project-title">Recover waste heat from refrigeration plant</h1>
+      <p>The delivered price of the heating this project displaces is used in the calculations, so the saving tracks the energy cost you stop paying.</p>
+      <textarea class="project-notes" placeholder="Add notes, assumptions or supplier context for this project — visible to anyone collaborating on it.">Heat-recovery retrofit on the refrigeration plant: capture rejected condenser heat for space heating and hot water, displacing bought-in gas. Saving tracks the delivered heating cost avoided. Install cost is indicative — confirm against a plant survey. Recovered heat offtake assumed broadly constant year-round, given the continuous refrigeration load.</textarea>
     </div>
     <button class="download-btn">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
@@ -653,8 +875,8 @@ body {
       <span class="value">10 Years</span>
     </div>
     <div class="summary-pill">
-      <span class="label">Total Costs</span>
-      <span class="value">£207.0k</span>
+      <span class="label">Install Cost</span>
+      <span class="value">£165.0k</span>
     </div>
   </div>
 
@@ -664,18 +886,6 @@ body {
     <!-- LEFT PANEL -->
     <div class="left-panel">
 
-      <!-- Evaluation Period (unchanged) -->
-      <div class="panel-section">
-        <div class="panel-section-header">Evaluation Period</div>
-        <div class="panel-section-body">
-          <div class="eval-toggle">
-            <button class="eval-btn" onclick="setEval(this)">5 Years</button>
-            <button class="eval-btn active" onclick="setEval(this)">10 Years</button>
-            <button class="eval-btn" onclick="setEval(this)">2050</button>
-          </div>
-        </div>
-      </div>
-
       <!-- SCENARIO MODELLING — replaces old panel -->
       <div class="scenario-panel">
         <div class="scenario-panel-header">
@@ -683,6 +893,14 @@ body {
           <span class="new-tag">New</span>
         </div>
         <div class="scenario-panel-body">
+
+          <!-- Start date -->
+          <div>
+            <div class="field-label">Start date</div>
+            <input type="date" class="scenario-date" value="2025-06-04">
+          </div>
+
+          <div class="divider"></div>
 
           <!-- Named scenario preset -->
           <div>
@@ -693,17 +911,32 @@ body {
               <option value="high">High — price inflation</option>
               <option value="low">Low — market decline</option>
             </select>
+
+            <!-- Custom preset save area -->
+            <div id="custom-presets-wrap" style="margin-top:10px;">
+              <div id="saved-preset-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div>
+              <button class="save-preset-btn" id="save-preset-btn" onclick="toggleSavePresetForm()">
+                + Save current as preset
+              </button>
+              <div id="save-preset-form" style="display:none; margin-top:8px;">
+                <input type="text" id="preset-name-input" placeholder="e.g. Worst case 2030" maxlength="40" class="preset-name-input">
+                <div style="display:flex; gap:6px; margin-top:6px;">
+                  <button class="preset-form-btn preset-form-save" onclick="saveCurrentPreset()">Save</button>
+                  <button class="preset-form-btn preset-form-cancel" onclick="toggleSavePresetForm()">Cancel</button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="divider"></div>
 
           <!-- Active layers: Total delivered rate group -->
           <div>
-            <div class="field-label" style="margin-bottom:10px;">Total delivered rate</div>
+            <div class="field-label" style="margin-bottom:10px;">Displaced heating rate</div>
 
             <div class="layer-row" id="layer-total">
               <div class="layer-color-dot" style="background:#111111;"></div>
-              <div class="layer-label">Energy cost (total)<small>p/kWh delivered rate · always shown</small></div>
+              <div class="layer-label">Avoided heating cost<small>p/kWh delivered · always shown</small></div>
               <div class="toggle on" style="opacity:0.4; cursor:not-allowed;" title="Always shown"></div>
             </div>
 
@@ -714,7 +947,7 @@ body {
             </div>
 
             <div class="layer-row" style="margin-top:10px; padding-left:14px;" id="layer-noncommodity">
-              <div class="layer-color-dot" style="border:1.5px dashed #111111; background:transparent;"></div>
+              <div class="layer-color-dot" style="background:#111111; opacity:0.18;"></div>
               <div class="layer-label">Non-commodity component<small>Network, policy, levies, margin</small></div>
               <div class="toggle" id="toggle-noncommodity" onclick="toggleLayer('noncommodity')"></div>
             </div>
@@ -728,7 +961,7 @@ body {
 
             <div class="layer-row" id="layer-degradation">
               <div class="layer-color-dot" style="border:1.5px dashed #111111; background:transparent;"></div>
-              <div class="layer-label">System degradation<small>Declining kWh output over time</small></div>
+              <div class="layer-label">System degradation<small>Falling heat offtake over time</small></div>
               <div class="toggle" id="toggle-degradation" onclick="toggleLayer('degradation')"></div>
             </div>
 
@@ -746,7 +979,7 @@ body {
 
             <div class="layer-row" style="margin-top:10px;" id="layer-export">
               <div class="layer-color-dot" style="background:#3185DA;"></div>
-              <div class="layer-label">Export agreement<small>p/kWh received for exported energy · drag to edit</small></div>
+              <div class="layer-label">Surplus heat offtake<small>Value from surplus recovered heat · drag to edit</small></div>
               <div class="toggle" id="toggle-export" onclick="toggleLayer('export')"></div>
             </div>
           </div>
@@ -754,7 +987,8 @@ body {
           <div class="divider"></div>
 
           <div style="font-size:11px; color:#111111; line-height:1.6; background:#F5F5F5; padding:8px 10px; border-radius:4px;">
-            <strong>Drag any point</strong> on the chart to adjust the forecast. The impact summary updates automatically.
+            <strong>Drag any point</strong> on the chart to adjust the forecast.<br>
+            <strong>Shift-click</strong> two or more points to lift them together by the same amount.
           </div>
 
           <button class="reset-btn" onclick="resetCurve()">Reset to baseline</button>
@@ -778,17 +1012,17 @@ body {
       <div class="impact-strip">
         <div class="impact-cell">
           <div class="impact-label">Est. Net Savings</div>
-          <div class="impact-value" id="val-savings">£90,022</div>
+          <div class="impact-value" id="val-savings">£295,000</div>
           <div class="impact-delta delta-neutral" id="delta-savings">Baseline</div>
         </div>
         <div class="impact-cell">
           <div class="impact-label">Payback Term</div>
-          <div class="impact-value" id="val-payback">77 <span style="font-size:14px;font-weight:400;">months</span></div>
+          <div class="impact-value" id="val-payback">43 <span style="font-size:14px;font-weight:400;">months</span></div>
           <div class="impact-delta delta-neutral" id="delta-payback">Baseline</div>
         </div>
         <div class="impact-cell">
           <div class="impact-label">Carbon Savings</div>
-          <div class="impact-value" id="val-carbon">293.4 <span style="font-size:14px;font-weight:400;">tCO₂e</span></div>
+          <div class="impact-value" id="val-carbon">1,090.0 <span style="font-size:14px;font-weight:400;">tCO₂e</span></div>
           <div class="impact-delta delta-neutral" id="delta-carbon">Enable grid layer to model decarb impact</div>
         </div>
       </div>
@@ -796,7 +1030,7 @@ body {
       <!-- Chart area -->
       <div class="chart-area">
 
-        <div class="chart-title" id="chart-title">Energy cost forecast — project lifespan
+        <div class="chart-title" id="chart-title">Displaced heating cost — project lifespan
         </div>
         <div class="chart-subtitle" id="chart-subtitle">
           Drag points to reshape the forecast. Solid line = your scenario. Dashed = baseline. Toggle layers in the panel to add detail.
@@ -805,14 +1039,52 @@ body {
 
         <svg id="curve-chart" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet"></svg>
 
+        <!-- ── Time window panel (replaces old Evaluation Period buttons) ── -->
+        <div class="time-window">
+          <div class="tw-row">
+            <div class="tw-presets">
+              <span class="tw-label">Time window</span>
+              <button class="tw-preset-btn" onclick="setWindowMonths(0, 12)">1 yr</button>
+              <button class="tw-preset-btn" onclick="setWindowMonths(0, 36)">3 yr</button>
+              <button class="tw-preset-btn" onclick="setWindowMonths(0, 60)">5 yr</button>
+              <button class="tw-preset-btn active" onclick="setWindowMonths(0, 120)">Full (10 yr)</button>
+            </div>
+            <div class="tw-info">
+              <span class="tw-mode-pill" id="tw-mode-pill">Annual view</span>
+              <span class="tw-range-readout" id="tw-range-readout">Jun 2025 → Jun 2035</span>
+            </div>
+          </div>
+
+          <div class="tw-slider-wrap">
+            <div class="tw-track" id="tw-track">
+              <div class="tw-track-fill" id="tw-track-fill"></div>
+            </div>
+            <input type="range" id="tw-start" min="0" max="120" value="0" step="1" class="tw-slider tw-slider-start">
+            <input type="range" id="tw-end" min="0" max="120" value="120" step="1" class="tw-slider tw-slider-end">
+          </div>
+
+          <div class="tw-axis-labels">
+            <span>Jun 2025</span>
+            <span>Yr 2</span>
+            <span>Yr 4</span>
+            <span>Yr 6</span>
+            <span>Yr 8</span>
+            <span>Jun 2035</span>
+          </div>
+
+          <div class="tw-helper" id="tw-helper">
+            Drag the handles to focus on any period — view auto-switches to monthly when zoomed under 3 years.
+          </div>
+        </div>
+
         <div class="chart-legend" id="chart-legend">
-          <div class="legend-item"><div class="legend-line" style="background:#111111; height:2.5px;"></div>Energy cost (total)</div>
-          <div class="legend-item legend-extra" data-layer="commodity" style="display:none;"><div class="legend-line" style="background:#111111; height:2.5px; opacity:0.55;"></div>Commodity</div>
-          <div class="legend-item legend-extra" data-layer="noncommodity" style="display:none;"><div class="legend-dashed" style="opacity:0.5;"></div>Non-commodity</div>
+          <div class="legend-item"><div class="legend-line" style="background:#111111; height:2.5px;"></div>Avoided heating cost</div>
+          <div class="legend-item legend-extra" data-layer="commodity" style="display:none;"><div style="width:18px; height:11px; background:#111111; opacity:0.14; border:1px solid rgba(17,17,17,0.45); flex-shrink:0;"></div>Commodity</div>
+          <div class="legend-item legend-extra" data-layer="noncommodity" style="display:none;"><div style="width:18px; height:11px; background:#111111; opacity:0.06; border:1px solid rgba(17,17,17,0.3); flex-shrink:0;"></div>Non-commodity</div>
           <div class="legend-item legend-extra" data-layer="degradation" style="display:none;"><div class="legend-dashed" style="opacity:0.5;"></div>Degradation</div>
           <div class="legend-item legend-extra" data-layer="grid" style="display:none;"><div class="legend-dashed" style="border-bottom-color:#63C73B; opacity:0.7;"></div>Grid decarb</div>
           <div class="legend-item legend-extra" data-layer="demand" style="display:none;"><div class="legend-dashed" style="border-bottom-color:#C04A74; opacity:0.7;"></div>Demand growth</div>
-          <div class="legend-item legend-extra" data-layer="export" style="display:none;"><div class="legend-line" style="background:#3185DA; height:2px;"></div>Export agreement</div>
+          <div class="legend-item legend-extra" data-layer="export" style="display:none;"><div class="legend-line" style="background:#3185DA; height:2px;"></div>Surplus heat</div>
           <div class="legend-item"><div class="legend-dashed"></div>Baseline</div>
           <div class="legend-item"><div class="legend-line" style="background:#DC2626; width:2px; height:14px;"></div>Contract end</div>
         </div>
@@ -851,6 +1123,31 @@ const CH = VH - PAD.top - PAD.bottom;
 const YEARS = 10;
 const CONTRACT_END_YEAR = 4; // fixed contract ends at year 4
 
+// ── Time window state (months from project start) ──
+let windowStartMonth = 0;
+let windowEndMonth = 120; // 10 years
+const MONTHLY_THRESHOLD_MONTHS = 36; // ≤ 3 yr window → monthly view
+function isMonthlyView() { return (windowEndMonth - windowStartMonth) <= MONTHLY_THRESHOLD_MONTHS; }
+
+// Project start date (read from input on init / when changed)
+function getStartDate() {
+  const input = document.querySelector('.scenario-date');
+  if (!input || !input.value) return new Date(2025, 5, 4); // June 2025 fallback
+  const [y, m, d] = input.value.split('-').map(Number);
+  return new Date(y, m - 1, d || 1);
+}
+function monthOffsetToDate(m) {
+  const s = getStartDate();
+  return new Date(s.getFullYear(), s.getMonth() + m, 1);
+}
+function fmtMonthShort(d) {
+  const m = d.toLocaleDateString('en-GB', { month: 'short' });
+  return m + " '" + String(d.getFullYear()).slice(-2);
+}
+function fmtMonthYear(d) {
+  return d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+}
+
 // Baseline energy cost data (p/kWh) — flat-ish with small rise
 function baseline(yr) {
   if (yr <= CONTRACT_END_YEAR) return 22 + yr * 0.3; // fixed contract
@@ -880,14 +1177,18 @@ const layerState = {
   export: false
 };
 
-// Coordinate helpers
-function xPos(year) { return PAD.left + (year / YEARS) * CW; }
+// Coordinate helpers — xPos accepts a fractional year and maps to current visible window
+function xPos(year) {
+  const monthCoord = year * 12;
+  const span = Math.max(1, windowEndMonth - windowStartMonth);
+  return PAD.left + ((monthCoord - windowStartMonth) / span) * CW;
+}
 function yPos(val) {
-  const minV = 10, maxV = 50;
+  const minV = 0, maxV = 50;
   return PAD.top + CH - ((val - minV) / (maxV - minV)) * CH;
 }
 function yToVal(y) {
-  const minV = 10, maxV = 50;
+  const minV = 0, maxV = 50;
   return maxV - ((y - PAD.top) / CH) * (maxV - minV);
 }
 
@@ -895,12 +1196,43 @@ let dragging = null;
 let draggingExport = null;
 let svgRect = null;
 
+// Multi-point selection state — shift-click to add/remove from selection,
+// then dragging any selected point moves all selected points by the same delta.
+const selectedIndices = new Set();
+let dragStartValues = new Map(); // index -> value at mousedown
+
+// ── Monthly view helpers ──
+// Linear interpolation between annual userPoints to get a value at any fractional year.
+function interpolateAnnualValue(yrFloat) {
+  if (yrFloat <= 0) return userPoints[0].value;
+  if (yrFloat >= YEARS) return userPoints[YEARS].value;
+  const lo = Math.floor(yrFloat);
+  const hi = Math.min(YEARS, lo + 1);
+  const t = yrFloat - lo;
+  return userPoints[lo].value + (userPoints[hi].value - userPoints[lo].value) * t;
+}
+// Seasonal modifier: cosine peaks in winter (Jan), dips in summer (July). ±1.5p amplitude.
+function seasonality(monthOffset) {
+  const startD = getStartDate();
+  const calMonth = (((startD.getMonth() + monthOffset) % 12) + 12) % 12; // 0=Jan
+  return Math.cos((calMonth / 12) * 2 * Math.PI) * 1.5;
+}
+// Build a monthly series within the visible window, with a per-month value function.
+// Caller passes a function (monthOffset) → annual value; we layer seasonality on top.
+function generateMonthlySeries(getAnnual) {
+  const out = [];
+  for (let m = windowStartMonth; m <= windowEndMonth; m++) {
+    out.push({ year: m / 12, value: getAnnual(m) + seasonality(m) });
+  }
+  return out;
+}
+
 function buildChart() {
   while (svg.firstChild) svg.removeChild(svg.firstChild);
   svgRect = svg.getBoundingClientRect();
 
   // Grid lines + Y axis labels
-  [10, 20, 30, 40, 50].forEach(v => {
+  [0, 10, 20, 30, 40, 50].forEach(v => {
     const y = yPos(v);
     const line = document.createElementNS(SVG_NS, 'line');
     line.setAttribute('x1', PAD.left); line.setAttribute('x2', VW - PAD.right);
@@ -918,20 +1250,57 @@ function buildChart() {
     svg.appendChild(lbl);
   });
 
-  // X axis labels (every 5 years)
-  for (let y = 0; y <= YEARS; y += 2) {
-    const x = xPos(y);
-    const lbl = document.createElementNS(SVG_NS, 'text');
-    lbl.setAttribute('x', x); lbl.setAttribute('y', VH - PAD.bottom + 14);
-    lbl.setAttribute('text-anchor', 'middle');
-    lbl.setAttribute('font-size', '9'); lbl.setAttribute('font-family', 'Poppins, sans-serif');
-    lbl.setAttribute('fill', '#111');
-    lbl.textContent = 'Yr ' + y;
-    svg.appendChild(lbl);
+  // X axis labels — adapt to window size and view mode
+  if (isMonthlyView()) {
+    const winSpan = windowEndMonth - windowStartMonth;
+    const step = winSpan <= 12 ? 2 : 3; // every 2 months for ≤1yr, every 3 months otherwise
+    for (let m = windowStartMonth; m <= windowEndMonth; m += step) {
+      const x = xPos(m / 12);
+      if (x < PAD.left - 1 || x > VW - PAD.right + 1) continue;
+      const d = monthOffsetToDate(m);
+      const lbl = document.createElementNS(SVG_NS, 'text');
+      lbl.setAttribute('x', x); lbl.setAttribute('y', VH - PAD.bottom + 14);
+      lbl.setAttribute('text-anchor', 'middle');
+      lbl.setAttribute('font-size', '9'); lbl.setAttribute('font-family', 'Poppins, sans-serif');
+      lbl.setAttribute('fill', '#111');
+      lbl.textContent = fmtMonthShort(d);
+      svg.appendChild(lbl);
+    }
+  } else {
+    const winSpanYrs = (windowEndMonth - windowStartMonth) / 12;
+    const yearStep = winSpanYrs <= 5 ? 1 : 2;
+    for (let y = 0; y <= YEARS; y += yearStep) {
+      const monthCoord = y * 12;
+      if (monthCoord < windowStartMonth - 0.5 || monthCoord > windowEndMonth + 0.5) continue;
+      const x = xPos(y);
+      const lbl = document.createElementNS(SVG_NS, 'text');
+      lbl.setAttribute('x', x); lbl.setAttribute('y', VH - PAD.bottom + 14);
+      lbl.setAttribute('text-anchor', 'middle');
+      lbl.setAttribute('font-size', '9'); lbl.setAttribute('font-family', 'Poppins, sans-serif');
+      lbl.setAttribute('fill', '#111');
+      lbl.textContent = 'Yr ' + y;
+      svg.appendChild(lbl);
+    }
   }
 
-  // Baseline line (dashed)
-  const baselinePts = userPoints.map(p => `${xPos(p.year)},${yPos(baseline(p.year))}`).join(' ');
+  // Clip path so lines don't extend past the chart area when zoomed in
+  const defs = document.createElementNS(SVG_NS, 'defs');
+  const clip = document.createElementNS(SVG_NS, 'clipPath');
+  clip.setAttribute('id', 'chart-clip');
+  const clipRect = document.createElementNS(SVG_NS, 'rect');
+  clipRect.setAttribute('x', PAD.left);
+  clipRect.setAttribute('y', PAD.top - 2);
+  clipRect.setAttribute('width', CW);
+  clipRect.setAttribute('height', CH + 4);
+  clip.appendChild(clipRect);
+  defs.appendChild(clip);
+  svg.appendChild(defs);
+
+  // Baseline line (dashed) — rendered with seasonality in monthly view
+  const baselineSeries = isMonthlyView()
+    ? generateMonthlySeries(m => baseline(m / 12))
+    : userPoints.map(p => ({ year: p.year, value: baseline(p.year) }));
+  const baselinePts = baselineSeries.map(p => `${xPos(p.year)},${yPos(p.value)}`).join(' ');
   const bLine = document.createElementNS(SVG_NS, 'polyline');
   bLine.setAttribute('points', baselinePts);
   bLine.setAttribute('fill', 'none');
@@ -939,96 +1308,133 @@ function buildChart() {
   bLine.setAttribute('stroke-width', '1.5');
   bLine.setAttribute('stroke-dasharray', '5 4');
   bLine.setAttribute('stroke-opacity', '0.25');
+  bLine.setAttribute('clip-path', 'url(#chart-clip)');
   svg.appendChild(bLine);
 
-  // Contract end vertical line
+  // Contract end vertical line — only render if within the visible window
+  const contractInWindow = (CONTRACT_END_YEAR * 12) >= windowStartMonth && (CONTRACT_END_YEAR * 12) <= windowEndMonth;
   const cx = xPos(CONTRACT_END_YEAR);
-  const cLine = document.createElementNS(SVG_NS, 'line');
-  cLine.setAttribute('x1', cx); cLine.setAttribute('x2', cx);
-  cLine.setAttribute('y1', PAD.top); cLine.setAttribute('y2', VH - PAD.bottom);
-  cLine.setAttribute('stroke', '#DC2626');
-  cLine.setAttribute('stroke-width', '1.5');
-  cLine.setAttribute('stroke-dasharray', '4 3');
-  svg.appendChild(cLine);
+  if (contractInWindow) {
+    const cLine = document.createElementNS(SVG_NS, 'line');
+    cLine.setAttribute('x1', cx); cLine.setAttribute('x2', cx);
+    cLine.setAttribute('y1', PAD.top); cLine.setAttribute('y2', VH - PAD.bottom);
+    cLine.setAttribute('stroke', '#DC2626');
+    cLine.setAttribute('stroke-width', '1.5');
+    cLine.setAttribute('stroke-dasharray', '4 3');
+    svg.appendChild(cLine);
 
-  // Contract end label
-  const cLbl = document.createElementNS(SVG_NS, 'text');
-  cLbl.setAttribute('x', cx + 4); cLbl.setAttribute('y', PAD.top + 12);
-  cLbl.setAttribute('font-size', '8'); cLbl.setAttribute('font-family', 'Poppins, sans-serif');
-  cLbl.setAttribute('fill', '#DC2626'); cLbl.setAttribute('font-weight', '600');
-  cLbl.textContent = 'Contract end';
-  svg.appendChild(cLbl);
+    const cLbl = document.createElementNS(SVG_NS, 'text');
+    cLbl.setAttribute('x', cx + 4); cLbl.setAttribute('y', PAD.top + 12);
+    cLbl.setAttribute('font-size', '8'); cLbl.setAttribute('font-family', 'Poppins, sans-serif');
+    cLbl.setAttribute('fill', '#DC2626'); cLbl.setAttribute('font-weight', '600');
+    cLbl.textContent = 'Contract end';
+    svg.appendChild(cLbl);
+  }
 
-  // Locked region shade
-  const shade = document.createElementNS(SVG_NS, 'rect');
-  shade.setAttribute('x', PAD.left);
-  shade.setAttribute('y', PAD.top);
-  shade.setAttribute('width', cx - PAD.left);
-  shade.setAttribute('height', CH);
-  shade.setAttribute('fill', '#F5F5F5');
-  shade.setAttribute('opacity', '0.6');
-  svg.insertBefore(shade, svg.firstChild);
+  // Locked region shade — only the portion within the window
+  const lockedEnd = Math.min(cx, VW - PAD.right);
+  if (lockedEnd > PAD.left && (CONTRACT_END_YEAR * 12) > windowStartMonth) {
+    const shade = document.createElementNS(SVG_NS, 'rect');
+    shade.setAttribute('x', PAD.left);
+    shade.setAttribute('y', PAD.top);
+    shade.setAttribute('width', Math.max(0, lockedEnd - PAD.left));
+    shade.setAttribute('height', CH);
+    shade.setAttribute('fill', '#F5F5F5');
+    shade.setAttribute('opacity', '0.6');
+    svg.insertBefore(shade, defs.nextSibling);
 
-  // Locked label
-  const lockLbl = document.createElementNS(SVG_NS, 'text');
-  lockLbl.setAttribute('x', PAD.left + (cx - PAD.left) / 2); lockLbl.setAttribute('y', VH - PAD.bottom - 8);
-  lockLbl.setAttribute('text-anchor', 'middle');
-  lockLbl.setAttribute('font-size', '8'); lockLbl.setAttribute('font-family', 'Poppins, sans-serif');
-  lockLbl.setAttribute('fill', '#111'); lockLbl.setAttribute('opacity', '0.4');
-  lockLbl.textContent = 'Fixed contract (read-only)';
-  svg.appendChild(lockLbl);
+    if (contractInWindow) {
+      const lockLbl = document.createElementNS(SVG_NS, 'text');
+      lockLbl.setAttribute('x', PAD.left + (lockedEnd - PAD.left) / 2); lockLbl.setAttribute('y', VH - PAD.bottom - 8);
+      lockLbl.setAttribute('text-anchor', 'middle');
+      lockLbl.setAttribute('font-size', '8'); lockLbl.setAttribute('font-family', 'Poppins, sans-serif');
+      lockLbl.setAttribute('fill', '#111'); lockLbl.setAttribute('opacity', '0.4');
+      lockLbl.textContent = 'Fixed contract (read-only)';
+      svg.appendChild(lockLbl);
+    }
+  }
 
-  // User scenario line (energy cost — always shown, draggable)
-  const pts = userPoints.map(p => `${xPos(p.year)},${yPos(p.value)}`).join(' ');
+  // ── Main user scenario line ──
+  // In monthly view, generate interpolated monthly points with seasonality (read-only).
+  // In annual view, use the editable yearly userPoints directly.
+  const userSeries = isMonthlyView()
+    ? generateMonthlySeries(m => interpolateAnnualValue(m / 12))
+    : userPoints.map(p => ({ year: p.year, value: p.value }));
+  const pts = userSeries.map(p => `${xPos(p.year)},${yPos(p.value)}`).join(' ');
   const uLine = document.createElementNS(SVG_NS, 'polyline');
   uLine.setAttribute('points', pts);
   uLine.setAttribute('fill', 'none');
   uLine.setAttribute('stroke', '#111111');
   uLine.setAttribute('stroke-width', '2.5');
+  uLine.setAttribute('clip-path', 'url(#chart-clip)');
   svg.appendChild(uLine);
+
+  // ── Annual-only rendering: layers + draggable points ──
+  // In monthly view we render an interpolated read-only line; layers and direct editing return in annual.
+  if (!isMonthlyView()) {
 
   // Each layer is independently togglable — read state from layerState
   const labelYr = Math.min(YEARS - 2, 8); // safe annotation x position for 10yr span
 
-  // Commodity component (~65% of total)
-  if (layerState.commodity) {
-    const comPts = userPoints.map(p => `${xPos(p.year)},${yPos(p.value * 0.65)}`).join(' ');
-    const comLine = document.createElementNS(SVG_NS, 'polyline');
-    comLine.setAttribute('points', comPts);
-    comLine.setAttribute('fill', 'none');
-    comLine.setAttribute('stroke', '#111111');
-    comLine.setAttribute('stroke-width', '1.5');
-    comLine.setAttribute('stroke-opacity', '0.55');
-    svg.appendChild(comLine);
+  // Commodity / Non-commodity decomposition.
+  // These are PARTS of the total delivered rate, so they're drawn as a stack, not as
+  // free-floating lines: commodity fills from 0 up to the split boundary, non-commodity
+  // fills from the boundary up to the total line. By construction the two bands add up
+  // to the total — the top of the stack sits exactly on the black line.
+  const COMMODITY_SHARE = 0.65; // commodity (wholesale) vs 0.35 non-commodity — clean partition, sums to 100%
+  if (layerState.commodity || layerState.noncommodity) {
+    const floorY = yPos(0);
+    const boundaryTop = userPoints.map(p => `${xPos(p.year)},${yPos(p.value * COMMODITY_SHARE)}`);
+    const boundaryRev = userPoints.slice().reverse().map(p => `${xPos(p.year)},${yPos(p.value * COMMODITY_SHARE)}`);
+    const totalTop = userPoints.map(p => `${xPos(p.year)},${yPos(p.value)}`);
+    const floorRev = userPoints.slice().reverse().map(p => `${xPos(p.year)},${floorY}`);
 
-    const comLbl = document.createElementNS(SVG_NS, 'text');
-    comLbl.setAttribute('x', xPos(labelYr)); comLbl.setAttribute('y', yPos(userPoints[labelYr].value * 0.65) - 5);
-    comLbl.setAttribute('font-size', '8'); comLbl.setAttribute('font-family', 'Poppins, sans-serif');
-    comLbl.setAttribute('fill', '#111111'); comLbl.setAttribute('opacity', '0.55');
-    comLbl.setAttribute('text-anchor', 'end');
-    comLbl.textContent = 'Commodity';
-    svg.appendChild(comLbl);
-  }
+    // Commodity band: 0 → boundary
+    if (layerState.commodity) {
+      const comBand = document.createElementNS(SVG_NS, 'polygon');
+      comBand.setAttribute('points', boundaryTop.join(' ') + ' ' + floorRev.join(' '));
+      comBand.setAttribute('fill', '#111111');
+      comBand.setAttribute('fill-opacity', '0.14');
+      comBand.setAttribute('clip-path', 'url(#chart-clip)');
+      svg.appendChild(comBand);
 
-  // Non-commodity component (~35% of total + small floor)
-  if (layerState.noncommodity) {
-    const ncPts = userPoints.map(p => `${xPos(p.year)},${yPos(p.value * 0.35 + 4)}`).join(' ');
-    const ncLine = document.createElementNS(SVG_NS, 'polyline');
-    ncLine.setAttribute('points', ncPts);
-    ncLine.setAttribute('fill', 'none');
-    ncLine.setAttribute('stroke', '#111111');
-    ncLine.setAttribute('stroke-width', '1.5');
-    ncLine.setAttribute('stroke-opacity', '0.45');
-    ncLine.setAttribute('stroke-dasharray', '4 3');
-    svg.appendChild(ncLine);
+      const comLbl = document.createElementNS(SVG_NS, 'text');
+      comLbl.setAttribute('x', xPos(labelYr)); comLbl.setAttribute('y', yPos(userPoints[labelYr].value * COMMODITY_SHARE * 0.5) + 3);
+      comLbl.setAttribute('font-size', '8'); comLbl.setAttribute('font-family', 'Poppins, sans-serif');
+      comLbl.setAttribute('fill', '#111111'); comLbl.setAttribute('opacity', '0.55');
+      comLbl.setAttribute('text-anchor', 'end');
+      comLbl.textContent = 'Commodity';
+      svg.appendChild(comLbl);
+    }
 
-    const ncLbl = document.createElementNS(SVG_NS, 'text');
-    ncLbl.setAttribute('x', xPos(labelYr)); ncLbl.setAttribute('y', yPos(userPoints[labelYr].value * 0.35 + 4) - 5);
-    ncLbl.setAttribute('font-size', '8'); ncLbl.setAttribute('font-family', 'Poppins, sans-serif');
-    ncLbl.setAttribute('fill', '#111111'); ncLbl.setAttribute('opacity', '0.5');
-    ncLbl.setAttribute('text-anchor', 'end');
-    ncLbl.textContent = 'Non-commodity';
-    svg.appendChild(ncLbl);
+    // Non-commodity band: boundary → total
+    if (layerState.noncommodity) {
+      const ncBand = document.createElementNS(SVG_NS, 'polygon');
+      ncBand.setAttribute('points', totalTop.join(' ') + ' ' + boundaryRev.join(' '));
+      ncBand.setAttribute('fill', '#111111');
+      ncBand.setAttribute('fill-opacity', '0.06');
+      ncBand.setAttribute('clip-path', 'url(#chart-clip)');
+      svg.appendChild(ncBand);
+
+      const ncMidVal = userPoints[labelYr].value * (COMMODITY_SHARE + (1 - COMMODITY_SHARE) * 0.5);
+      const ncLbl = document.createElementNS(SVG_NS, 'text');
+      ncLbl.setAttribute('x', xPos(labelYr)); ncLbl.setAttribute('y', yPos(ncMidVal) + 3);
+      ncLbl.setAttribute('font-size', '8'); ncLbl.setAttribute('font-family', 'Poppins, sans-serif');
+      ncLbl.setAttribute('fill', '#111111'); ncLbl.setAttribute('opacity', '0.5');
+      ncLbl.setAttribute('text-anchor', 'end');
+      ncLbl.textContent = 'Non-commodity';
+      svg.appendChild(ncLbl);
+    }
+
+    // Split boundary line (commodity top / non-commodity bottom) for a clean read
+    const splitLine = document.createElementNS(SVG_NS, 'polyline');
+    splitLine.setAttribute('points', boundaryTop.join(' '));
+    splitLine.setAttribute('fill', 'none');
+    splitLine.setAttribute('stroke', '#111111');
+    splitLine.setAttribute('stroke-width', '1');
+    splitLine.setAttribute('stroke-opacity', '0.35');
+    splitLine.setAttribute('clip-path', 'url(#chart-clip)');
+    svg.appendChild(splitLine);
   }
 
   // System degradation: declining curve (~10% drop over 10yr)
@@ -1145,13 +1551,28 @@ function buildChart() {
     expLbl.setAttribute('font-size', '8'); expLbl.setAttribute('font-family', 'Poppins, sans-serif');
     expLbl.setAttribute('fill', '#3185DA'); expLbl.setAttribute('opacity', '0.85');
     expLbl.setAttribute('text-anchor', 'end');
-    expLbl.textContent = 'Export agreement (p/kWh)';
+    expLbl.textContent = 'Surplus heat (p/kWh)';
     svg.appendChild(expLbl);
   }
 
   // Draggable points (post-contract only)
   userPoints.forEach((p, i) => {
     if (p.locked) return;
+    const isSelected = selectedIndices.has(i);
+
+    // Selection ring (drawn first so it sits behind the dot)
+    if (isSelected) {
+      const ring = document.createElementNS(SVG_NS, 'circle');
+      ring.setAttribute('cx', xPos(p.year));
+      ring.setAttribute('cy', yPos(p.value));
+      ring.setAttribute('r', '9');
+      ring.setAttribute('fill', 'none');
+      ring.setAttribute('stroke', '#111111');
+      ring.setAttribute('stroke-width', '1.5');
+      ring.setAttribute('stroke-dasharray', '2 2');
+      svg.appendChild(ring);
+    }
+
     const circle = document.createElementNS(SVG_NS, 'circle');
     circle.setAttribute('cx', xPos(p.year));
     circle.setAttribute('cy', yPos(p.value));
@@ -1166,7 +1587,9 @@ function buildChart() {
       circle.setAttribute('r', '7');
       tooltip.style.display = 'block';
       document.getElementById('tt-year').textContent = 'Year ' + p.year;
-      document.getElementById('tt-value').textContent = p.value.toFixed(1) + 'p / kWh';
+      const sel = selectedIndices.size;
+      document.getElementById('tt-value').textContent = p.value.toFixed(1) + 'p / kWh' +
+        (sel > 1 && selectedIndices.has(i) ? ' · ' + sel + ' points selected' : '');
     });
     circle.addEventListener('mouseleave', () => {
       if (dragging !== i) circle.setAttribute('r', '5');
@@ -1177,12 +1600,55 @@ function buildChart() {
       tooltip.style.top  = (e.clientY - 10) + 'px';
     });
     circle.addEventListener('mousedown', (e) => {
+      // Shift-click toggles selection — does NOT start a drag
+      if (e.shiftKey) {
+        if (selectedIndices.has(i)) selectedIndices.delete(i);
+        else selectedIndices.add(i);
+        e.preventDefault();
+        e.stopPropagation();
+        buildChart();
+        return;
+      }
+      // If clicked point isn't in current selection, clear and select just this one
+      if (!selectedIndices.has(i)) {
+        selectedIndices.clear();
+      }
+      // Snapshot start values for all selected points (or just the one being dragged)
+      dragStartValues.clear();
+      if (selectedIndices.size > 0) {
+        selectedIndices.forEach(idx => dragStartValues.set(idx, userPoints[idx].value));
+      }
+      dragStartValues.set(i, userPoints[i].value);
       dragging = i;
       circle.setAttribute('cursor', 'grabbing');
       e.preventDefault();
     });
     svg.appendChild(circle);
   });
+
+  } // end if (!isMonthlyView()) — annual-only block
+
+  // Monthly view: show a small "View only" badge inside the chart so the read-only state is obvious
+  if (isMonthlyView()) {
+    const badgeBg = document.createElementNS(SVG_NS, 'rect');
+    badgeBg.setAttribute('x', PAD.left + 6);
+    badgeBg.setAttribute('y', PAD.top + 4);
+    badgeBg.setAttribute('width', 138);
+    badgeBg.setAttribute('height', 18);
+    badgeBg.setAttribute('rx', '3');
+    badgeBg.setAttribute('fill', '#111111');
+    svg.appendChild(badgeBg);
+
+    const badgeTxt = document.createElementNS(SVG_NS, 'text');
+    badgeTxt.setAttribute('x', PAD.left + 14);
+    badgeTxt.setAttribute('y', PAD.top + 17);
+    badgeTxt.setAttribute('font-size', '9');
+    badgeTxt.setAttribute('font-family', 'Poppins, sans-serif');
+    badgeTxt.setAttribute('font-weight', '600');
+    badgeTxt.setAttribute('fill', '#ffffff');
+    badgeTxt.textContent = 'Monthly view · read-only';
+    svg.appendChild(badgeTxt);
+  }
 
   // Axis baseline
   const axis = document.createElementNS(SVG_NS, 'line');
@@ -1202,12 +1668,26 @@ svg.addEventListener('mousemove', (e) => {
   val = Math.max(10, Math.min(50, val));
 
   if (dragging !== null) {
-    userPoints[dragging].value = parseFloat(val.toFixed(1));
+    // If multiple points are selected and the dragged point is one of them,
+    // apply the same delta to all selected points.
+    if (selectedIndices.size > 1 && selectedIndices.has(dragging)) {
+      const startVal = dragStartValues.get(dragging);
+      const delta = val - startVal;
+      selectedIndices.forEach(idx => {
+        if (userPoints[idx].locked) return;
+        const newVal = (dragStartValues.get(idx) || userPoints[idx].value) + delta;
+        userPoints[idx].value = parseFloat(Math.max(10, Math.min(50, newVal)).toFixed(1));
+      });
+    } else {
+      userPoints[dragging].value = parseFloat(val.toFixed(1));
+    }
     buildChart();
     updateImpact();
     tooltip.style.display = 'block';
     document.getElementById('tt-year').textContent = 'Year ' + userPoints[dragging].year;
-    document.getElementById('tt-value').textContent = val.toFixed(1) + 'p / kWh';
+    const selCount = selectedIndices.size;
+    document.getElementById('tt-value').textContent = val.toFixed(1) + 'p / kWh' +
+      (selCount > 1 && selectedIndices.has(dragging) ? ' · ' + selCount + ' points moved' : '');
   } else if (draggingExport !== null) {
     exportPoints[draggingExport].value = parseFloat(val.toFixed(1));
     buildChart();
@@ -1220,14 +1700,32 @@ svg.addEventListener('mousemove', (e) => {
   tooltip.style.top  = (e.clientY - 10) + 'px';
 });
 
-svg.addEventListener('mouseup', () => { dragging = null; draggingExport = null; tooltip.style.display = 'none'; });
-svg.addEventListener('mouseleave', () => { dragging = null; draggingExport = null; });
+svg.addEventListener('mouseup', () => {
+  dragging = null;
+  draggingExport = null;
+  dragStartValues.clear();
+  tooltip.style.display = 'none';
+});
+svg.addEventListener('mouseleave', () => {
+  dragging = null;
+  draggingExport = null;
+  dragStartValues.clear();
+});
+
+// Click on the chart background (not on a point) clears the selection
+svg.addEventListener('click', (e) => {
+  if (e.target.tagName === 'circle') return; // ignore clicks on points
+  if (selectedIndices.size > 0) {
+    selectedIndices.clear();
+    buildChart();
+  }
+});
 
 function updateImpact() {
   // Baseline financial figures
-  const BASE_SAVINGS = 90022;
-  const BASE_PAYBACK_M = 77;
-  const BASE_CARBON_T = 293.4;
+  const BASE_SAVINGS = 295000;
+  const BASE_PAYBACK_M = 43;
+  const BASE_CARBON_T = 1090.0;
 
   // 1. Energy cost delta — main driver of net savings
   const postContract = userPoints.filter(p => !p.locked);
@@ -1314,12 +1812,28 @@ function resetCurve() {
   exportPoints.forEach((p, i) => {
     p.value = i <= CONTRACT_END_YEAR ? 12 : 13 + (i - CONTRACT_END_YEAR) * 0.3;
   });
+  selectedIndices.clear();
   buildChart();
   updateImpact();
   document.querySelector('.scenario-select').value = 'custom';
 }
 
 function applyPreset(val) {
+  // Check if it's a saved custom preset (id format: "saved:<id>")
+  if (typeof val === 'string' && val.startsWith('saved:')) {
+    const id = val.slice(6);
+    const presets = loadSavedPresets();
+    const p = presets.find(x => x.id === id);
+    if (p) {
+      userPoints.forEach((pt, i) => {
+        if (pt.locked) return;
+        if (p.values[i] !== undefined) pt.value = p.values[i];
+      });
+      buildChart();
+      updateImpact();
+    }
+    return;
+  }
   userPoints.forEach(p => {
     if (p.locked) return;
     const b = baseline(p.year);
@@ -1331,6 +1845,85 @@ function applyPreset(val) {
   });
   buildChart();
   updateImpact();
+}
+
+// ── Custom presets (localStorage-backed for wireframe demo) ──
+const PRESETS_KEY = 'truedi.scenarios.presets';
+
+function loadSavedPresets() {
+  try {
+    return JSON.parse(localStorage.getItem(PRESETS_KEY) || '[]');
+  } catch (e) {
+    return [];
+  }
+}
+function writeSavedPresets(list) {
+  try { localStorage.setItem(PRESETS_KEY, JSON.stringify(list)); } catch (e) {}
+}
+
+function toggleSavePresetForm() {
+  const form = document.getElementById('save-preset-form');
+  const btn = document.getElementById('save-preset-btn');
+  const open = form.style.display === 'block';
+  form.style.display = open ? 'none' : 'block';
+  btn.style.display = open ? 'block' : 'none';
+  if (!open) {
+    setTimeout(() => document.getElementById('preset-name-input').focus(), 0);
+  }
+}
+
+function saveCurrentPreset() {
+  const input = document.getElementById('preset-name-input');
+  const name = (input.value || '').trim();
+  if (!name) { input.focus(); return; }
+  const list = loadSavedPresets();
+  const id = 'p' + Date.now().toString(36);
+  list.push({
+    id,
+    name,
+    values: userPoints.map(p => p.value)
+  });
+  writeSavedPresets(list);
+  input.value = '';
+  toggleSavePresetForm();
+  renderSavedPresetChips();
+}
+
+function deleteSavedPreset(id) {
+  const list = loadSavedPresets().filter(p => p.id !== id);
+  writeSavedPresets(list);
+  renderSavedPresetChips();
+}
+
+function renderSavedPresetChips() {
+  const wrap = document.getElementById('saved-preset-chips');
+  if (!wrap) return;
+  const list = loadSavedPresets();
+  wrap.innerHTML = '';
+  list.forEach(p => {
+    const chip = document.createElement('span');
+    chip.className = 'saved-preset-chip';
+    chip.title = 'Apply preset';
+    chip.onclick = (e) => {
+      if (e.target.classList.contains('chip-delete')) return;
+      applyPreset('saved:' + p.id);
+    };
+
+    const label = document.createElement('span');
+    label.textContent = p.name;
+    chip.appendChild(label);
+
+    const del = document.createElement('button');
+    del.className = 'chip-delete';
+    del.title = 'Delete preset';
+    del.textContent = '×';
+    del.onclick = (e) => {
+      e.stopPropagation();
+      deleteSavedPreset(p.id);
+    };
+    chip.appendChild(del);
+    wrap.appendChild(chip);
+  });
 }
 
 // Per-layer toggle handler — wired up to the toggle pills on each layer row
@@ -1353,8 +1946,102 @@ function setEval(btn) {
   btn.classList.add('active');
 }
 
+// ── Time-window slider wiring ──
+function setWindowMonths(start, end) {
+  windowStartMonth = Math.max(0, Math.min(120, start));
+  windowEndMonth   = Math.max(0, Math.min(120, end));
+  if (windowEndMonth - windowStartMonth < 6) {
+    // enforce a minimum window of 6 months so handles can't cross / collapse
+    if (start === windowStartMonth) windowEndMonth = windowStartMonth + 6;
+    else windowStartMonth = windowEndMonth - 6;
+  }
+  document.getElementById('tw-start').value = windowStartMonth;
+  document.getElementById('tw-end').value = windowEndMonth;
+  updateWindowUI();
+  buildChart();
+}
+
+function updateWindowUI() {
+  // Update preset button active state
+  const presets = [
+    { btn: 0, start: 0, end: 12 },
+    { btn: 1, start: 0, end: 36 },
+    { btn: 2, start: 0, end: 60 },
+    { btn: 3, start: 0, end: 120 }
+  ];
+  const presetButtons = document.querySelectorAll('.tw-preset-btn');
+  presetButtons.forEach(b => b.classList.remove('active'));
+  presets.forEach(p => {
+    if (p.start === windowStartMonth && p.end === windowEndMonth) {
+      presetButtons[p.btn]?.classList.add('active');
+    }
+  });
+
+  // Update the filled segment of the track
+  const fill = document.getElementById('tw-track-fill');
+  if (fill) {
+    fill.style.left = (windowStartMonth / 120 * 100) + '%';
+    fill.style.width = ((windowEndMonth - windowStartMonth) / 120 * 100) + '%';
+  }
+
+  // Update mode pill
+  const pill = document.getElementById('tw-mode-pill');
+  if (pill) {
+    if (isMonthlyView()) {
+      pill.textContent = 'Monthly view';
+      pill.classList.add('monthly');
+    } else {
+      pill.textContent = 'Annual view';
+      pill.classList.remove('monthly');
+    }
+  }
+
+  // Update range readout (calendar dates)
+  const readout = document.getElementById('tw-range-readout');
+  if (readout) {
+    const startD = monthOffsetToDate(windowStartMonth);
+    const endD = monthOffsetToDate(windowEndMonth);
+    readout.textContent = fmtMonthYear(startD) + ' → ' + fmtMonthYear(endD);
+  }
+
+  // Update helper text
+  const helper = document.getElementById('tw-helper');
+  if (helper) {
+    if (isMonthlyView()) {
+      helper.textContent = 'Monthly view: showing month-by-month detail with seasonality. Layers and editing return when window expands beyond 3 years.';
+      helper.classList.add('read-only');
+    } else {
+      helper.textContent = 'Drag the handles to focus on any period — view auto-switches to monthly when zoomed under 3 years.';
+      helper.classList.remove('read-only');
+    }
+  }
+}
+
+// Wire up the dual-handle slider — guard against handles crossing
+(function initSlider() {
+  const start = document.getElementById('tw-start');
+  const end = document.getElementById('tw-end');
+  if (!start || !end) return;
+  start.addEventListener('input', () => {
+    let s = parseInt(start.value, 10);
+    let e = parseInt(end.value, 10);
+    if (s > e - 6) s = e - 6;
+    start.value = s;
+    setWindowMonths(s, e);
+  });
+  end.addEventListener('input', () => {
+    let s = parseInt(start.value, 10);
+    let e = parseInt(end.value, 10);
+    if (e < s + 6) e = s + 6;
+    end.value = e;
+    setWindowMonths(s, e);
+  });
+})();
+
 // Init
 buildChart();
+renderSavedPresetChips();
+updateWindowUI();
 // Initial dim state for inactive layer rows
 ['commodity', 'noncommodity', 'degradation', 'grid', 'demand', 'export'].forEach(k => {
   const row = document.getElementById('layer-' + k);

@@ -69,7 +69,6 @@
   .t-new { background: #EFF6FD; }
   .t-com { background: #FCEEF4; }
   .t-hld { opacity: 0.4; }
-  .t-cc  { background: #ECF5F4; }
 
   .feat-text { font-size: 12px; color: #111111; flex: 1; line-height: 1.4; }
   .feat-badge {
@@ -84,7 +83,6 @@
   .b-api { background: #FF9800; color: #FFFFFF; }
   .b-hld { background: #111111; color: #FFFFFF; }
   .b-com { background: #C04A74; color: #FFFFFF; }
-  .b-cc  { background: #2C7A77; color: #FFFFFF; }
 
   /* ── Arrow between page nodes ── */
   .arrow-col { display: flex; align-items: flex-start; padding-top: 18px; width: 24px; flex-shrink: 0; }
@@ -128,14 +126,13 @@
   /* ── Legend (below diagram) ── */
   .legend-bar {
     margin-top: 40px; padding-top: 24px;
-    display: flex; flex-direction: column; gap: 14px;
+    display: flex; align-items: center; flex-wrap: wrap; gap: 4px;
   }
   .legend-label {
     font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
     text-transform: uppercase; color: #111111; margin-right: 8px;
   }
   .legend-items { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
-  .legend-row { width: 100%; }
   .legend-item { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 400; color: #111111; }
   .lpip { width: 28px; height: 14px; border-radius: 3px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
   .lpip span { font-size: 7px; font-weight: 700; letter-spacing: 0.05em; color: #FFFFFF; text-transform: uppercase; }
@@ -144,44 +141,20 @@
   .lp-com { background: #C04A74; }
   .lp-hld { background: #111111; opacity: 0.4; }
   .lp-api { background: #FF9800; }
-  .lp-cc  { background: #2C7A77; }
 
-  /* ── Tooltip (click to open, X to close) ── */
+  /* ── Tooltip ── */
   .tooltip {
     display: none; position: fixed;
     background: #111111; border-radius: 6px;
-    padding: 14px 16px 12px 16px; font-family: 'Poppins', sans-serif;
-    color: #FFFFFF; max-width: 300px;
-    z-index: 999;
-    line-height: 1.5; box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    padding: 12px 16px; font-family: 'Poppins', sans-serif;
+    color: #FFFFFF; max-width: 280px;
+    z-index: 999; pointer-events: none;
+    line-height: 1.5; box-shadow: 0 4px 20px rgba(0,0,0,0.18);
   }
   .tooltip.visible { display: block; }
-  .tt-close {
-    position: absolute; top: 6px; right: 6px;
-    width: 22px; height: 22px;
-    background: transparent; border: none;
-    color: #FFFFFF; font-size: 14px; line-height: 1;
-    cursor: pointer; opacity: 0.6;
-    border-radius: 3px;
-  }
-  .tt-close:hover { opacity: 1; background: rgba(255,255,255,0.1); }
-  .tt-t { font-size: 13px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.01em; padding-right: 22px; }
+  .tt-t { font-size: 13px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.01em; }
   .tt-p { font-size: 10px; font-weight: 500; color: #FFFFFF; margin-bottom: 8px; letter-spacing: 0.02em; text-transform: uppercase; }
   .tt-d { font-size: 11px; font-weight: 400; color: #FFFFFF; line-height: 1.6; }
-  .tt-link {
-    display: none;
-    margin-top: 12px; padding: 8px 12px;
-    background: #FFFFFF; color: #111111;
-    border: none; border-radius: 4px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 11px; font-weight: 600;
-    text-decoration: none; cursor: pointer;
-    text-align: center;
-    transition: background 0.15s;
-  }
-  .tt-link.visible { display: inline-block; }
-  .tt-link:hover { background: #EEEEEE; }
-  .feature-tag, .api-node { cursor: pointer; }
 
   /* Filter interaction */
   .legend-item { cursor: pointer; user-select: none; }
@@ -195,6 +168,11 @@
   .canvas.filtered .feature-tag.match { display: flex; }
   .canvas.filtered .api-node.match    { display: block; }
   .canvas.filtered .feature-tag.match.last-visible { border-bottom: none; }
+
+  /* Legend rows */
+  .legend-row { display: flex; align-items: center; gap: 8px; }
+  .legend-row + .legend-row { margin-top: 12px; }
+  .legend-divider { width: 1px; height: 20px; background: #111111; opacity: 0.15; margin: 0 8px; flex-shrink: 0; }
 
   /* Phase pip — numbered */
   .ppip {
@@ -242,7 +220,7 @@
 
 <header>
   <div class="header-title">Sustainability Platform Map</div>
-  <div class="header-meta">April 2026 &middot; v1.2 &middot; Updated with Otto&rsquo;s Asana priorities &middot; Hover any feature for context &middot; Click key to filter</div>
+  <div class="header-meta">April 2026 &middot; v1.1 &middot; Hover any feature for context &middot; Click key to filter</div>
 </header>
 
 <div class="canvas" id="canvas">
@@ -267,8 +245,8 @@
         <div class="features-list">
           <div data-phase-filter="p1" data-type="new" class="feature-tag t-new" data-title="Universal Admin Access" data-phase="Phase 1 · High priority" data-tip="Global admin login across all customer environments. Enables cross-entity strategy creation, bulk duplication, and user transfer. Critical for group customers — franchises and associations where each entity is a separate company."><span class="feat-text">Universal Admin Access</span><span class="feat-badge b-new">new</span></div>
           <div data-phase-filter="p2" data-type="new" class="feature-tag t-new" data-title="Project Upload Template" data-phase="Phase 2 · In progress" data-tip="Bulk project upload via pre-formatted Excel template. Download, fill in, upload, validate, confirm. Genuinely faster than manual entry for the sustainability team."><span class="feat-text">Project Upload Template</span><span class="feat-badge b-new">new</span></div>
-          <div data-phase-filter="p4" data-type="imp" class="feature-tag t-imp" data-title="Risk Management Survey" data-phase="Phase 4 · Low — demoted by Otto" data-tip="Sustainability-specific risk survey template. Captures customer drivers, budget constraints, and priorities upfront to inform comparison weighting downstream. Otto marked Low — sits behind the foundational modelling work."><span class="feat-text">Risk Management Survey</span><span class="feat-badge b-imp">imp</span></div>
-          <div data-phase-filter="p4" data-type="imp" class="feature-tag t-imp" data-title="Client Notifications" data-phase="Phase 4 · Low" data-tip="Extend automatic notifications to the sustainability module. Scheduled but Low priority. Requires defined trigger logic before design can begin."><span class="feat-text">Client Notifications</span><span class="feat-badge b-imp">imp</span></div>
+          <div data-phase-filter="p3" data-type="imp" class="feature-tag t-imp" data-title="Risk Management Survey" data-phase="Phase 3 · Medium" data-tip="Sustainability-specific risk survey template. Captures customer drivers, budget constraints, and priorities upfront to inform comparison weighting downstream."><span class="feat-text">Risk Management Survey</span><span class="feat-badge b-imp">imp</span></div>
+          <div data-phase-filter="p3" data-type="imp" class="feature-tag t-imp" data-title="Client Notifications" data-phase="Phase 3 · Low" data-tip="Extend automatic notifications to the sustainability module. Requires defined trigger logic before design can begin."><span class="feat-text">Client Notifications</span><span class="feat-badge b-imp">imp</span></div>
         </div>
       </div>
     </div>
@@ -284,9 +262,9 @@
           <div data-phase-filter="p2" data-type="imp" class="feature-tag t-imp" data-title="Retrospective Modelling" data-phase="Phase 2 · Low" data-tip="Drop in actual half-hourly data post-deployment (inverter, import meter, export meter) to replace forecasts with real actuals. Shows actual vs forecast deviation. Retention play — keeps customers using True after project goes live."><span class="feat-text">Retrospective Modelling</span><span class="feat-badge b-imp">imp</span></div>
           <div data-phase-filter="p1" data-type="new" class="feature-tag t-new" data-title="Scope 3 Project Modelling" data-phase="Phase 1 · High — game changer" data-tip="Foundational change to the data model. Projects that cost money rather than save it. Activity metrics beyond kWh: fuel volume, distance, mass, waste. Reinvestment modelling: energy savings fund Scope 3 investments over time. No one in the market doing this end-to-end."><span class="feat-text">Scope 3 Modelling</span><span class="feat-badge b-new">new</span></div>
           <div data-phase-filter="p1" data-type="new" class="feature-tag t-new" data-title="Alternative Fuel Modelling" data-phase="Phase 1 · High" data-tip="Extend beyond electricity and gas. Required for SECR and ESOS compliance. Includes fuel switching (diesel to HVO, refrigerant gas switching from Cold Chain Federation pilot). Design as same system as Scope 3, not a separate feature."><span class="feat-text">Alternative Fuel Modelling</span><span class="feat-badge b-new">new</span></div>
-          <div data-phase-filter="p3" data-type="new" class="feature-tag t-new" data-title="EV Charger Modelling" data-phase="Phase 3 · High once unblocked" data-tip="Otto marked HIGH in Asana but still BLOCKED. API-first via Virta Global — top EV platform in Europe. Needed for ESOS Scope 1 transport reporting. Confirm Virta integration approach before starting any design work."><span class="feat-text">EV Charger <span style="font-size:9px;color:#CC7700;font-weight:600;">via API</span></span><span class="feat-badge b-new">new</span></div>
-          <div data-phase-filter="p4" data-type="new" class="feature-tag t-new" data-title="PPA Modelling" data-phase="Phase 4 · Low — off hold" data-tip="Moved off hold. Otto has now assigned Low priority. Still critical for data centre customers and final net-zero pathway (efficiency → on-site gen → Scope 3 → PPAs → removal). Latsi has Excel model. Build for TrueCrew first."><span class="feat-text">PPA Modelling</span><span class="feat-badge b-new">new</span></div>
-          <div data-phase-filter="p4" data-type="new" class="feature-tag t-new" data-title="Profitability & Carbon Calculator" data-phase="Phase 4 · Low" data-tip="Otto assigned Low priority. Detailed scoping still required before design work begins."><span class="feat-text">Profitability Calculator</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p3" data-type="new" class="feature-tag t-new" data-title="EV Charger Modelling" data-phase="Phase 3 · BLOCKED" data-tip="API-first via Virta Global — top EV platform in Europe. Needed for ESOS Scope 1 transport reporting. BLOCKED — confirm Virta integration approach before starting any design work."><span class="feat-text">EV Charger <span style="font-size:9px;color:#CC7700;font-weight:600;">via API</span></span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="hold" data-type="hld" class="feature-tag t-hld" data-title="PPA Modelling" data-phase="On hold · pending Otto + Jono meeting" data-tip="ON HOLD — Otto meeting Jono (corporate PPA specialist) before weighting up priority. Critical for data centre customers. Latsi has Excel model. Build for TrueCrew first. Final net-zero pathway: efficiency → on-site gen → Scope 3 → PPAs → removal."><span class="feat-text">PPA Modelling</span><span class="feat-badge b-hld">hold</span></div>
+          <div data-phase-filter="backlog" data-type="new" class="feature-tag t-new" data-title="Profitability & Carbon Calculator" data-phase="Not yet scoped" data-tip="Not yet detailed by Otto. To be scoped in a future session before any design work begins."><span class="feat-text">Profitability Calculator</span><span class="feat-badge b-new">new</span></div>
         </div>
       </div>
 
@@ -294,6 +272,7 @@
       <div class="api-group">
         <span class="api-section-label">External APIs</span>
         <div data-type="api" class="api-node" id="api-virta" data-title="Virta Global" data-phase="API · Phase 3" data-tip="Top EV charger platform in Europe. API-first integration for EV Charger Modelling. Already operates across European markets — important for the European rollout strategy."><div class="api-node-name">Virta Global</div><div class="api-node-sub">EV charger modelling</div></div>
+        <div data-type="api" class="api-node" id="api-trading" data-title="Trading data feed" data-phase="API · Existing" data-tip="Live energy price data feeding into scenario modelling. Currently pulls through and projects a flat line — the scenario modelling improvement work builds on top of this feed."><div class="api-node-name">Trading data feed</div><div class="api-node-sub">Energy cost forecasting</div></div>
         <div data-type="api" class="api-node" id="api-emfactors" data-title="Emission factors list" data-phase="API · Annual update" data-tip="DEFRA/DESNZ emission conversion factors, updated annually. Paul and Otto discussed automating the annual update rather than manually maintaining it."><div class="api-node-name">Emission factors list</div><div class="api-node-sub">Annual DEFRA/DESNZ update</div></div>
         <div data-type="api" class="api-node" id="api-inverter" data-title="Inverter data" data-phase="API · Phase 2" data-tip="Half-hourly solar generation data from inverters. Used in Retrospective Modelling to replace forecast kWh figures with real actuals post-deployment."><div class="api-node-name">Inverter data</div><div class="api-node-sub">Half-hourly generation</div></div>
       </div>
@@ -306,9 +285,9 @@
       <div class="page-node" id="page-comps">
         <div class="page-header"><div class="ph-dot"></div>Comparisons</div>
         <div class="features-list">
-          <div data-phase-filter="p3" data-type="new" class="feature-tag t-new" data-title="Scope 3 Comparison Framework" data-phase="Phase 3 · Medium — brainstorm required first" data-tip="Otto demoted to Medium. Current comparison assumes positive ROI. Scope 3 breaks that assumption. New metrics: cost per tonne CO2, CapEx intensity, carbon reduction magnitude, strategic alignment score. BRAINSTORM REQUIRED — Otto hasn't solved this yet. Don't wireframe without a session first."><span class="feat-text">Scope 3 Comparison</span><span class="feat-badge b-new">new</span></div>
-          <div data-phase-filter="p3" data-type="new" class="feature-tag t-new" data-title="Weighted Prioritisation" data-phase="Phase 3 · Medium" data-tip="Grouped with Scope 3 Comparison. Capture customer drivers upfront: carbon vs cost vs compliance, annual sustainability budget. Weight comparisons accordingly. Like the procurement risk profile but for sustainability."><span class="feat-text">Weighted Prioritisation</span><span class="feat-badge b-new">new</span></div>
-          <div data-phase-filter="p4" data-type="imp" class="feature-tag t-imp" data-title="Options Appraisal Framework" data-phase="Phase 4 · Low" data-tip="Otto demoted to Low. Master list of all technologies. Rule-out system (site constraints, budget, energy profile, compliance, site type). Scoring criteria. Currently done manually. Otto's team developing the scoring logic."><span class="feat-text">Options Appraisal</span><span class="feat-badge b-imp">imp</span></div>
+          <div data-phase-filter="p1" data-type="new" class="feature-tag t-new" data-title="Scope 3 Comparison Framework" data-phase="Phase 1 · High — brainstorm required first" data-tip="Current comparison assumes positive ROI. Scope 3 breaks that assumption. New metrics: cost per tonne CO2, CapEx intensity, carbon reduction magnitude, strategic alignment score. BRAINSTORM REQUIRED — Otto hasn't solved this yet. Don't wireframe without a session first."><span class="feat-text">Scope 3 Comparison</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p1" data-type="new" class="feature-tag t-new" data-title="Weighted Prioritisation" data-phase="Phase 1 · High" data-tip="Capture customer drivers upfront: carbon vs cost vs compliance, annual sustainability budget. Weight comparisons accordingly. Like the procurement risk profile but for sustainability."><span class="feat-text">Weighted Prioritisation</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p3" data-type="imp" class="feature-tag t-imp" data-title="Options Appraisal Framework" data-phase="Phase 3 · Low" data-tip="Master list of all technologies. Rule-out system (site constraints, budget, energy profile, compliance, site type). Scoring criteria. Currently done manually. Otto's team developing the scoring logic."><span class="feat-text">Options Appraisal</span><span class="feat-badge b-imp">imp</span></div>
           <div data-phase-filter="p4" data-type="imp" class="feature-tag t-imp" data-title="Strategy Comparisons" data-phase="Phase 4 · Backlog" data-tip="Compare entire strategies against each other — not just individual projects. Which strategy gives best ROI vs best carbon savings vs fastest to target? Depends on Scope 3 comparison framework first."><span class="feat-text">Strategy Comparisons</span><span class="feat-badge b-imp">imp</span></div>
         </div>
       </div>
@@ -322,8 +301,7 @@
         <div class="page-header"><div class="ph-dot"></div>Strategies</div>
         <div class="features-list">
           <div data-phase-filter="p2" data-type="imp" class="feature-tag t-imp" data-title="Strategy V2" data-phase="Phase 2 · High — moved up by Otto" data-tip="Major rework — currently the weakest page. One red bar per year, no drill-down. Use Schemes as the design blueprint. Must have: month-by-month stacked graphs, time frame zoom, strategy titles (currently missing), savings and returns display. KEY: live M&T progress tracking — red line (today), dashed (forecast), solid (actual). Retention play."><span class="feat-text">Strategy V2</span><span class="feat-badge b-imp">imp</span></div>
-          <div data-phase-filter="p3" data-type="imp" class="feature-tag t-imp" data-title="Phase Filtering in Strategies" data-phase="Phase 3 · Medium — new from Julian" data-tip="NEW in Asana (Julian). Categorise and filter by phases within a strategy — users need to dynamically explore how each phase affects net cash commitment, carbon reduction and cash flow. Supports staged investment decisions. Sits naturally within Strategy V2 scope."><span class="feat-text">Phase Filtering</span><span class="feat-badge b-imp">imp</span></div>
-          <div data-phase-filter="p4" data-type="new" class="feature-tag t-new" data-title="Automated Strategy Modelling (AI)" data-phase="Phase 4 · Low" data-tip="AI-powered strategy recommendations. Run thousands of scenarios, surface top 3 options based on customer goals. Future phase — depends on the modelling engine being mature."><span class="feat-text">Automated Modelling (AI)</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p4" data-type="new" class="feature-tag t-new" data-title="Automated Strategy Modelling (AI)" data-phase="Phase 4 · Backlog" data-tip="AI-powered strategy recommendations. Run thousands of scenarios, surface top 3 options based on customer goals. Future phase — depends on the modelling engine being mature."><span class="feat-text">Automated Modelling (AI)</span><span class="feat-badge b-new">new</span></div>
         </div>
       </div>
 
@@ -350,48 +328,39 @@
       <div class="page-node" id="page-schemes">
         <div class="page-header"><div class="ph-dot"></div>Schemes</div>
         <div class="features-list side-row">
-          <div data-phase-filter="p2" data-type="com" class="feature-tag t-com" data-title="SECR" data-phase="Phase 2 · In progress — Sohil (Low priority)" data-tip="Otto demoted schemes overall to Low but SECR remains In Progress with Sohil. Still pattern-setter — get SECR right and CCA, ESOS, RE100 follow with minimal additional design. Requires alternative fuel modelling for full coverage."><span class="feat-text">SECR</span><span class="feat-badge b-com">pattern</span></div>
-          <div data-phase-filter="p4" data-type="com" class="feature-tag t-com" data-title="CCA" data-phase="Phase 4 · Low" data-tip="Otto demoted to Low. Follows the SECR template directly."><span class="feat-text">CCA</span></div>
-          <div data-phase-filter="p3" data-type="com" class="feature-tag t-com" data-title="ESOS" data-phase="Phase 3 · Medium — blocked" data-tip="Otto set as Medium. Includes Scope 1 transport — blocked until EV modelling and alternative fuel modelling are in place."><span class="feat-text">ESOS</span></div>
-          <div data-phase-filter="p4" data-type="com" class="feature-tag t-com" data-title="RE100" data-phase="Phase 4 · Low" data-tip="Otto demoted to Low. Follows the SECR template. Rochelle researching SRS (~2027) and ISO 50001."><span class="feat-text">RE100</span></div>
-          <div data-phase-filter="p4" data-type="com" class="feature-tag t-com" data-title="Future Schemes" data-phase="Phase 4 · Low" data-tip="Placeholder for SRS, ISO 50001, and future regulatory schemes. Rochelle leading landscape assessment."><span class="feat-text">Future</span></div>
+          <div data-phase-filter="p2" data-type="com" class="feature-tag t-com" data-title="SECR" data-phase="Phase 2 · In progress — Sohil assigned" data-tip="Pattern-setter for all other compliance schemes. Get SECR right and CCA, ESOS, RE100 follow with minimal additional design. Requires alternative fuel modelling for full coverage."><span class="feat-text">SECR</span><span class="feat-badge b-com">pattern</span></div>
+          <div data-phase-filter="p3" data-type="com" class="feature-tag t-com" data-title="CCA" data-phase="Phase 3" data-tip="Follows the SECR template directly."><span class="feat-text">CCA</span></div>
+          <div data-phase-filter="p3" data-type="com" class="feature-tag t-com" data-title="ESOS" data-phase="Phase 3 · blocked" data-tip="Includes Scope 1 transport — blocked until EV modelling and alternative fuel modelling are in place."><span class="feat-text">ESOS</span></div>
+          <div data-phase-filter="p3" data-type="com" class="feature-tag t-com" data-title="RE100" data-phase="Phase 3" data-tip="Follows the SECR template. Rochelle researching SRS (~2027) and ISO 50001."><span class="feat-text">RE100</span></div>
+          <div data-phase-filter="p4" data-type="com" class="feature-tag t-com" data-title="Future Schemes" data-phase="Phase 4" data-tip="Placeholder for SRS, ISO 50001, and future regulatory schemes. Rochelle leading landscape assessment."><span class="feat-text">Future</span></div>
         </div>
       </div>
 
       <div class="page-node" id="page-targets">
         <div class="page-header"><div class="ph-dot"></div>Targets</div>
         <div class="features-list">
-          <div data-phase-filter="p3" data-type="imp" class="feature-tag t-imp" data-title="Targets V2" data-phase="Phase 3 · Medium" data-tip="Otto set to Medium. Currently carbon-only and linear. New design: financial (£ saved), energy (kWh), and carbon (tCO2e) targets together. Nonlinear pathways with checkpoints. Multi-scope on one view. Drag-point interaction reused from scenario modelling. Currently limited to one strategy per target."><span class="feat-text">Targets V2 — multi-type, nonlinear, multi-scope</span><span class="feat-badge b-imp">imp</span></div>
+          <div data-phase-filter="p3" data-type="imp" class="feature-tag t-imp" data-title="Targets V2" data-phase="Phase 3 · High" data-tip="Currently carbon-only and linear. New design: financial (£ saved), energy (kWh), and carbon (tCO2e) targets together. Nonlinear pathways with checkpoints. Multi-scope on one view. Drag-point interaction reused from scenario modelling. Currently limited to one strategy per target."><span class="feat-text">Targets V2 — multi-type, nonlinear, multi-scope</span><span class="feat-badge b-imp">imp</span></div>
         </div>
       </div>
 
       <div class="page-node" id="page-emissions">
         <div class="page-header"><div class="ph-dot"></div>Emissions</div>
         <div class="features-list side-row">
-          <div data-phase-filter="p1" data-type="imp" class="feature-tag t-imp" data-title="Scope 2 Carbon Forecasting" data-phase="Phase 1 · High — promoted by Otto" data-tip="Otto promoted from Phase 2 to High priority. Hourly matching and declining grid carbon intensity year-on-year. Wait for Otto to rewrite Rochelle's notes before starting wireframes."><span class="feat-text">Scope 2 Forecasting</span><span class="feat-badge b-imp">imp</span></div>
-          <div data-phase-filter="p1" data-type="new" class="feature-tag t-new" data-title="Scope 3 Platform-level" data-phase="Phase 1 · High — major promotion" data-tip="Otto promoted from Phase 4 backlog to HIGH priority. Platform-wide Scope 3 integration. Emission source list updated annually. Pairs with the foundational Scope 3 Project Modelling work to give True end-to-end Scope 3 coverage."><span class="feat-text">Scope 3 Platform</span><span class="feat-badge b-new">new</span></div>
-          <div data-phase-filter="p3" data-type="new" class="feature-tag t-new" data-title="Carbon Costs (ETS/CBAM)" data-phase="Phase 3 · Medium — promoted" data-tip="Otto promoted from backlog to Medium. ETS and CBAM carbon cost modelling. Detail still to be scoped before design begins."><span class="feat-text">Carbon Costs</span><span class="feat-badge b-new">new</span></div>
-          <div data-phase-filter="p4" data-type="new" class="feature-tag t-new" data-title="Water Sustainability" data-phase="Phase 4 · Low" data-tip="Basic visibility only for now. True delivers water as a service but the platform can't represent it at all."><span class="feat-text">Water</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p2" data-type="imp" class="feature-tag t-imp" data-title="Scope 2 Carbon Forecasting" data-phase="Phase 2 · wait for Otto's rewrite" data-tip="Hourly matching and declining grid carbon intensity year-on-year. Wait for Otto to rewrite Rochelle's notes before starting wireframes."><span class="feat-text">Scope 2 Forecasting</span><span class="feat-badge b-imp">imp</span></div>
+          <div data-phase-filter="p4" data-type="new" class="feature-tag t-new" data-title="Scope 3 Platform-level" data-phase="Phase 4 · Backlog" data-tip="Platform-wide Scope 3 integration. Emission source list updated annually. Otto to prioritise which sources to support first."><span class="feat-text">Scope 3 Platform</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p4" data-type="new" class="feature-tag t-new" data-title="Carbon Costs (ETS/CBAM)" data-phase="Phase 4 · Backlog" data-tip="ETS and CBAM carbon cost modelling. Not yet detailed — to be scoped before design begins."><span class="feat-text">Carbon Costs</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p4" data-type="new" class="feature-tag t-new" data-title="Water Sustainability" data-phase="Phase 4 · Backlog" data-tip="Basic visibility only for now. True delivers water as a service but the platform can't represent it at all."><span class="feat-text">Water</span><span class="feat-badge b-new">new</span></div>
         </div>
       </div>
 
       <div class="page-node" id="page-dashboard">
         <div class="page-header"><div class="ph-dot"></div>Dashboard</div>
         <div class="features-list side-row">
-          <div data-phase-filter="p3" data-type="new" class="feature-tag t-new" data-title="Customer Sustainability Dashboard V1" data-phase="Phase 3 · Medium — demoted" data-tip="Otto demoted from Phase 2 to Medium. Start from Otto's PowerPoint mockups. Scope 3 sunburst (in progress), progress tiles, on/off track indicators, cost/savings tracking, active project summary. Must tell the story in 10 seconds. Design for group customers — multi-entity view needed."><span class="feat-text">Dashboard V1</span><span class="feat-badge b-new">new</span></div>
-          <div data-phase-filter="p4" data-type="new" class="feature-tag t-new" data-title="Portfolio Site Mapping" data-phase="Phase 4 · Low" data-tip="Otto demoted to Low. Otto built a working HTML prototype in ~1 hour using Mapbox. DNO boundaries, grid constraints, sleeving, phase filtering, heat maps. Power BI has a map layer for production."><span class="feat-text">Site Mapping</span><span class="feat-badge b-new">new</span></div>
-          <div data-phase-filter="hold" data-type="imp" class="feature-tag t-hld" data-title="Portfolio Report V2" data-phase="On hold — waiting on energy team" data-tip="Waiting for the energy team's Portfolio V2 to land first. Check with Sanio on progress before starting."><span class="feat-text">Portfolio Report V2</span><span class="feat-badge b-hld">hold</span></div>
-          <div data-phase-filter="p3" data-type="new" class="feature-tag t-new" data-title="Consumption Export V2" data-phase="Phase 3 · Medium — off hold" data-tip="Otto moved off hold and assigned Medium priority. Still dependent on the Portfolio V2 design. Requirements TBD."><span class="feat-text">Consumption Export V2</span><span class="feat-badge b-new">new</span></div>
-          <div data-phase-filter="p4" data-type="imp" class="feature-tag t-imp" data-title="Portfolio & Project Management" data-phase="Phase 4 · Low" data-tip="Better filtering, multi-entity views. Group customers need group-level visibility. Connects to Universal Admin Access."><span class="feat-text">Portfolio Management</span><span class="feat-badge b-imp">imp</span></div>
-        </div>
-      </div>
-
-      <div class="page-node" id="page-crosscutting">
-        <div class="page-header"><div class="ph-dot"></div>Cross-cutting / KTLO</div>
-        <div class="features-list side-row">
-          <div data-phase-filter="p2" data-type="cc" class="feature-tag t-cc" data-title="Notes &amp; Assumptions Field" data-phase="Phase 2 · High — surfaced by Otto" data-tip="Free-text notes/assumptions field on every modelling object: project, strategy, comparison, scheme. Otto raised this in scenario modelling feedback (Apr 2026): users need to document assumptions inline so collaborators understand the reasoning behind the numbers. Existing Asana ticket under Platform-KTLO — under-loved, deserves promotion."><span class="feat-text">Notes &amp; Assumptions</span><span class="feat-badge b-cc">cc</span></div>
-          <div data-phase-filter="p3" data-type="cc" class="feature-tag t-cc" data-title="Strategy Project Capacity" data-phase="Phase 3 · Medium" data-tip="Otto-owned KTLO ticket: increase the maximum number of projects a single strategy can hold. Cuts across all strategy work — every multi-site customer hits this ceiling."><span class="feat-text">Strategy Capacity</span><span class="feat-badge b-cc">cc</span></div>
-          <div data-phase-filter="p3" data-type="cc" class="feature-tag t-cc" data-title="Object Titles on All Pages" data-phase="Phase 3 · Low" data-tip="Project, strategy and comparison titles aren't surfaced consistently across the Net Zero section. Otto raised in scenario modelling feedback — when working across pages the user often loses track of what they're looking at. Same fix as Notes — touches every modelling object."><span class="feat-text">Title Consistency</span><span class="feat-badge b-cc">cc</span></div>
+          <div data-phase-filter="p2" data-type="new" class="feature-tag t-new" data-title="Customer Sustainability Dashboard V1" data-phase="Phase 2 · Not started" data-tip="Start from Otto's PowerPoint mockups. Scope 3 sunburst (in progress), progress tiles, on/off track indicators, cost/savings tracking, active project summary. Must tell the story in 10 seconds. Design for group customers — multi-entity view needed."><span class="feat-text">Dashboard V1</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="p3" data-type="new" class="feature-tag t-new" data-title="Portfolio Site Mapping" data-phase="Phase 3 · Low" data-tip="Otto built a working HTML prototype in ~1 hour using Mapbox. DNO boundaries, grid constraints, sleeving, phase filtering, heat maps. Power BI has a map layer for production."><span class="feat-text">Site Mapping</span><span class="feat-badge b-new">new</span></div>
+          <div data-phase-filter="hold" data-type="hld" class="feature-tag t-hld" data-title="Portfolio Report V2" data-phase="On hold — waiting on energy team" data-tip="Waiting for the energy team's Portfolio V2 to land first. Check with Sanio on progress before starting."><span class="feat-text">Portfolio Report V2</span><span class="feat-badge b-hld">hold</span></div>
+          <div data-phase-filter="hold" data-type="hld" class="feature-tag t-hld" data-title="Consumption Export V2" data-phase="On hold — dependent on Portfolio V2" data-tip="Dependent on the Portfolio V2 design. Requirements TBD."><span class="feat-text">Consumption Export V2</span><span class="feat-badge b-hld">hold</span></div>
+          <div data-phase-filter="p4" data-type="imp" class="feature-tag t-imp" data-title="Portfolio & Project Management" data-phase="Phase 4 · Backlog" data-tip="Better filtering, multi-entity views. Group customers need group-level visibility. Connects to Universal Admin Access."><span class="feat-text">Portfolio Management</span><span class="feat-badge b-imp">imp</span></div>
         </div>
       </div>
 
@@ -401,24 +370,27 @@
   <!-- Legend below diagram -->
   <div class="legend-bar">
 
-    <!-- Phase filters -->
-    <div class="legend-items legend-row">
-      <div class="phase-item" data-phase-filter="p1"><div class="ppip pp1">1</div><span class="phase-item-label">Phase 1</span></div>
-      <div class="phase-item" data-phase-filter="p2"><div class="ppip pp2">2</div><span class="phase-item-label">Phase 2</span></div>
-      <div class="phase-item" data-phase-filter="p3"><div class="ppip pp3">3</div><span class="phase-item-label">Phase 3</span></div>
-      <div class="phase-item" data-phase-filter="p4"><div class="ppip pp4">4</div><span class="phase-item-label">Phase 4</span></div>
-      <div class="phase-item" data-phase-filter="hold"><div class="ppip pp-hold">–</div><span class="phase-item-label">On hold</span></div>
-      <button class="legend-reset" id="legend-reset-phase" style="margin-left:auto;">↺ Reset</button>
-    </div>
-
     <!-- Type filters -->
-    <div class="legend-items legend-row">
+    <div class="legend-items">
       <div class="legend-item" data-filter="new"><div class="lpip lp-new"><span>new</span></div><span class="legend-item-label">New</span></div>
       <div class="legend-item" data-filter="imp"><div class="lpip lp-imp"><span>imp</span></div><span class="legend-item-label">Improvement</span></div>
       <div class="legend-item" data-filter="com"><div class="lpip lp-com"><span>com</span></div><span class="legend-item-label">Compliance</span></div>
-      <div class="legend-item" data-filter="cc"><div class="lpip lp-cc"><span>cc</span></div><span class="legend-item-label">Cross-cutting</span></div>
+      <div class="legend-item" data-filter="hld"><div class="lpip lp-hld"><span>hold</span></div><span class="legend-item-label">On hold</span></div>
       <div class="legend-item" data-filter="api"><div class="lpip lp-api" style="border:1px solid #FF9800;background:#FFFDF8;"><span style="color:#CC7700;">api</span></div><span class="legend-item-label">API</span></div>
-      <button class="legend-reset" id="legend-reset-type" style="margin-left:auto;">↺ Reset</button>
+      <button class="legend-reset" id="legend-reset-type">↺ Reset</button>
+    </div>
+
+    <!-- Divider -->
+    <div style="width:1px;height:20px;background:#111111;opacity:0.15;margin:0 12px;flex-shrink:0;"></div>
+
+    <!-- Phase filters -->
+    <div class="legend-items">
+      <div class="phase-item" data-phase-filter="p1"><div class="ppip pp1">1</div><span class="phase-item-label">Foundation</span></div>
+      <div class="phase-item" data-phase-filter="p2"><div class="ppip pp2">2</div><span class="phase-item-label">Active</span></div>
+      <div class="phase-item" data-phase-filter="p3"><div class="ppip pp3">3</div><span class="phase-item-label">Medium</span></div>
+      <div class="phase-item" data-phase-filter="p4"><div class="ppip pp4">4</div><span class="phase-item-label">Backlog</span></div>
+      <div class="phase-item" data-phase-filter="hold"><div class="ppip pp-hold">–</div><span class="phase-item-label">On hold</span></div>
+      <button class="legend-reset" id="legend-reset-phase">↺ Reset</button>
     </div>
 
   </div>
@@ -426,102 +398,26 @@
 </div>
 
 <div class="tooltip" id="tooltip">
-  <button class="tt-close" id="tt-close" aria-label="Close">×</button>
   <div class="tt-t" id="tt-t"></div>
   <div class="tt-p" id="tt-p"></div>
   <div class="tt-d" id="tt-d"></div>
-  <a class="tt-link" id="tt-link" target="_blank" rel="noopener">View prototype →</a>
 </div>
 
 <script>
-  // ── Tooltip: click to open, X to close, click another tile auto-switches ──
-  // Maps tile data-title → relative path to its prototype file.
-  // Tiles not in this map don't get a "View prototype" link.
-  const PROTOTYPE_LINKS = {
-    'Universal Admin Access':         './universal-admin/universal-admin-access.html',
-    'Project Upload Template':        './flowcharts-and-maps/project-upload-template.html',
-    'Scenario Modelling (items 5–8)': './project-scenario-modelling/project-scenarios.html',
-    'Scope 3 Project Modelling':      './flowcharts-and-maps/scope-3-project-modelling.html',
-    'Alternative Fuel Modelling':     './alternative-fuels/alternative-fuel-modelling.html',
-    'Weighted Prioritisation':        './weighted-strategy/weighted-strategy-prioritisation.html',
-    'Strategy Comparisons':           './strategy-v2/strategy-v2-compare.html',
-    'Strategy V2':                    './strategy-v2/strategy-v2-prototype.html',
-    'Targets V2':                     './targets/targets-option-1.html',
-    'SECR':                           './SECR/SECR-compliance-scheme.html'
-  };
-
+  // Tooltips
   const tip = document.getElementById('tooltip');
-  const tipClose = document.getElementById('tt-close');
-  const tipLink = document.getElementById('tt-link');
-
-  function closeTip() {
-    tip.classList.remove('visible');
-  }
-
-  function openTip(el) {
-    document.getElementById('tt-t').textContent = el.dataset.title || '';
-    document.getElementById('tt-p').textContent = el.dataset.phase || '';
-    document.getElementById('tt-d').textContent = el.dataset.tip   || '';
-
-    // Show prototype link if we have a mapping
-    const protoPath = PROTOTYPE_LINKS[el.dataset.title];
-    if (protoPath) {
-      tipLink.href = protoPath;
-      tipLink.classList.add('visible');
-    } else {
-      tipLink.classList.remove('visible');
-    }
-
-    // Make visible first so we can measure its size
-    tip.classList.add('visible');
-
-    // Pin tooltip next to the clicked tile (right side, vertically aligned)
-    const rect = el.getBoundingClientRect();
-    const tipRect = tip.getBoundingClientRect();
-    const margin = 12;
-
-    // Default: place tooltip to the right of the tile
-    let left = rect.right + margin;
-    let top = rect.top;
-
-    // If it overflows the right edge, place to the left of the tile instead
-    if (left + tipRect.width > window.innerWidth - 8) {
-      left = rect.left - tipRect.width - margin;
-    }
-    // If it overflows the left edge too, just clamp inside the viewport
-    if (left < 8) left = 8;
-
-    // Clamp vertically inside viewport
-    if (top + tipRect.height > window.innerHeight - 8) {
-      top = window.innerHeight - tipRect.height - 8;
-    }
-    if (top < 8) top = 8;
-
-    tip.style.left = left + 'px';
-    tip.style.top = top + 'px';
-  }
-
   document.querySelectorAll('[data-tip]').forEach(el => {
-    el.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openTip(el);
+    el.addEventListener('mouseenter', () => {
+      document.getElementById('tt-t').textContent = el.dataset.title || '';
+      document.getElementById('tt-p').textContent = el.dataset.phase || '';
+      document.getElementById('tt-d').textContent = el.dataset.tip   || '';
+      tip.classList.add('visible');
     });
-  });
-
-  // Close button
-  tipClose.addEventListener('click', (e) => {
-    e.stopPropagation();
-    closeTip();
-  });
-
-  // Click outside the tooltip closes it
-  document.addEventListener('click', (e) => {
-    if (!tip.contains(e.target)) closeTip();
-  });
-
-  // Esc key closes
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeTip();
+    el.addEventListener('mousemove', e => {
+      tip.style.left = (e.clientX + 16) + 'px';
+      tip.style.top  = (e.clientY - 10) + 'px';
+    });
+    el.addEventListener('mouseleave', () => tip.classList.remove('visible'));
   });
 
   // SVG connectors
