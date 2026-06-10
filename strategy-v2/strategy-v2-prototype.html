@@ -887,6 +887,98 @@ body {
   font-size: 12px;
 }
 .footer-actions { display: flex; gap: 12px; }
+
+/* ---------- SITES FILTER ---------- */
+.controls-right { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.sites-filter { position: relative; }
+.sites-trigger {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--white); border: 1.5px solid var(--secondary);
+  border-radius: 6px; padding: 8px 14px;
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  color: var(--secondary); cursor: pointer; transition: background 150ms ease-out;
+}
+.sites-trigger:hover { background: var(--grey); }
+.sites-trigger .material-symbols-outlined { font-size: 18px; }
+.sites-trigger .chevron { margin-left: 2px; transition: transform 200ms ease-out; }
+.sites-filter.open .sites-trigger .chevron { transform: rotate(180deg); }
+
+.sites-panel {
+  position: absolute; top: calc(100% + 6px); left: 0; width: 320px;
+  background: var(--white); border: 1.5px solid var(--secondary);
+  border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  z-index: 120; display: flex; flex-direction: column;
+}
+.sites-panel-search { padding: 12px 14px 8px; }
+.sites-panel-search input {
+  width: 100%; font-family: var(--font); font-size: 14px; padding: 8px 12px;
+  border: 1.5px solid var(--secondary); border-radius: 6px; color: var(--secondary);
+}
+.sites-panel-search input::placeholder { color: var(--secondary); opacity: 0.45; }
+.sites-panel-actions {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 2px 16px 10px; border-bottom: 1.5px solid var(--secondary);
+}
+.sites-panel-actions button {
+  background: none; border: none; font-family: var(--font); font-size: 12px;
+  font-weight: 600; color: var(--secondary); cursor: pointer; padding: 0;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.sites-panel-actions button:hover { text-decoration: underline; }
+.sites-panel-actions .sp-count { font-size: 12px; font-weight: 600; }
+.sites-list { max-height: 280px; overflow-y: auto; padding: 6px 0; }
+.sites-group-header {
+  display: flex; align-items: center; gap: 10px; padding: 10px 16px 6px;
+  cursor: pointer; position: sticky; top: 0; background: var(--white);
+}
+.sites-group-header .sg-name { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; flex: 1; }
+.sites-group-header .sg-meta { font-size: 11px; font-weight: 400; }
+.site-row { display: flex; align-items: center; gap: 10px; padding: 9px 16px 9px 28px; cursor: pointer; transition: background 150ms ease-out; }
+.site-row:hover { background: var(--grey); }
+.site-check, .sg-check {
+  width: 18px; height: 18px; flex-shrink: 0; border: 1.5px solid var(--secondary);
+  border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; background: var(--white);
+}
+.site-check .material-symbols-outlined, .sg-check .material-symbols-outlined { font-size: 14px; color: var(--white); display: none; }
+.site-row.sel .site-check, .sites-group-header.sel .sg-check, .sites-group-header.partial .sg-check { background: var(--secondary); }
+.site-row.sel .site-check .material-symbols-outlined,
+.sites-group-header.sel .sg-check .material-symbols-outlined,
+.sites-group-header.partial .sg-check .material-symbols-outlined { display: inline-flex; }
+.site-row .sr-text { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.site-row .sr-name { font-size: 14px; font-weight: 500; }
+.site-row .sr-meta { font-size: 11px; font-weight: 400; }
+.site-row.sel .sr-name { font-weight: 600; }
+.sites-empty { padding: 20px 16px; text-align: center; font-size: 13px; }
+
+/* Tag filter inside the sites panel */
+.sites-tags { padding: 10px 14px 12px; display: flex; flex-direction: column; gap: 8px; }
+.sites-tags-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.sites-tags-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag-chip {
+  display: inline-flex; align-items: center; gap: 5px; font-family: var(--font);
+  font-size: 12px; font-weight: 500; padding: 5px 11px; border: 1.5px solid var(--secondary);
+  border-radius: 16px; background: var(--white); color: var(--secondary); cursor: pointer;
+  transition: background 150ms ease-out;
+}
+.tag-chip:hover { background: var(--grey); }
+.tag-chip .material-symbols-outlined { font-size: 14px; display: none; }
+.tag-chip.active { background: var(--secondary); color: var(--white); font-weight: 600; }
+.tag-chip.active:hover { background: var(--secondary); }
+.tag-chip.active .material-symbols-outlined { display: inline-flex; color: var(--white); }
+
+.sites-selection { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: -8px 0 24px; }
+.sites-selection.hidden { display: none; }
+.sites-selection .ssel-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.site-chip { display: inline-flex; align-items: center; gap: 4px; background: var(--secondary); color: var(--white); border-radius: 20px; padding: 6px 8px 6px 14px; font-size: 12px; font-weight: 600; }
+.site-chip .chip-x { display: inline-flex; cursor: pointer; border-radius: 50%; }
+.site-chip .chip-x .material-symbols-outlined { font-size: 15px; color: var(--white); }
+.site-chip .chip-x:hover { opacity: 0.7; }
+.site-chip.more { background: var(--white); color: var(--secondary); border: 1.5px solid var(--secondary); padding: 6px 14px; cursor: pointer; }
+.sites-selection .ssel-clear { background: none; border: none; font-family: var(--font); font-size: 12px; font-weight: 600; color: var(--secondary); cursor: pointer; text-decoration: underline; padding: 0; }
+
+.filter-note { display: none; align-items: flex-start; gap: 8px; font-size: 13px; font-weight: 400; color: var(--secondary); margin: 0 0 4px; padding: 0; }
+.filter-note.show { display: flex; }
+.filter-note .material-symbols-outlined { font-size: 18px; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -1062,27 +1154,60 @@ body {
 
   <!-- CONTROLS BAR -->
   <div class="controls-bar">
-    <div class="control-group">
-      <span class="control-label">Strategy view</span>
-      <div class="toggle">
-        <button class="active">Full term (10 yrs)</button>
-        <button>Next 5 yrs</button>
-        <button>To 2050</button>
+    <div class="control-group" id="sitesControlGroup">
+      <span class="control-label">Sites</span>
+      <div class="sites-filter" id="sitesFilter">
+        <button class="sites-trigger" id="sitesTrigger" aria-expanded="false" aria-haspopup="true">
+          <span class="material-symbols-outlined">location_on</span>
+          <span class="st-label" id="sitesTriggerLabel">All sites</span>
+          <span class="material-symbols-outlined chevron">expand_more</span>
+        </button>
+        <div class="sites-panel" id="sitesPanel" hidden>
+          <div class="sites-panel-search">
+            <input type="text" id="sitesSearch" placeholder="Search sites…" autocomplete="off">
+          </div>
+          <div class="sites-tags" id="sitesTags">
+            <span class="sites-tags-label">Show sites tagged with all of</span>
+            <div class="sites-tags-chips" id="sitesTagChips"></div>
+          </div>
+          <div class="sites-panel-actions">
+            <button id="sitesSelectAll">Select all</button>
+            <span class="sp-count" id="sitesPanelCount">5 of 5</span>
+          </div>
+          <div class="sites-list" id="sitesList"></div>
+        </div>
       </div>
       <span class="info-tip" tabindex="0">
         <span class="material-symbols-outlined">info</span>
-        <span class="tip-content">Default shows the full strategy term. Other views zoom to a section of the strategy — they don't shorten or extend the strategy itself.</span>
+        <span class="tip-content">Slice the whole strategy — KPIs, cash flow and projects — by site. Search, or tap a region to roll up all its sites. A view-only lens: it doesn't change the saved strategy. Energy unit rates and the target trajectory stay portfolio-level (see notes on those tabs).</span>
       </span>
     </div>
-    <div class="control-group">
-      <span class="control-label">Granularity</span>
-      <div class="toggle">
-        <button>Month</button>
-        <button class="active">Quarter</button>
-        <button>Year</button>
+    <div class="controls-right">
+      <div class="control-group">
+        <span class="control-label">Strategy view</span>
+        <div class="toggle">
+          <button class="active">Full term (10 yrs)</button>
+          <button>Next 5 yrs</button>
+          <button>To 2050</button>
+        </div>
+        <span class="info-tip" tabindex="0">
+          <span class="material-symbols-outlined">info</span>
+          <span class="tip-content">Default shows the full strategy term. Other views zoom to a section of the strategy — they don't shorten or extend the strategy itself.</span>
+        </span>
+      </div>
+      <div class="control-group">
+        <span class="control-label">Granularity</span>
+        <div class="toggle">
+          <button>Month</button>
+          <button class="active">Quarter</button>
+          <button>Year</button>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- SITES SELECTION CHIPS -->
+  <div class="sites-selection hidden" id="sitesSelection"></div>
 
   <!-- MAIN TABS -->
   <div class="main-tabs">
@@ -1130,6 +1255,7 @@ body {
         <button data-meter="gas">Gas</button>
       </div>
     </div>
+    <div class="filter-note"><span class="material-symbols-outlined">info</span><span>Showing portfolio-level unit rates. Rates don't sum across sites, so the site filter doesn't rescale this chart — it changes the financial and carbon views instead.</span></div>
     <div class="chart-area" id="chartEnergy"></div>
     <div class="chart-legend">
       <div class="legend-item"><div class="legend-swatch line" id="energyLegendActual" style="background: #C04A74;"></div>Actual</div>
@@ -1164,6 +1290,7 @@ body {
         </div>
       </div>
     </div>
+    <div class="filter-note"><span class="material-symbols-outlined">info</span><span>Trajectory shown at portfolio level. Per-site tracking depends on the group-to-site target cascade (Targets V2); until that lands, the filter rescales financials and carbon savings but not the target line.</span></div>
     <div class="chart-area" id="chartTarget"></div>
     <div class="chart-legend" id="targetLegendCombined">
       <div class="legend-item"><svg width="22" height="6" aria-hidden="true"><line x1="0" y1="3" x2="22" y2="3" stroke="#111" stroke-width="1.5" opacity="0.55"/></svg>Target trajectory (2032)</div>
@@ -1450,6 +1577,7 @@ body {
    line on its own £ cumulative axis (right). Solid past = actuals,
    hatched future = forecast. Toggle hides cumulative line entirely.
    ========================================================= */
+let SITE_SCALE = 1;
 let cashFlowShowCum = true;
 
 function renderCashFlow() {
@@ -1475,7 +1603,7 @@ function renderCashFlow() {
     const savingsRamp = Math.min(1, i / 28);
     const savings = (3500 + Math.sin(i / 4) * 800) * savingsRamp + i * 60;
 
-    data.push({ capex, opex, savings });
+    data.push({ capex: capex * SITE_SCALE, opex: opex * SITE_SCALE, savings: savings * SITE_SCALE });
   }
 
   // Cumulative net cash flow
@@ -2174,6 +2302,12 @@ document.querySelectorAll('.main-tabs .main-tab').forEach(btn => {
     document.querySelectorAll('[data-tab-content]').forEach(c => {
       c.hidden = c.dataset.tabContent !== panel;
     });
+    // Sites filter only applies to Cash Flow & Commitment — show it only there
+    const onCashflow = panel === 'cashflow';
+    const sitesGroup = document.getElementById('sitesControlGroup');
+    const sitesSel = document.getElementById('sitesSelection');
+    if (sitesGroup) sitesGroup.hidden = !onCashflow;
+    if (sitesSel) sitesSel.hidden = !onCashflow;
   });
 });
 
@@ -2215,6 +2349,193 @@ scenarioDropdown.querySelectorAll('.dropdown-item:not(.create)').forEach(item =>
     scenarioTrigger.setAttribute('aria-expanded', 'false');
   });
 });
+// ============ SITES FILTER ============
+(function(){
+  // Projects mapped to sites; a site's share = sum of its projects' benefit %.
+  const PROJECTS = [
+    { match: 'VO Site 2',                 site: 'birmingham', pct: 32 },
+    { match: 'Staff Energy Awareness',    site: 'thurrock',   pct: 1  },
+    { match: 'Replace light fittings',    site: 'trafford',   pct: 18 },
+    { match: 'Building Energy Management',site: 'trafford',   pct: 28 },
+    { match: 'Compressed Air',            site: 'haydock',    pct: 9  },
+    { match: 'EV Charging',               site: 'dartford',   pct: 12 },
+  ];
+  const SITES = [
+    { id:'trafford',   name:'Trafford Park DC',    tags:['Retail','Distribution'] },
+    { id:'haydock',    name:'Haydock Depot',        tags:['Distribution'] },
+    { id:'birmingham', name:'Birmingham Hub',       tags:['Retail','Distribution'] },
+    { id:'dartford',   name:'Dartford Depot',       tags:['Distribution','Cold Chain'] },
+    { id:'thurrock',   name:'Thurrock Cross-Dock',  tags:['Distribution'] },
+  ];
+  // Tag order for the filter chips (placeholder demo tags — real tags come from the portfolio)
+  const TAGS = ['Retail','Distribution','Cold Chain'];
+  SITES.forEach(s => {
+    const ps = PROJECTS.filter(p => p.site === s.id);
+    s.share = ps.reduce((a,p)=>a+p.pct,0);
+    s.projectCount = ps.length;
+  });
+  const TOTAL = SITES.length;
+
+  const KPI = document.querySelectorAll('.kpi-card');
+  const kpiBase = [
+    { el: KPI[0].querySelector('.kpi-value'), base: 989443,   fmt: v => '£' + Math.round(v).toLocaleString('en-GB') },
+    { el: KPI[1].querySelector('.kpi-value'), base: 2667.775, fmt: v => v.toLocaleString('en-GB',{minimumFractionDigits:3,maximumFractionDigits:3}) + ' <span class="unit">tCO₂e</span>' },
+    { el: KPI[2].querySelector('.kpi-value'), base: 720948,   fmt: v => '£' + Math.round(v).toLocaleString('en-GB') },
+  ];
+
+  const rows = [...document.querySelectorAll('.project-row')];
+  rows.forEach(r => {
+    const title = (r.querySelector('.p-title')||{}).textContent || '';
+    const pj = PROJECTS.find(p => title.indexOf(p.match) !== -1);
+    if (pj) { r.dataset.site = pj.site; r.dataset.basePct = pj.pct; }
+  });
+
+  const metaSpans = [...document.querySelectorAll('.title-meta span')];
+  const projMeta = metaSpans.find(s => /projects/.test(s.textContent));
+  const projMetaIcon = projMeta ? ((projMeta.querySelector('.material-symbols-outlined')||{}).outerHTML || '') : '';
+
+  let selected = new Set(SITES.map(s=>s.id));
+  let activeTags = new Set();
+
+  const filter      = document.getElementById('sitesFilter');
+  const trigger     = document.getElementById('sitesTrigger');
+  const panel       = document.getElementById('sitesPanel');
+  const label       = document.getElementById('sitesTriggerLabel');
+  const listEl      = document.getElementById('sitesList');
+  const searchEl    = document.getElementById('sitesSearch');
+  const selectAllBtn= document.getElementById('sitesSelectAll');
+  const panelCount  = document.getElementById('sitesPanelCount');
+  const selectionRow= document.getElementById('sitesSelection');
+  const tagChipsEl  = document.getElementById('sitesTagChips');
+
+  // Sites matching ALL active tags (AND), mirroring the portfolio tag filter.
+  function sitesMatchingTags(){
+    if (!activeTags.size) return SITES.slice();
+    return SITES.filter(s => [...activeTags].every(t => s.tags.indexOf(t) !== -1));
+  }
+
+  function enforceMin(){
+    if (selected.size === 0){
+      const m = sitesMatchingTags();
+      selected = new Set((m.length ? m : SITES).map(s=>s.id));
+    }
+  }
+
+  function buildTags(){
+    tagChipsEl.innerHTML = '';
+    TAGS.forEach(t => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'tag-chip' + (activeTags.has(t) ? ' active' : '');
+      chip.innerHTML = '<span class="material-symbols-outlined">check</span>' + t;
+      chip.addEventListener('click', () => toggleTag(t));
+      tagChipsEl.appendChild(chip);
+    });
+  }
+
+  function toggleTag(t){
+    if (activeTags.has(t)) activeTags.delete(t); else activeTags.add(t);
+    const matched = sitesMatchingTags();
+    if (!activeTags.size){
+      selected = new Set(SITES.map(s=>s.id));
+    } else if (matched.length){
+      selected = new Set(matched.map(s=>s.id));
+    } // empty intersection: keep current selection, list shows empty state
+    apply(); buildTags(); buildList(searchEl.value);
+  }
+
+  function buildList(q){
+    q = (q||'').trim().toLowerCase();
+    listEl.innerHTML = '';
+    const base = sitesMatchingTags();
+    if (activeTags.size && !base.length){
+      listEl.innerHTML = '<div class="sites-empty">No sites carry all of the selected tags.</div>';
+      return;
+    }
+    const sitesIn = base.filter(s => !q || s.name.toLowerCase().indexOf(q)!==-1);
+    if (!sitesIn.length){ listEl.innerHTML = '<div class="sites-empty">No sites match that search.</div>'; return; }
+    sitesIn.forEach(s => {
+      const row = document.createElement('div');
+      row.className = 'site-row' + (selected.has(s.id)?' sel':'');
+      row.innerHTML = '<span class="site-check"><span class="material-symbols-outlined">check</span></span>'
+        + '<span class="sr-text"><span class="sr-name">'+s.name+'</span>'
+        + '<span class="sr-meta">'+s.share+'% of benefit · '+s.projectCount+' project'+(s.projectCount>1?'s':'')+'</span></span>';
+      row.addEventListener('click', () => {
+        if (selected.has(s.id)) selected.delete(s.id); else selected.add(s.id);
+        enforceMin(); apply(); buildList(searchEl.value);
+      });
+      listEl.appendChild(row);
+    });
+  }
+
+  function renderSelection(all){
+    if (all){ selectionRow.classList.add('hidden'); selectionRow.innerHTML=''; return; }
+    selectionRow.classList.remove('hidden');
+    const sel = SITES.filter(s=>selected.has(s.id));
+    const MAX = 4;
+    let html = '<span class="ssel-label">Filtered to</span>';
+    sel.slice(0,MAX).forEach(s => {
+      html += '<span class="site-chip">'+s.name+'<span class="chip-x" data-id="'+s.id+'"><span class="material-symbols-outlined">close</span></span></span>';
+    });
+    if (sel.length > MAX) html += '<span class="site-chip more" id="chipMore">+'+(sel.length-MAX)+' more</span>';
+    html += '<button class="ssel-clear" id="sselClear">Clear filter</button>';
+    selectionRow.innerHTML = html;
+    selectionRow.querySelectorAll('.chip-x').forEach(x => x.addEventListener('click', () => {
+      selected.delete(x.dataset.id); enforceMin(); apply(); buildList(searchEl.value);
+    }));
+    const more = document.getElementById('chipMore');
+    if (more) more.addEventListener('click', openPanel);
+    document.getElementById('sselClear').addEventListener('click', () => {
+      activeTags.clear(); selected = new Set(SITES.map(s=>s.id));
+      apply(); buildTags(); buildList(searchEl.value);
+    });
+  }
+
+  function apply(){
+    const count = selected.size;
+    const all = count === TOTAL;
+    const share = SITES.filter(s=>selected.has(s.id)).reduce((a,s)=>a+s.share,0) / 100;
+    SITE_SCALE = share;
+
+    label.textContent = all ? 'All sites' : (count===1 ? SITES.find(s=>selected.has(s.id)).name : count+' of '+TOTAL+' sites');
+    panelCount.textContent = count+' of '+TOTAL;
+
+    kpiBase.forEach(k => { k.el.innerHTML = k.fmt(k.base * share); });
+    document.querySelectorAll('.kpi-delta').forEach(d => d.style.display = all ? '' : 'none');
+
+    const visible = rows.filter(r => !r.dataset.site || selected.has(r.dataset.site));
+    const visSum = visible.reduce((a,r)=>a + (parseFloat(r.dataset.basePct)||0), 0) || 1;
+    rows.forEach(r => {
+      const show = !r.dataset.site || selected.has(r.dataset.site);
+      r.style.display = show ? '' : 'none';
+      if (show && r.dataset.basePct){
+        const newPct = Math.round((parseFloat(r.dataset.basePct) / visSum) * 100);
+        const cap = r.querySelector('.caption');
+        const fill = r.querySelector('.proportion-bar .fill');
+        if (cap) cap.textContent = newPct + '% of strategy benefit';
+        if (fill) fill.style.width = newPct + '%';
+      }
+    });
+
+    if (projMeta) projMeta.innerHTML = projMetaIcon + (all ? visible.length+' projects' : visible.length+' of 6 projects');
+
+    renderSelection(all);
+    renderCashFlow();
+    document.querySelectorAll('.filter-note').forEach(n => n.classList.toggle('show', !all));
+  }
+
+  function openPanel(){ filter.classList.add('open'); panel.hidden = false; trigger.setAttribute('aria-expanded','true'); searchEl.focus(); }
+  function closePanel(){ filter.classList.remove('open'); panel.hidden = true; trigger.setAttribute('aria-expanded','false'); }
+  trigger.addEventListener('click', (e)=>{ e.stopPropagation(); panel.hidden ? openPanel() : closePanel(); });
+  panel.addEventListener('click', (e)=> e.stopPropagation());
+  document.addEventListener('click', (e)=>{ if (!filter.contains(e.target)) closePanel(); });
+  searchEl.addEventListener('input', ()=> buildList(searchEl.value));
+  selectAllBtn.addEventListener('click', ()=>{ activeTags.clear(); selected = new Set(SITES.map(s=>s.id)); apply(); buildTags(); buildList(searchEl.value); });
+
+  buildTags();
+  buildList('');
+  apply();
+})();
 </script>
 </body>
 </html>
